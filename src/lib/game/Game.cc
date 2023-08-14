@@ -38,12 +38,6 @@ auto generateMenu(const olc::vi2d &pos,
 
 Game::Game()
   : utils::CoreObject("game")
-  , m_state(State{
-      true,  // paused
-      true,  // disabled
-      false, // terminated
-    })
-  , m_menus()
 {
   setService("game");
 
