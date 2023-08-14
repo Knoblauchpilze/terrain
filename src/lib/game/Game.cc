@@ -1,7 +1,8 @@
 
 #include "Game.hh"
 #include "Menu.hh"
-#include <cxxabi.h>
+#include "ValueNoise.hh"
+//#include <cxxabi.h>
 
 namespace pge {
 
@@ -15,7 +16,7 @@ Game::Game()
       false, // terminated
     })
   , m_menus()
-  , m_terrain(TERRAIN_SIZE, TERRAIN_SIZE)
+  , m_terrain(TERRAIN_SIZE, TERRAIN_SIZE, std::make_unique<terrain::ValueNoise>(0))
 {
   setService("game");
 }

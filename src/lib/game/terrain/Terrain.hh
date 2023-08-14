@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "Noise2d.hh"
 #include "Type.hh"
 #include <core_utils/CoreObject.hh>
 #include <vector>
@@ -10,7 +11,7 @@ namespace pge::terrain {
 class Terrain : public utils::CoreObject
 {
   public:
-  Terrain(int width, int height) noexcept;
+  Terrain(int width, int height, Noise2dPtr noise) noexcept;
 
   auto w() const noexcept -> int;
   auto h() const noexcept -> int;
@@ -24,6 +25,8 @@ class Terrain : public utils::CoreObject
   private:
   int m_width;
   int m_height;
+
+  Noise2dPtr m_noise{};
 
   std::vector<Type> m_land{};
 };
