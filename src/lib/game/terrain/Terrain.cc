@@ -3,10 +3,11 @@
 
 namespace pge::terrain {
 
-Terrain::Terrain(int width, int height) noexcept
+Terrain::Terrain(int width, int height, Noise2dPtr noise) noexcept
   : utils::CoreObject(std::to_string(width) + "x" + std::to_string(height))
   , m_width(width)
   , m_height(height)
+  , m_noise(std::move(noise))
 {
   setService("terrain");
 }
