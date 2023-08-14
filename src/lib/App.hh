@@ -113,9 +113,6 @@ class App : public PGEApp
   /// @brief - A description of the textures used to represent the elements of
   /// the game.
   sprites::TexturePackShPtr m_packs;
-
-  /// @brief - Default texture pack identifier.
-  sprites::PackId m_defaultPackId;
 };
 
 } // namespace pge
