@@ -1,12 +1,12 @@
 
 #include "Game.hh"
 #include "Menu.hh"
-#include "ValueNoise.hh"
-//#include <cxxabi.h>
+#include "Noise2dFactory.hh"
 
 namespace pge {
 
 constexpr auto TERRAIN_SIZE = 10;
+constexpr auto SEED         = 1993;
 
 Game::Game()
   : utils::CoreObject("game")
@@ -16,9 +16,13 @@ Game::Game()
       false, // terminated
     })
   , m_menus()
-  , m_terrain(TERRAIN_SIZE, TERRAIN_SIZE, std::make_unique<terrain::ValueNoise>(0))
 {
   setService("game");
+
+  auto factory = noise::Noise2dFactory(noise::Type::White);
+  m_terrain    = std::make_unique<terrain::Terrain>(TERRAIN_SIZE,
+                                                 TERRAIN_SIZE,
+                                                 factory.createNoise2d({SEED}));
 }
 
 Game::~Game() {}
@@ -70,17 +74,17 @@ void Game::togglePause()
 
 void Game::load(const std::string &fileName)
 {
-  m_terrain.load(fileName);
+  m_terrain->load(fileName);
 }
 
 void Game::save(const std::string &fileName) const
 {
-  m_terrain.save(fileName);
+  m_terrain->save(fileName);
 }
 
 auto Game::terrain() const noexcept -> const terrain::Terrain &
 {
-  return m_terrain;
+  return *m_terrain;
 }
 
 void Game::enable(bool enable)

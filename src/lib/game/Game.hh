@@ -143,7 +143,7 @@ class Game : public utils::CoreObject
   /// simulation.
   Menus m_menus;
 
-  terrain::Terrain m_terrain;
+  terrain::TerrainPtr m_terrain{nullptr};
 };
 
 using GameShPtr = std::shared_ptr<Game>;
