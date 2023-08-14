@@ -64,6 +64,16 @@ void Game::togglePause()
   enable(!m_state.paused);
 }
 
+void Game::load(const std::string &fileName)
+{
+  warn("Should load game " + fileName);
+}
+
+void Game::save(const std::string &fileName) const
+{
+  warn("Should save game " + fileName);
+}
+
 void Game::enable(bool enable)
 {
   m_state.disabled = !enable;
