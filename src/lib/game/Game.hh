@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "Terrain.hh"
 #include <core_utils/CoreObject.hh>
 #include <core_utils/TimeUtils.hh>
 #include <memory>
@@ -69,6 +70,8 @@ class Game : public utils::CoreObject
   void load(const std::string &fileName);
 
   void save(const std::string &fileName) const;
+
+  auto terrain() const noexcept -> const terrain::Terrain &;
 
   private:
   /// @brief - Used to enable or disable the menus that compose the game. This allows
@@ -139,6 +142,8 @@ class Game : public utils::CoreObject
   /// @brief - The menus displaying information about the current state of the
   /// simulation.
   Menus m_menus;
+
+  terrain::Terrain m_terrain;
 };
 
 using GameShPtr = std::shared_ptr<Game>;

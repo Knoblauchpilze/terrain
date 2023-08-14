@@ -5,6 +5,8 @@
 
 namespace pge {
 
+constexpr auto TERRAIN_SIZE = 10;
+
 Game::Game()
   : utils::CoreObject("game")
   , m_state(State{
@@ -13,6 +15,7 @@ Game::Game()
       false, // terminated
     })
   , m_menus()
+  , m_terrain(TERRAIN_SIZE, TERRAIN_SIZE)
 {
   setService("game");
 }
@@ -66,12 +69,17 @@ void Game::togglePause()
 
 void Game::load(const std::string &fileName)
 {
-  warn("Should load game " + fileName);
+  m_terrain.load(fileName);
 }
 
 void Game::save(const std::string &fileName) const
 {
-  warn("Should save game " + fileName);
+  m_terrain.save(fileName);
+}
+
+auto Game::terrain() const noexcept -> const terrain::Terrain &
+{
+  return m_terrain;
 }
 
 void Game::enable(bool enable)

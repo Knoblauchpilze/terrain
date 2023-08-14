@@ -95,9 +95,7 @@ class App : public PGEApp
   /// position to pixels.
   void drawWarpedRect(const SpriteDesc &t, const CoordinateFrame &cf);
 
-  /// @brief - Example method to render the default texture pack.
-  /// @param cf - the coordinate frame to convert from tiles to pixels space.
-  void renderDefaultTexturePack(const CoordinateFrame &cf);
+  void renderTerrain(const CoordinateFrame &cf);
 
   private:
   /// @brief - The game managed by this application.
