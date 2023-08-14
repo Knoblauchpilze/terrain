@@ -160,6 +160,10 @@ auto Game::generateNoiseMenus(int width, int height) -> std::vector<MenuShPtr>
   white->setSimpleAction([](Game &g) { g.setNoiseType(noise::Type::White); });
   noises->addMenu(white);
 
+  auto value = generateMenu(olc::vi2d{}, olc::vi2d{DEFAULT_MENU_WIDTH, 30}, "value", "value", true);
+  value->setSimpleAction([](Game &g) { g.setNoiseType(noise::Type::Value); });
+  noises->addMenu(value);
+
   out.push_back(noises);
   return out;
 }

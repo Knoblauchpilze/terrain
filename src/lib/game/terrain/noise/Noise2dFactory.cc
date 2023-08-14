@@ -1,5 +1,6 @@
 
 #include "Noise2dFactory.hh"
+#include "ValueNoise.hh"
 #include "WhiteNoise.hh"
 #include <chrono>
 
@@ -33,6 +34,8 @@ auto Noise2dFactory::createNoise2d(const std::optional<Noise2d::Seed> &maybeSeed
   {
     case Type::White:
       return std::make_unique<WhiteNoise>(seed);
+    case Type::Value:
+      return std::make_unique<ValueNoise>(seed);
     default:
       error("failed to generate noise", "unknown noise " + str(m_type));
       // Useless but needed as the error does not have a throw qualifier.

@@ -9,6 +9,8 @@ auto str(const Type &type) noexcept -> std::string
   {
     case Type::White:
       return "white";
+    case Type::Value:
+      return "value";
     default:
       return "unknown(" + std::to_string(static_cast<int>(type)) + ")";
   }
