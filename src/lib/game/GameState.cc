@@ -53,20 +53,14 @@ pge::MenuShPtr generateScreenOption(const olc::vi2d &dims,
 
 namespace pge {
 
-GameState::GameState(const olc::vi2d &dims, const Screen &screen)
+GameState::GameState(const olc::vi2d &dims, const Screen &screen, Game &game)
   : utils::CoreObject("state")
-  ,
-
   // Assign a different screen so that we can use the
   // `setScreen` routine to initialize the visibility
   // status of screens.
-  m_screen(screen == Screen::Home ? Screen::Exit : Screen::Home)
-  ,
-
-  m_home(nullptr)
-  , m_loadGame(nullptr)
+  , m_screen(screen == Screen::Home ? Screen::Exit : Screen::Home)
   , m_savedGames(10u, "data/saves", "ext")
-  , m_gameOver(nullptr)
+  , m_game(game)
 {
   setService("chess");
 
@@ -136,10 +130,16 @@ menu::InputHandle GameState::processUserInput(const controls::State &c,
   return res;
 }
 
+void GameState::save() const
+{
+  m_game.save(m_savedGames.generateNewName());
+}
+
 void GameState::onSavedGamePicked(const std::string &game)
 {
   info("Picked saved game \"" + game + "\"");
   setScreen(Screen::Game);
+  m_game.load(game);
 }
 
 void GameState::generateHomeScreen(const olc::vi2d &dims)

@@ -66,6 +66,10 @@ class Game : public utils::CoreObject
   /// based entities should take actions to be resuming their pathes, motions, etc.
   void resume();
 
+  void load(const std::string &fileName);
+
+  void save(const std::string &fileName) const;
+
   private:
   /// @brief - Used to enable or disable the menus that compose the game. This allows
   /// to easily hide any game related component.

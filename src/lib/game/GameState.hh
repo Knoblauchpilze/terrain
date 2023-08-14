@@ -27,7 +27,8 @@ class GameState : public utils::CoreObject
   /// @brief - Creates a new game state with the specified state.
   /// @param dims - the dimensions of the desired UI.
   /// @param screen - the current screen.
-  GameState(const olc::vi2d &dims, const Screen &screen);
+  /// @param game - the game attached to this state.
+  GameState(const olc::vi2d &dims, const Screen &screen, Game &game);
 
   /// @brief - Destructor to disconnect the signal from the saved games object.
   ~GameState();
@@ -53,6 +54,8 @@ class GameState : public utils::CoreObject
   /// @return - the description of what happened when the inputs has been processed.
   menu::InputHandle processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions);
 
+  void save() const;
+
   private:
   /// @brief - A slot used to receive notifications of a user picking a new saved game.
   /// @param game - the path to the saved game that was picked.
@@ -70,17 +73,19 @@ class GameState : public utils::CoreObject
   Screen m_screen;
 
   /// @brief - Defines the screen to display when the game is on the home screen.
-  MenuShPtr m_home;
+  MenuShPtr m_home{nullptr};
 
   /// @brief - Defines the screen to display when the game is on the loading game
   /// screen.
-  MenuShPtr m_loadGame;
+  MenuShPtr m_loadGame{nullptr};
 
   /// @brief - The data needed to represent the list of games available for loading.
   SavedGames m_savedGames;
 
   /// @brief - Defines the menu to display in case the game is over.
-  MenuShPtr m_gameOver;
+  MenuShPtr m_gameOver{nullptr};
+
+  Game &m_game;
 };
 
 using GameStateShPtr = std::shared_ptr<GameState>;
