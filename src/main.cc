@@ -1,6 +1,11 @@
 
-/// @brief - Canonical application allowing to instantiate a working PGE process
-/// with configurable hooks to customize the behavior.
+/// @brief - A terrain generator.
+
+/// Useful links:
+/// https://medium.com/@henchman/adventures-in-procedural-terrain-generation-part-1-b64c29e2367a
+/// https://en.m.wikipedia.org/wiki/Value_noise#:~:text=Value%20noise%20is%20a%20type,Perlin%20noise%20and%20Simplex%20noise.
+/// https://rtouti.github.io/graphics/perlin-noise-algorithm
+/// https://math.stackexchange.com/questions/184121/why-is-gradient-noise-better-quality-than-value-noise
 
 #include "App.hh"
 #include "AppDesc.hh"
@@ -26,16 +31,7 @@ int main(int /*argc*/, char ** /*argv*/)
     auto tiles  = pge::CenteredViewport({0.0f, 0.0f}, {4.0f, 3.0f});
     auto pixels = pge::TopLeftViewport({0.0f, 0.0f}, {800.0f, 600.0f});
 
-    pge::CoordinateFramePtr frame;
-    auto useIsometric = true;
-    if (useIsometric)
-    {
-      frame = std::make_shared<pge::IsometricViewFrame>(tiles, pixels);
-    }
-    else
-    {
-      frame = std::make_shared<pge::TopViewFrame>(tiles, pixels);
-    }
+    auto frame = std::make_shared<pge::TopViewFrame>(tiles, pixels);
 
     pge::AppDesc ad = pge::newDesc(olc::vi2d(800, 600), frame, "terrain");
     pge::App demo(ad);
