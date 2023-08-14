@@ -71,6 +71,10 @@ class Game : public utils::CoreObject
 
   void save(const std::string &fileName) const;
 
+  void generate();
+
+  void setNoiseType(const noise::Type &noise);
+
   auto terrain() const noexcept -> const terrain::Terrain &;
 
   private:
@@ -82,6 +86,8 @@ class Game : public utils::CoreObject
   /// @brief - Used during the step function and by any process that needs to update
   /// the UI and the text content of menus.
   virtual void updateUI();
+
+  auto generateNoiseMenus(int width, int height) -> std::vector<MenuShPtr>;
 
   private:
   /// @brief - Convenience structure allowing to group information

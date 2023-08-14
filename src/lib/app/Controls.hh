@@ -20,6 +20,7 @@ enum Keys
 
   P,
   S,
+  G,
 
   KeysCount
 };
