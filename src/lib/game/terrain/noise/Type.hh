@@ -7,7 +7,8 @@ namespace pge::noise {
 
 enum class Type
 {
-  White
+  White,
+  Value
 };
 
 auto str(const Type &type) noexcept -> std::string;
