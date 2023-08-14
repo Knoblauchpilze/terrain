@@ -8,6 +8,34 @@ namespace pge {
 constexpr auto TERRAIN_SIZE = 10;
 constexpr auto SEED         = 1993;
 
+constexpr auto DEFAULT_MENU_WIDTH = 100;
+
+namespace {
+auto generateMenu(const olc::vi2d &pos,
+                  const olc::vi2d &size,
+                  const std::string &text,
+                  const std::string &name,
+                  bool clickable     = false,
+                  olc::Pixel bgColor = olc::VERY_DARK_GREEN) -> pge::MenuShPtr
+{
+  auto fd = pge::menu::newMenuContent(text, "", size);
+
+  fd.color  = bgColor == olc::BLACK ? olc::WHITE : olc::BLACK;
+  fd.hColor = RGBToHSL(bgColor).b < 128 ? olc::WHITE : olc::BLACK;
+
+  fd.align = pge::menu::Alignment::Center;
+
+  return std::make_shared<pge::Menu>(pos,
+                                     size,
+                                     name,
+                                     pge::menu::newColoredBackground(bgColor),
+                                     fd,
+                                     pge::menu::Layout::Vertical,
+                                     clickable,
+                                     false);
+}
+} // namespace
+
 Game::Game()
   : utils::CoreObject("game")
   , m_state(State{
@@ -19,18 +47,22 @@ Game::Game()
 {
   setService("game");
 
-  auto factory = noise::Noise2dFactory(noise::Type::White);
-  m_terrain    = std::make_unique<terrain::Terrain>(TERRAIN_SIZE,
-                                                 TERRAIN_SIZE,
-                                                 factory.createNoise2d({SEED}));
+  setNoiseType(noise::Type::White);
 }
 
 Game::~Game() {}
 
-std::vector<MenuShPtr> Game::generateMenus(float /*width*/, float /*height*/)
+std::vector<MenuShPtr> Game::generateMenus(float width, float height)
 {
-  info("Generate UI menus here");
-  return std::vector<MenuShPtr>();
+  std::vector<MenuShPtr> out;
+
+  auto menus = generateNoiseMenus(width, height);
+  for (auto &menu : menus)
+  {
+    out.push_back(menu);
+  }
+
+  return out;
 }
 
 void Game::performAction(float /*x*/, float /*y*/)
@@ -50,8 +82,6 @@ bool Game::step(float /*tDelta*/)
   {
     return true;
   }
-
-  info("Perform step method of the game");
 
   updateUI();
 
@@ -82,6 +112,19 @@ void Game::save(const std::string &fileName) const
   m_terrain->save(fileName);
 }
 
+void Game::generate()
+{
+  m_terrain->generate();
+}
+
+void Game::setNoiseType(const noise::Type &noise)
+{
+  auto factory = noise::Noise2dFactory(noise);
+  m_terrain    = std::make_unique<terrain::Terrain>(TERRAIN_SIZE,
+                                                 TERRAIN_SIZE,
+                                                 factory.createNoise2d({SEED}));
+}
+
 auto Game::terrain() const noexcept -> const terrain::Terrain &
 {
   return *m_terrain;
@@ -101,9 +144,30 @@ void Game::enable(bool enable)
   }
 }
 
-void Game::updateUI()
+void Game::updateUI() {}
+
+auto Game::generateNoiseMenus(int width, int height) -> std::vector<MenuShPtr>
 {
-  info("Perform update of UI menus");
+  std::vector<MenuShPtr> out{};
+  auto noises = generateMenu(olc::vi2d{width - DEFAULT_MENU_WIDTH, 0},
+                             olc::vi2d{DEFAULT_MENU_WIDTH, height},
+                             "",
+                             "noises",
+                             false);
+
+  auto title = generateMenu(olc::vi2d{width - DEFAULT_MENU_WIDTH, 0},
+                            olc::vi2d{DEFAULT_MENU_WIDTH, height},
+                            "Noises",
+                            "title",
+                            false);
+  noises->addMenu(title);
+
+  auto white = generateMenu(olc::vi2d{}, olc::vi2d{DEFAULT_MENU_WIDTH, 30}, "white", "white", true);
+  white->setSimpleAction([](Game &g) { g.setNoiseType(noise::Type::White); });
+  noises->addMenu(white);
+
+  out.push_back(noises);
+  return out;
 }
 
 bool Game::TimedMenu::update(bool active) noexcept

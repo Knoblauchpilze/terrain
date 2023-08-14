@@ -64,7 +64,7 @@ auto Terrain::at(const int x, const int y) const -> Type
           "invalid dimensions for " + std::to_string(w()) + "x" + std::to_string(h()));
   }
 
-  return m_land[y * w() + x];
+  return m_land[linear(x, y)];
 }
 
 void Terrain::load(const std::string &fileName)
@@ -79,14 +79,20 @@ void Terrain::save(const std::string &fileName) const
 
 void Terrain::generate()
 {
+  m_land.resize(w() * h());
+
   for (int y = 0; y < h(); ++y)
   {
     for (int x = 0; x < w(); ++x)
     {
-      const auto t = heightToTerrainType(m_noise->at(x, y));
-      m_land.push_back(t);
+      m_land[linear(x, y)] = heightToTerrainType(m_noise->at(x, y));
     }
   }
+}
+
+auto Terrain::linear(const int x, const int y) const noexcept -> int
+{
+  return y * w() + x;
 }
 
 } // namespace pge::terrain

@@ -94,11 +94,15 @@ void App::onInputs(const controls::State &c, const CoordinateFrame &cf)
   {
     m_game->togglePause();
   }
-  if (c.keys[controls::keys::S])
+  if (m_state->getScreen() == Screen::Game)
   {
-    if (m_state->getScreen() == Screen::Game)
+    if (c.keys[controls::keys::S])
     {
       m_state->save();
+    }
+    if (c.keys[controls::keys::G])
+    {
+      m_game->generate();
     }
   }
 }

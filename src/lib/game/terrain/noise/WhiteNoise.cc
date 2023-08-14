@@ -11,6 +11,7 @@ WhiteNoise::WhiteNoise(const Seed seed)
 
 auto WhiteNoise::at(float /*x*/, float /*y*/) const noexcept -> float
 {
+  // https://stackoverflow.com/questions/22923551/generating-number-0-1-using-mersenne-twister-c
   return m_distribution(m_generator);
 }
 

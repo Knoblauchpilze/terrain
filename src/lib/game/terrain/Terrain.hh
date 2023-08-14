@@ -22,6 +22,8 @@ class Terrain : public utils::CoreObject
   void load(const std::string &fileName);
   void save(const std::string &fileName) const;
 
+  void generate();
+
   private:
   int m_width;
   int m_height;
@@ -29,7 +31,7 @@ class Terrain : public utils::CoreObject
   noise::Noise2dPtr m_noise{};
   std::vector<Type> m_land{};
 
-  void generate();
+  auto linear(const int x, const int y) const noexcept -> int;
 };
 
 using TerrainPtr = std::unique_ptr<Terrain>;
