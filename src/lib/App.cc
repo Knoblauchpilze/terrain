@@ -1,9 +1,31 @@
 
 #include "App.hh"
+#include "Type.hh"
 
 namespace pge {
 
 const auto CURSOR_COLOR = olc::Pixel{255, 255, 0, alpha::SemiOpaque};
+
+namespace {
+auto colorFromTerrain(const terrain::Type &terrain) noexcept -> olc::Pixel
+{
+  switch (terrain)
+  {
+    case terrain::Type::Ocean:
+      return olc::DARK_BLUE;
+    case terrain::Type::Coast:
+      return olc::BLUE;
+    case terrain::Type::Plain:
+      return olc::GREEN;
+    case terrain::Type::Mountain:
+      return olc::BROWN;
+    case terrain::Type::Ice:
+      return olc::WHITE;
+    default:
+      return olc::RED;
+  }
+}
+} // namespace
 
 App::App(const AppDesc &desc)
   : PGEApp(desc)
@@ -103,7 +125,7 @@ void App::loadMenuResources()
 {
   // Generate the game state.
   m_state = std::make_shared<GameState>(olc::vi2d(ScreenWidth(), ScreenHeight()),
-                                        Screen::Home,
+                                        Screen::Game,
                                         *m_game);
 
   m_menus = m_game->generateMenus(ScreenWidth(), ScreenHeight());
@@ -135,6 +157,7 @@ void App::drawDecal(const RenderDesc &res)
     return;
   }
 
+  renderTerrain(res.cf);
   if (hasCursor())
   {
     renderCursor(res);
@@ -265,6 +288,25 @@ inline void App::drawWarpedRect(const SpriteDesc &t, const CoordinateFrame &cf)
   colors.fill(t.sprite.tint);
 
   DrawExplicitDecal(nullptr, p.data(), uvs.data(), colors.data());
+}
+
+inline void App::renderTerrain(const CoordinateFrame &cf)
+{
+  const auto &terrain = m_game->terrain();
+
+  for (auto y = 0; y < terrain.h(); ++y)
+  {
+    for (auto x = 0; x < terrain.w(); ++x)
+    {
+      SpriteDesc sp;
+      sp.x           = 1.0f * x;
+      sp.y           = 1.0f * y;
+      sp.radius      = 1.0f;
+      sp.sprite.tint = colorFromTerrain(terrain.at(x, y));
+
+      drawRect(sp, cf);
+    }
+  }
 }
 
 } // namespace pge
