@@ -36,16 +36,16 @@ auto heightToTerrainType(const float height) noexcept -> Type
 
 } // namespace
 
-Terrain::Terrain(const noise::Seed seed) noexcept
+Terrain::Terrain(ILatticePtr lattice) noexcept
   : utils::CoreObject("2d")
-  , m_grid(std::make_unique<Lattice>(seed))
+  , m_lattice(std::move(lattice))
 {
   setService("terrain");
 }
 
 auto Terrain::at(const float x, const float y) const -> Type
 {
-  return heightToTerrainType(m_grid->at(x, y));
+  return heightToTerrainType(m_lattice->at(x, y));
 }
 
 void Terrain::load(const std::string &fileName)

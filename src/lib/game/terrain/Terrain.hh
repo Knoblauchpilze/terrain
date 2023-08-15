@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Lattice.hh"
+#include "ILattice.hh"
 #include "Type.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
@@ -12,7 +12,7 @@ namespace pge::terrain {
 class Terrain : public utils::CoreObject
 {
   public:
-  Terrain(const noise::Seed seed) noexcept;
+  Terrain(ILatticePtr lattice) noexcept;
 
   auto at(const float x, const float y) const -> Type;
 
@@ -20,7 +20,7 @@ class Terrain : public utils::CoreObject
   void save(const std::string &fileName) const;
 
   private:
-  LatticePtr m_grid{};
+  ILatticePtr m_lattice{};
 };
 
 using TerrainPtr = std::unique_ptr<Terrain>;
