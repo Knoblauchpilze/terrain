@@ -1,9 +1,9 @@
 
-#include "NoiseGrid.hh"
+#include "Lattice.hh"
 #include "Bilinear.hh"
 #include "Noise.hh"
 
-namespace pge::noise {
+namespace pge {
 
 auto hashCoordinates(const int x, const int y) -> noise::Seed
 {
@@ -17,23 +17,23 @@ auto hashCoordinates(const int x, const int y) -> noise::Seed
   return hash;
 }
 
-NoiseGrid::NoiseGrid(const Seed seed) noexcept
+Lattice::Lattice(const noise::Seed seed) noexcept
   : m_seed(seed)
-  , m_noise(std::make_unique<Noise>())
+  , m_noise(std::make_unique<noise::Noise>())
   , m_interpolator(std::make_unique<interpolation::Bilinear>())
 {}
 
-void NoiseGrid::seed(const Seed seed)
+void Lattice::seed(const noise::Seed seed)
 {
   m_seed = seed;
 }
 
-auto NoiseGrid::at(const float x, const float y) -> float
+auto Lattice::at(const float x, const float y) -> float
 {
   return generateLatticePointsAndInterpolate(x, y);
 }
 
-auto NoiseGrid::generateLatticePointsAndInterpolate(const float x, const float y) -> float
+auto Lattice::generateLatticePointsAndInterpolate(const float x, const float y) -> float
 {
   const auto minX = static_cast<int>(std::floor(x));
   const auto maxX = static_cast<int>(std::ceil(x + 0.5f));
@@ -60,4 +60,4 @@ auto NoiseGrid::generateLatticePointsAndInterpolate(const float x, const float y
   return m_interpolator->interpolate(tl, tr, br, bl, px, py);
 }
 
-} // namespace pge::noise
+} // namespace pge

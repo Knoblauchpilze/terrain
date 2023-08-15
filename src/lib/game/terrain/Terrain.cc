@@ -38,7 +38,7 @@ auto heightToTerrainType(const float height) noexcept -> Type
 
 Terrain::Terrain(const noise::Seed seed) noexcept
   : utils::CoreObject("2d")
-  , m_grid(std::make_unique<noise::NoiseGrid>(seed))
+  , m_grid(std::make_unique<Lattice>(seed))
 {
   setService("terrain");
 }

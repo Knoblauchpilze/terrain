@@ -5,25 +5,25 @@
 #include "INoise.hh"
 #include <memory>
 
-namespace pge::noise {
+namespace pge {
 
-class NoiseGrid
+class Lattice
 {
   public:
-  NoiseGrid(const Seed seed) noexcept;
-  ~NoiseGrid() = default;
+  Lattice(const noise::Seed seed) noexcept;
+  ~Lattice() = default;
 
-  void seed(const Seed seed);
+  void seed(const noise::Seed seed);
   auto at(const float x, const float y) -> float;
 
   private:
-  Seed m_seed{};
-  INoisePtr m_noise;
+  noise::Seed m_seed{};
+  noise::INoisePtr m_noise;
   interpolation::IInterpolatorPtr m_interpolator;
 
   auto generateLatticePointsAndInterpolate(const float x, const float y) -> float;
 };
 
-using NoiseGridPtr = std::unique_ptr<NoiseGrid>;
+using LatticePtr = std::unique_ptr<Lattice>;
 
-} // namespace pge::noise
+} // namespace pge
