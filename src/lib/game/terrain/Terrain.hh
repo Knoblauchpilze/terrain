@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "NoiseGrid.hh"
+#include "Lattice.hh"
 #include "Type.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
@@ -20,7 +20,7 @@ class Terrain : public utils::CoreObject
   void save(const std::string &fileName) const;
 
   private:
-  noise::NoiseGridPtr m_grid{};
+  LatticePtr m_grid{};
 };
 
 using TerrainPtr = std::unique_ptr<Terrain>;
