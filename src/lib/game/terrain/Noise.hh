@@ -1,27 +1,23 @@
 
 #pragma once
 
-#include <memory>
+#include "INoise.hh"
 #include <random>
 
 namespace pge::noise {
 
-class Noise
+class Noise : public INoise
 {
   public:
-  using Seed = int;
-
   Noise() noexcept;
-  ~Noise() = default;
+  ~Noise() override = default;
 
-  void seed(const Seed seed);
-  auto next() const noexcept -> float;
+  void seed(const Seed seed) override;
+  auto next() const noexcept -> float override;
 
   private:
   mutable std::mt19937 m_generator;
   mutable std::uniform_real_distribution<float> m_distribution;
 };
-
-using NoisePtr = std::unique_ptr<Noise>;
 
 } // namespace pge::noise

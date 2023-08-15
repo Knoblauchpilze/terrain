@@ -12,7 +12,7 @@ namespace pge::terrain {
 class Terrain : public utils::CoreObject
 {
   public:
-  Terrain(const noise::Noise::Seed seed) noexcept;
+  Terrain(const noise::Seed seed) noexcept;
 
   auto at(const float x, const float y) const -> Type;
 

@@ -148,7 +148,7 @@ class Game : public utils::CoreObject
   Menus m_menus{};
 
   static constexpr auto DEFAULT_SEED = 1993;
-  noise::Noise::Seed m_nextSeed{DEFAULT_SEED};
+  noise::Seed m_nextSeed{DEFAULT_SEED};
   terrain::TerrainPtr m_terrain{nullptr};
 };
 
