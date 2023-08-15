@@ -11,15 +11,15 @@ auto colorFromTerrain(const terrain::Type &terrain) noexcept -> olc::Pixel
 {
   switch (terrain)
   {
-    case terrain::Type::Ocean:
+    case terrain::Type::OCEAN:
       return olc::DARK_BLUE;
-    case terrain::Type::Coast:
+    case terrain::Type::COAST:
       return olc::BLUE;
-    case terrain::Type::Plain:
+    case terrain::Type::PLAIN:
       return olc::GREEN;
-    case terrain::Type::Mountain:
+    case terrain::Type::MOUNTAIN:
       return olc::BROWN;
-    case terrain::Type::Ice:
+    case terrain::Type::ICE:
       return olc::WHITE;
     default:
       return olc::RED;

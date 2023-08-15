@@ -14,39 +14,38 @@ auto heightToTerrainType(const float height) noexcept -> Type
 {
   if (height < OCEAN_THRESHOLD)
   {
-    return Type::Ocean;
+    return Type::OCEAN;
   }
   else if (height < COAST_THRESHOLD)
   {
-    return Type::Coast;
+    return Type::COAST;
   }
   else if (height < PLAIN_THRESHOLD)
   {
-    return Type::Plain;
+    return Type::PLAIN;
   }
   else if (height < MOUNTAIN_THRESHOLD)
   {
-    return Type::Mountain;
+    return Type::MOUNTAIN;
   }
   else
   {
-    return Type::Ice;
+    return Type::ICE;
   }
 }
 
 } // namespace
 
-Terrain::Terrain(noise::Noise2dPtr noise) noexcept
+Terrain::Terrain(const noise::Noise::Seed seed) noexcept
   : utils::CoreObject("2d")
-  , m_noise(std::move(noise))
+  , m_grid(std::make_unique<noise::NoiseGrid>(seed))
 {
   setService("terrain");
 }
 
-auto Terrain::at(const int x, const int y) const -> Type
+auto Terrain::at(const float x, const float y) const -> Type
 {
-  m_noise->seed(x, y);
-  return heightToTerrainType(m_noise->next());
+  return heightToTerrainType(m_grid->at(x, y));
 }
 
 void Terrain::load(const std::string &fileName)
