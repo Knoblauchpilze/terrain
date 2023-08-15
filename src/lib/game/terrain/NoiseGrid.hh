@@ -1,8 +1,8 @@
 
 #pragma once
 
+#include "IInterpolator.hh"
 #include "INoise.hh"
-#include "Interpolator.hh"
 #include <memory>
 
 namespace pge::noise {
@@ -19,7 +19,7 @@ class NoiseGrid
   private:
   Seed m_seed{};
   INoisePtr m_noise;
-  interpolation::Interpolator m_interpolator{interpolation::Algorithm::BILINEAR};
+  interpolation::IInterpolatorPtr m_interpolator;
 
   auto generateLatticePointsAndInterpolate(const float x, const float y) -> float;
 };

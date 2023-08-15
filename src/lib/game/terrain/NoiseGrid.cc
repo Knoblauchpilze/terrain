@@ -1,5 +1,6 @@
 
 #include "NoiseGrid.hh"
+#include "Bilinear.hh"
 #include "Noise.hh"
 
 namespace pge::noise {
@@ -19,6 +20,7 @@ auto hashCoordinates(const int x, const int y) -> noise::Seed
 NoiseGrid::NoiseGrid(const Seed seed) noexcept
   : m_seed(seed)
   , m_noise(std::make_unique<Noise>())
+  , m_interpolator(std::make_unique<interpolation::Bilinear>())
 {}
 
 void NoiseGrid::seed(const Seed seed)
@@ -55,7 +57,7 @@ auto NoiseGrid::generateLatticePointsAndInterpolate(const float x, const float y
   const auto px = (x - minX) / (maxX - minX);
   const auto py = (y - minY) / (maxY - minY);
 
-  return m_interpolator.interpolate(tl, tr, br, bl, px, py);
+  return m_interpolator->interpolate(tl, tr, br, bl, px, py);
 }
 
 } // namespace pge::noise

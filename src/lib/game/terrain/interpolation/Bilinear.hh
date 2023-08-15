@@ -1,26 +1,22 @@
 
 #pragma once
 
-#include "Algorithm.hh"
-#include <vector>
+#include "IInterpolator.hh"
 
 namespace pge::interpolation {
 
-class Interpolator
+class Bilinear : public IInterpolator
 {
   public:
-  Interpolator(const Algorithm &algorithm) noexcept;
-  ~Interpolator() = default;
+  Bilinear() noexcept  = default;
+  ~Bilinear() override = default;
 
   auto interpolate(const float tl,
                    const float tr,
                    const float br,
                    const float bl,
                    const float px,
-                   const float py) const -> float;
-
-  private:
-  Algorithm m_algorithm;
+                   const float py) const -> float override;
 };
 
 } // namespace pge::interpolation
