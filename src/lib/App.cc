@@ -298,9 +298,18 @@ inline void App::renderTerrain(const CoordinateFrame &cf)
 {
   const auto &terrain = m_game->terrain();
 
-  for (auto y = 0; y < 10; ++y)
+  const auto vp     = cf.tilesViewport();
+  const auto center = vp.center();
+  const auto dims   = vp.dims();
+
+  const auto xMin = static_cast<int>(std::floor(center.x - dims.x / 2.0f));
+  const auto xMax = static_cast<int>(std::ceil(center.x + dims.x / 2.0f));
+  const auto yMin = static_cast<int>(std::floor(center.y - dims.y / 2.0f));
+  const auto yMax = static_cast<int>(std::ceil(center.y + dims.y / 2.0f));
+
+  for (auto y = yMin; y <= yMax; ++y)
   {
-    for (auto x = 0; x < 10; ++x)
+    for (auto x = xMin; x <= xMax; ++x)
     {
       SpriteDesc sp;
       sp.x           = 1.0f * x;
