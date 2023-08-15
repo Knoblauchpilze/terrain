@@ -1,24 +1,13 @@
 
 #include "ValueLattice.hh"
 #include "Bilinear.hh"
+#include "Hasher.hh"
 #include "WhiteNoise.hh"
 
 namespace pge::lattice {
 
-auto hashCoordinates(const int x, const int y) -> noise::Seed
-{
-  const auto px = (x < 0 ? -2 * x + 1 : 2 * x);
-  const auto py = (y < 0 ? -2 * y + 1 : 2 * y);
-
-  auto hash = px;
-  hash ^= py << 16;
-  hash ^= py >> 16;
-
-  return hash;
-}
-
 ValueLattice::ValueLattice(const noise::Seed seed) noexcept
-  : m_seed(seed)
+  : m_hasher(std::make_unique<Hasher>(seed))
   , m_noise(std::make_unique<noise::WhiteNoise>())
   , m_interpolator(std::make_unique<interpolation::Bilinear>())
 {}
@@ -38,9 +27,7 @@ auto ValueLattice::generateLatticePointsAndInterpolate(const float x, const floa
 
   // https://gamedev.stackexchange.com/questions/183142/how-can-i-create-a-persistent-seed-for-each-chunk-of-an-infinite-procedural-worl
   auto latticeValue = [this](const int x, const int y) -> float {
-    auto seed1d = hashCoordinates(x, y) ^ m_seed;
-    m_noise->seed(seed1d);
-
+    m_noise->seed(m_hasher->hash(x, y));
     return m_noise->next();
   };
 
