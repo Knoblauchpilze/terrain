@@ -1,7 +1,7 @@
 
 #include "Interpolator.hh"
 
-namespace pge::noise::interpolation {
+namespace pge::interpolation {
 namespace {
 auto bilinear(const float tl,
               const float tr,
@@ -36,4 +36,4 @@ auto Interpolator::interpolate(const float tl,
   }
 }
 
-} // namespace pge::noise::interpolation
+} // namespace pge::interpolation

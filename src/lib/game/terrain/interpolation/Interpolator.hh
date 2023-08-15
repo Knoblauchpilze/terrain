@@ -1,10 +1,10 @@
 
 #pragma once
 
-#include "InterpolationAlgorithm.hh"
+#include "Algorithm.hh"
 #include <vector>
 
-namespace pge::noise::interpolation {
+namespace pge::interpolation {
 
 class Interpolator
 {
@@ -23,4 +23,4 @@ class Interpolator
   Algorithm m_algorithm;
 };
 
-} // namespace pge::noise::interpolation
+} // namespace pge::interpolation
