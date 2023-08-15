@@ -1,10 +1,10 @@
 
 #pragma once
 
+#include "IHasher.hh"
 #include "IInterpolator.hh"
 #include "ILattice.hh"
 #include "INoise.hh"
-#include <memory>
 
 namespace pge::lattice {
 
@@ -17,7 +17,7 @@ class ValueLattice : public ILattice
   auto at(const float x, const float y) -> float override;
 
   private:
-  noise::Seed m_seed{};
+  IHasherPtr m_hasher;
   noise::INoisePtr m_noise;
   interpolation::IInterpolatorPtr m_interpolator;
 
