@@ -3,7 +3,7 @@
 
 #include <memory>
 
-namespace pge {
+namespace pge::lattice {
 
 class ILattice
 {
@@ -15,4 +15,4 @@ class ILattice
 
 using ILatticePtr = std::unique_ptr<ILattice>;
 
-} // namespace pge
+} // namespace pge::lattice

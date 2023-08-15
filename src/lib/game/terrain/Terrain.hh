@@ -12,7 +12,7 @@ namespace pge::terrain {
 class Terrain : public utils::CoreObject
 {
   public:
-  Terrain(ILatticePtr lattice) noexcept;
+  Terrain(lattice::ILatticePtr lattice) noexcept;
 
   auto at(const float x, const float y) const -> Type;
 
@@ -20,7 +20,7 @@ class Terrain : public utils::CoreObject
   void save(const std::string &fileName) const;
 
   private:
-  ILatticePtr m_lattice{};
+  lattice::ILatticePtr m_lattice{};
 };
 
 using TerrainPtr = std::unique_ptr<Terrain>;

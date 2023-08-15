@@ -106,7 +106,7 @@ void Game::save(const std::string &fileName) const
 void Game::generate()
 {
   const auto seed = m_nextSeed;
-  auto lattice    = std::make_unique<Lattice>(seed);
+  auto lattice    = std::make_unique<lattice::Lattice>(seed);
   m_terrain       = std::make_unique<terrain::Terrain>(std::move(lattice));
   ++m_nextSeed;
 }

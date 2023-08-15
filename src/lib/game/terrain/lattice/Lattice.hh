@@ -6,7 +6,7 @@
 #include "INoise.hh"
 #include <memory>
 
-namespace pge {
+namespace pge::lattice {
 
 class Lattice : public ILattice
 {
@@ -26,4 +26,4 @@ class Lattice : public ILattice
 
 using LatticePtr = std::unique_ptr<Lattice>;
 
-} // namespace pge
+} // namespace pge::lattice
