@@ -2,19 +2,19 @@
 #pragma once
 
 #include "IInterpolator.hh"
+#include "ILattice.hh"
 #include "INoise.hh"
 #include <memory>
 
 namespace pge {
 
-class Lattice
+class Lattice : public ILattice
 {
   public:
   Lattice(const noise::Seed seed) noexcept;
-  ~Lattice() = default;
+  ~Lattice() override = default;
 
-  void seed(const noise::Seed seed);
-  auto at(const float x, const float y) -> float;
+  auto at(const float x, const float y) -> float override;
 
   private:
   noise::Seed m_seed{};

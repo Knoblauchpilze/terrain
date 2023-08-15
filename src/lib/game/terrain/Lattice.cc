@@ -23,11 +23,6 @@ Lattice::Lattice(const noise::Seed seed) noexcept
   , m_interpolator(std::make_unique<interpolation::Bilinear>())
 {}
 
-void Lattice::seed(const noise::Seed seed)
-{
-  m_seed = seed;
-}
-
 auto Lattice::at(const float x, const float y) -> float
 {
   return generateLatticePointsAndInterpolate(x, y);
