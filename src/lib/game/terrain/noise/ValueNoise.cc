@@ -3,13 +3,15 @@
 
 namespace pge::noise {
 
-ValueNoise::ValueNoise(const Seed /*seed*/)
-  : Noise2d(Type::Value)
+ValueNoise::ValueNoise(const Seed seed)
+  : Noise2d(Type::Value, seed)
 {}
 
-auto ValueNoise::at(float x, float y) const noexcept -> float
+auto ValueNoise::next() const noexcept -> float
 {
-  return (x + y) / 20.0f;
+  return 2.0f;
 }
+
+void ValueNoise::seed(const Seed /*seed*/) {}
 
 } // namespace pge::noise

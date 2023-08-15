@@ -5,9 +5,6 @@
 
 namespace pge {
 
-constexpr auto TERRAIN_SIZE = 10;
-constexpr auto SEED         = 1993;
-
 constexpr auto DEFAULT_MENU_WIDTH = 100;
 
 namespace {
@@ -41,7 +38,7 @@ Game::Game()
 {
   setService("game");
 
-  setNoiseType(noise::Type::White);
+  generate();
 }
 
 Game::~Game() {}
@@ -108,15 +105,20 @@ void Game::save(const std::string &fileName) const
 
 void Game::generate()
 {
-  m_terrain->generate();
+  auto factory = noise::Noise2dFactory(m_type);
+  m_terrain    = std::make_unique<terrain::Terrain>(factory.createNoise2d({m_nextSeed}));
+  ++m_nextSeed;
 }
 
 void Game::setNoiseType(const noise::Type &noise)
 {
-  auto factory = noise::Noise2dFactory(noise);
-  m_terrain    = std::make_unique<terrain::Terrain>(TERRAIN_SIZE,
-                                                 TERRAIN_SIZE,
-                                                 factory.createNoise2d({SEED}));
+  if (noise == m_type)
+  {
+    return;
+  }
+
+  m_type = noise;
+  generate();
 }
 
 auto Game::terrain() const noexcept -> const terrain::Terrain &

@@ -36,35 +36,17 @@ auto heightToTerrainType(const float height) noexcept -> Type
 
 } // namespace
 
-Terrain::Terrain(int width, int height, noise::Noise2dPtr noise) noexcept
-  : utils::CoreObject(std::to_string(width) + "x" + std::to_string(height))
-  , m_width(width)
-  , m_height(height)
+Terrain::Terrain(noise::Noise2dPtr noise) noexcept
+  : utils::CoreObject("2d")
   , m_noise(std::move(noise))
 {
   setService("terrain");
-  generate();
-}
-
-auto Terrain::w() const noexcept -> int
-{
-  return m_width;
-}
-
-auto Terrain::h() const noexcept -> int
-{
-  return m_height;
 }
 
 auto Terrain::at(const int x, const int y) const -> Type
 {
-  if (x < 0 || x >= w() || y < 0 || y >= h())
-  {
-    error("can't get terrain at " + std::to_string(x) + "x" + std::to_string(y),
-          "invalid dimensions for " + std::to_string(w()) + "x" + std::to_string(h()));
-  }
-
-  return m_land[linear(x, y)];
+  m_noise->seed(x, y);
+  return heightToTerrainType(m_noise->next());
 }
 
 void Terrain::load(const std::string &fileName)
@@ -75,24 +57,6 @@ void Terrain::load(const std::string &fileName)
 void Terrain::save(const std::string &fileName) const
 {
   warn("Should save " + fileName);
-}
-
-void Terrain::generate()
-{
-  m_land.resize(w() * h());
-
-  for (int y = 0; y < h(); ++y)
-  {
-    for (int x = 0; x < w(); ++x)
-    {
-      m_land[linear(x, y)] = heightToTerrainType(m_noise->at(x, y));
-    }
-  }
-}
-
-auto Terrain::linear(const int x, const int y) const noexcept -> int
-{
-  return y * w() + x;
 }
 
 } // namespace pge::terrain

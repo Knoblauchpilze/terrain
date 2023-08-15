@@ -149,6 +149,9 @@ class Game : public utils::CoreObject
   /// simulation.
   Menus m_menus{};
 
+  noise::Type m_type{noise::Type::White};
+  static constexpr auto DEFAULT_SEED = 1993;
+  noise::Noise2d::Seed m_nextSeed{DEFAULT_SEED};
   terrain::TerrainPtr m_terrain{nullptr};
 };
 

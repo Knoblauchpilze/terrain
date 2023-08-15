@@ -12,26 +12,15 @@ namespace pge::terrain {
 class Terrain : public utils::CoreObject
 {
   public:
-  Terrain(int width, int height, noise::Noise2dPtr noise) noexcept;
-
-  auto w() const noexcept -> int;
-  auto h() const noexcept -> int;
+  Terrain(noise::Noise2dPtr noise) noexcept;
 
   auto at(const int x, const int y) const -> Type;
 
   void load(const std::string &fileName);
   void save(const std::string &fileName) const;
 
-  void generate();
-
   private:
-  int m_width;
-  int m_height;
-
   noise::Noise2dPtr m_noise{};
-  std::vector<Type> m_land{};
-
-  auto linear(const int x, const int y) const noexcept -> int;
 };
 
 using TerrainPtr = std::unique_ptr<Terrain>;

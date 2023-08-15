@@ -298,9 +298,9 @@ inline void App::renderTerrain(const CoordinateFrame &cf)
 {
   const auto &terrain = m_game->terrain();
 
-  for (auto y = 0; y < terrain.h(); ++y)
+  for (auto y = 0; y < 10; ++y)
   {
-    for (auto x = 0; x < terrain.w(); ++x)
+    for (auto x = 0; x < 10; ++x)
     {
       SpriteDesc sp;
       sp.x           = 1.0f * x;
