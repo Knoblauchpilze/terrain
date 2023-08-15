@@ -1,7 +1,7 @@
 
 #include "Game.hh"
-#include "Lattice.hh"
 #include "Menu.hh"
+#include "ValueLattice.hh"
 
 namespace pge {
 
@@ -106,7 +106,7 @@ void Game::save(const std::string &fileName) const
 void Game::generate()
 {
   const auto seed = m_nextSeed;
-  auto lattice    = std::make_unique<lattice::Lattice>(seed);
+  auto lattice    = std::make_unique<lattice::ValueLattice>(seed);
   m_terrain       = std::make_unique<terrain::Terrain>(std::move(lattice));
   ++m_nextSeed;
 }

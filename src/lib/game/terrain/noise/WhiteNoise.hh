@@ -6,11 +6,11 @@
 
 namespace pge::noise {
 
-class Noise : public INoise
+class WhiteNoise : public INoise
 {
   public:
-  Noise() noexcept;
-  ~Noise() override = default;
+  WhiteNoise() noexcept;
+  ~WhiteNoise() override = default;
 
   void seed(const Seed seed) override;
   auto next() const noexcept -> float override;
