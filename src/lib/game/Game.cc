@@ -1,7 +1,6 @@
 
 #include "Game.hh"
 #include "Menu.hh"
-#include "Noise2dFactory.hh"
 
 namespace pge {
 
@@ -105,20 +104,9 @@ void Game::save(const std::string &fileName) const
 
 void Game::generate()
 {
-  auto factory = noise::Noise2dFactory(m_type);
-  m_terrain    = std::make_unique<terrain::Terrain>(factory.createNoise2d({m_nextSeed}));
+  const auto seed = m_nextSeed;
+  m_terrain       = std::make_unique<terrain::Terrain>(seed);
   ++m_nextSeed;
-}
-
-void Game::setNoiseType(const noise::Type &noise)
-{
-  if (noise == m_type)
-  {
-    return;
-  }
-
-  m_type = noise;
-  generate();
 }
 
 auto Game::terrain() const noexcept -> const terrain::Terrain &
@@ -157,14 +145,6 @@ auto Game::generateNoiseMenus(int width, int height) -> std::vector<MenuShPtr>
                             "title",
                             false);
   noises->addMenu(title);
-
-  auto white = generateMenu(olc::vi2d{}, olc::vi2d{DEFAULT_MENU_WIDTH, 30}, "white", "white", true);
-  white->setSimpleAction([](Game &g) { g.setNoiseType(noise::Type::White); });
-  noises->addMenu(white);
-
-  auto value = generateMenu(olc::vi2d{}, olc::vi2d{DEFAULT_MENU_WIDTH, 30}, "value", "value", true);
-  value->setSimpleAction([](Game &g) { g.setNoiseType(noise::Type::Value); });
-  noises->addMenu(value);
 
   out.push_back(noises);
   return out;

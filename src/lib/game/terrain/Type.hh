@@ -5,11 +5,11 @@ namespace pge::terrain {
 
 enum class Type
 {
-  Ocean,
-  Coast,
-  Plain,
-  Mountain,
-  Ice
+  OCEAN,
+  COAST,
+  PLAIN,
+  MOUNTAIN,
+  ICE
 };
 
 } // namespace pge::terrain
