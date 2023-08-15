@@ -3,7 +3,7 @@
 #include "Bilinear.hh"
 #include "Noise.hh"
 
-namespace pge {
+namespace pge::lattice {
 
 auto hashCoordinates(const int x, const int y) -> noise::Seed
 {
@@ -55,4 +55,4 @@ auto Lattice::generateLatticePointsAndInterpolate(const float x, const float y) 
   return m_interpolator->interpolate(tl, tr, br, bl, px, py);
 }
 
-} // namespace pge
+} // namespace pge::lattice

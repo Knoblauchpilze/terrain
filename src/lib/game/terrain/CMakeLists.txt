@@ -11,7 +11,10 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/noise
 	)
 
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/lattice
+	)
+
 target_sources (terrain_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/Lattice.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Terrain.cc
 	)
