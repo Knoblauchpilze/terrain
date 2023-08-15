@@ -6,6 +6,7 @@
 /// https://en.m.wikipedia.org/wiki/Value_noise#:~:text=Value%20noise%20is%20a%20type,Perlin%20noise%20and%20Simplex%20noise.
 /// https://rtouti.github.io/graphics/perlin-noise-algorithm
 /// https://math.stackexchange.com/questions/184121/why-is-gradient-noise-better-quality-than-value-noise
+/// https://www.scratchapixel.com/lessons/procedural-generation-virtual-worlds/procedural-patterns-noise-part-1/creating-simple-1D-noise.html
 
 #include "App.hh"
 #include "AppDesc.hh"

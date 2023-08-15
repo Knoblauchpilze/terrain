@@ -14,12 +14,15 @@ class Noise2d
   virtual ~Noise2d() = default;
 
   auto type() const noexcept -> Type;
-  virtual auto at(float x, float y) const noexcept -> float = 0;
+  void seed(const int x, const int y);
+  virtual auto next() const noexcept -> float = 0;
 
   protected:
   Type m_type;
+  Seed m_seed;
 
-  Noise2d(const Type &type) noexcept;
+  Noise2d(const Type &type, const Seed seed) noexcept;
+  virtual void seed(const Seed seed) = 0;
 };
 
 using Noise2dPtr = std::unique_ptr<Noise2d>;

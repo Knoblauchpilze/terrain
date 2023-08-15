@@ -11,7 +11,10 @@ class ValueNoise : public Noise2d
   ValueNoise(const Seed seed);
   ~ValueNoise() override = default;
 
-  auto at(float x, float y) const noexcept -> float override;
+  auto next() const noexcept -> float override;
+
+  protected:
+  void seed(const Seed seed) override;
 };
 
 } // namespace pge::noise

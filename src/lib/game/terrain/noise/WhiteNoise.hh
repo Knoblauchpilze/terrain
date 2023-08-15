@@ -12,7 +12,10 @@ class WhiteNoise : public Noise2d
   WhiteNoise(const Seed seed);
   ~WhiteNoise() override = default;
 
-  auto at(float x, float y) const noexcept -> float override;
+  auto next() const noexcept -> float override;
+
+  protected:
+  void seed(const Seed seed) override;
 
   private:
   mutable std::mt19937 m_generator;
