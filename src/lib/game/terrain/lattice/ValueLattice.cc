@@ -1,7 +1,7 @@
 
-#include "Lattice.hh"
+#include "ValueLattice.hh"
 #include "Bilinear.hh"
-#include "Noise.hh"
+#include "WhiteNoise.hh"
 
 namespace pge::lattice {
 
@@ -17,18 +17,18 @@ auto hashCoordinates(const int x, const int y) -> noise::Seed
   return hash;
 }
 
-Lattice::Lattice(const noise::Seed seed) noexcept
+ValueLattice::ValueLattice(const noise::Seed seed) noexcept
   : m_seed(seed)
-  , m_noise(std::make_unique<noise::Noise>())
+  , m_noise(std::make_unique<noise::WhiteNoise>())
   , m_interpolator(std::make_unique<interpolation::Bilinear>())
 {}
 
-auto Lattice::at(const float x, const float y) -> float
+auto ValueLattice::at(const float x, const float y) -> float
 {
   return generateLatticePointsAndInterpolate(x, y);
 }
 
-auto Lattice::generateLatticePointsAndInterpolate(const float x, const float y) -> float
+auto ValueLattice::generateLatticePointsAndInterpolate(const float x, const float y) -> float
 {
   const auto minX = static_cast<int>(std::floor(x));
   const auto maxX = static_cast<int>(std::ceil(x + 0.5f));

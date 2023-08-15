@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Noise.hh"
+#include "INoise.hh"
 #include "Terrain.hh"
 #include <core_utils/CoreObject.hh>
 #include <core_utils/TimeUtils.hh>

@@ -8,11 +8,11 @@
 
 namespace pge::lattice {
 
-class Lattice : public ILattice
+class ValueLattice : public ILattice
 {
   public:
-  Lattice(const noise::Seed seed) noexcept;
-  ~Lattice() override = default;
+  ValueLattice(const noise::Seed seed) noexcept;
+  ~ValueLattice() override = default;
 
   auto at(const float x, const float y) -> float override;
 
@@ -23,7 +23,5 @@ class Lattice : public ILattice
 
   auto generateLatticePointsAndInterpolate(const float x, const float y) -> float;
 };
-
-using LatticePtr = std::unique_ptr<Lattice>;
 
 } // namespace pge::lattice
