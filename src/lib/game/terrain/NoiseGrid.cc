@@ -1,9 +1,10 @@
 
 #include "NoiseGrid.hh"
+#include "Noise.hh"
 
 namespace pge::noise {
 
-auto hashCoordinates(const int x, const int y) -> noise::Noise::Seed
+auto hashCoordinates(const int x, const int y) -> noise::Seed
 {
   const auto px = (x < 0 ? -2 * x + 1 : 2 * x);
   const auto py = (y < 0 ? -2 * y + 1 : 2 * y);
@@ -15,14 +16,14 @@ auto hashCoordinates(const int x, const int y) -> noise::Noise::Seed
   return hash;
 }
 
-NoiseGrid::NoiseGrid(const Noise::Seed seed) noexcept
+NoiseGrid::NoiseGrid(const Seed seed) noexcept
   : m_seed(seed)
   , m_noise(std::make_unique<Noise>())
 {}
 
-void NoiseGrid::seed(const Noise::Seed seed)
+void NoiseGrid::seed(const Seed seed)
 {
-  m_noise->seed(seed);
+  m_seed = seed;
 }
 
 auto NoiseGrid::at(const float x, const float y) -> float

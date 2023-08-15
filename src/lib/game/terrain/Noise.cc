@@ -8,7 +8,8 @@ constexpr auto MIN_NOISE_VALUE = 0.0f;
 constexpr auto MAX_NOISE_VALUE = 1.0f;
 
 Noise::Noise() noexcept
-  : m_generator(std::chrono::system_clock::now().time_since_epoch().count())
+  : INoise()
+  , m_generator(std::chrono::system_clock::now().time_since_epoch().count())
   , m_distribution(MIN_NOISE_VALUE, MAX_NOISE_VALUE)
 {}
 

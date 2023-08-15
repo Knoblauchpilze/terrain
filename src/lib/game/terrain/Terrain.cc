@@ -36,7 +36,7 @@ auto heightToTerrainType(const float height) noexcept -> Type
 
 } // namespace
 
-Terrain::Terrain(const noise::Noise::Seed seed) noexcept
+Terrain::Terrain(const noise::Seed seed) noexcept
   : utils::CoreObject("2d")
   , m_grid(std::make_unique<noise::NoiseGrid>(seed))
 {
