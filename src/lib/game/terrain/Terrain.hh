@@ -14,12 +14,14 @@ class Terrain : public utils::CoreObject
   public:
   Terrain(lattice::ILatticePtr lattice) noexcept;
 
+  auto height(const float x, const float y) const -> float;
   auto at(const float x, const float y) const -> Type;
 
   void load(const std::string &fileName);
   void save(const std::string &fileName) const;
 
   private:
+  float m_scale{2.0f};
   lattice::ILatticePtr m_lattice{};
 };
 

@@ -43,9 +43,14 @@ Terrain::Terrain(lattice::ILatticePtr lattice) noexcept
   setService("terrain");
 }
 
+auto Terrain::height(const float x, const float y) const -> float
+{
+  return m_lattice->at(x / m_scale, y / m_scale);
+}
+
 auto Terrain::at(const float x, const float y) const -> Type
 {
-  return heightToTerrainType(m_lattice->at(x, y));
+  return heightToTerrainType(height(x, y));
 }
 
 void Terrain::load(const std::string &fileName)
