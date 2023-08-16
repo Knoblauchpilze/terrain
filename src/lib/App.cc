@@ -25,6 +25,13 @@ auto colorFromTerrain(const terrain::Type &terrain) noexcept -> olc::Pixel
       return olc::RED;
   }
 }
+
+auto colorFromHeight(const float height) noexcept -> olc::Pixel
+{
+  const auto c = static_cast<unsigned>(
+    std::max(0.0f, std::min(255.0f, std::round(255.0f * height))));
+  return olc::Pixel(c, c, c);
+}
 } // namespace
 
 App::App(const AppDesc &desc)
@@ -103,6 +110,10 @@ void App::onInputs(const controls::State &c, const CoordinateFrame &cf)
     if (c.keys[controls::keys::G])
     {
       m_game->generate();
+    }
+    if (c.keys[controls::keys::M])
+    {
+      m_mode = (DisplayMode::HEIGHT == m_mode ? DisplayMode::TERRAIN : DisplayMode::HEIGHT);
     }
   }
 }
@@ -312,10 +323,17 @@ inline void App::renderTerrain(const CoordinateFrame &cf)
     for (auto x = xMin; x <= xMax; ++x)
     {
       SpriteDesc sp;
-      sp.x           = 1.0f * x;
-      sp.y           = 1.0f * y;
-      sp.radius      = 1.0f;
-      sp.sprite.tint = colorFromTerrain(terrain.at(x, y));
+      sp.x      = 1.0f * x;
+      sp.y      = 1.0f * y;
+      sp.radius = 1.0f;
+      if (DisplayMode::HEIGHT == m_mode)
+      {
+        sp.sprite.tint = colorFromHeight(terrain.height(x, y));
+      }
+      else
+      {
+        sp.sprite.tint = colorFromTerrain(terrain.at(x, y));
+      }
 
       drawRect(sp, cf);
     }
