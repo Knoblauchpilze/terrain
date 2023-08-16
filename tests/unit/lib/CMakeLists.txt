@@ -10,3 +10,7 @@ add_subdirectory(
 add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/coordinates
 	)
+
+add_subdirectory(
+	${CMAKE_CURRENT_SOURCE_DIR}/game
+	)
