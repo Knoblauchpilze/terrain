@@ -1,7 +1,10 @@
 
 #include "Game.hh"
+#include "Bilinear.hh"
+#include "Hasher.hh"
 #include "Menu.hh"
 #include "ValueLattice.hh"
+#include "WhiteNoise.hh"
 
 namespace pge {
 
@@ -105,9 +108,14 @@ void Game::save(const std::string &fileName) const
 
 void Game::generate()
 {
-  const auto seed = m_nextSeed;
-  auto lattice    = std::make_unique<lattice::ValueLattice>(seed);
-  m_terrain       = std::make_unique<terrain::Terrain>(std::move(lattice));
+  const auto seed   = m_nextSeed;
+  auto hasher       = std::make_unique<lattice::Hasher>(seed);
+  auto noise        = std::make_unique<noise::WhiteNoise>();
+  auto interpolator = std::make_unique<interpolation::Bilinear>();
+  auto lattice      = std::make_unique<lattice::ValueLattice>(std::move(hasher),
+                                                         std::move(noise),
+                                                         std::move(interpolator));
+  m_terrain         = std::make_unique<terrain::Terrain>(std::move(lattice));
   ++m_nextSeed;
 }
 
