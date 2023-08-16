@@ -10,10 +10,10 @@ auto Bilinear::interpolate(const float tl,
                            const float px,
                            const float py) const -> float
 {
-  const auto top    = px * tl + (1.0f - px) * tr;
-  const auto bottom = px * bl + (1.0f - px) * br;
+  const auto top    = (1.0f - px) * tl + px * tr;
+  const auto bottom = (1.0f - px) * bl + px * br;
 
-  return py * bottom + (1.0f - py) * top;
+  return (1.0f - py) * bottom + py * top;
 }
 
 } // namespace pge::interpolation
