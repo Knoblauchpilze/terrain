@@ -1,15 +1,15 @@
 
 #include "ValueLattice.hh"
-#include "Bilinear.hh"
-#include "Hasher.hh"
-#include "WhiteNoise.hh"
+#include <cmath>
 
 namespace pge::lattice {
 
-ValueLattice::ValueLattice(const noise::Seed seed) noexcept
-  : m_hasher(std::make_unique<Hasher>(seed))
-  , m_noise(std::make_unique<noise::WhiteNoise>())
-  , m_interpolator(std::make_unique<interpolation::Bilinear>())
+ValueLattice::ValueLattice(IHasherPtr hasher,
+                           noise::INoisePtr noise,
+                           interpolation::IInterpolatorPtr interpolator) noexcept
+  : m_hasher(std::move(hasher))
+  , m_noise(std::move(noise))
+  , m_interpolator(std::move(interpolator))
 {}
 
 auto ValueLattice::at(const float x, const float y) -> float
@@ -21,10 +21,13 @@ auto ValueLattice::generateLatticePointsAndInterpolate(const float x, const floa
 {
   // https://www.scratchapixel.com/lessons/procedural-generation-virtual-worlds/procedural-patterns-noise-part-1/creating-simple-1D-noise.html
   const auto minX = static_cast<int>(std::floor(x));
-  const auto maxX = static_cast<int>(std::ceil(x + 0.5f));
+  // https://stackoverflow.com/questions/61756878/how-to-find-the-next-greater-value-generically-in-c-for-integers-and-floats
+  const auto maxX = static_cast<int>(
+    std::ceil(std::nextafter(x, std::numeric_limits<float>::infinity())));
 
   const auto minY = static_cast<int>(std::floor(y));
-  const auto maxY = static_cast<int>(std::ceil(y + 0.5f));
+  const auto maxY = static_cast<int>(
+    std::ceil(std::nextafter(y, std::numeric_limits<float>::infinity())));
 
   auto latticeValue = [this](const int x, const int y) -> float {
     m_noise->seed(m_hasher->hash(x, y));

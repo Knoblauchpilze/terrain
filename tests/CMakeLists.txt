@@ -32,9 +32,11 @@ target_include_directories (terrain-tests PUBLIC
 	${GTEST_INCLUDE_DIRS}
 	)
 
+# https://gitlab.kitware.com/cmake/cmake/-/issues/17365
 target_link_libraries(terrain-tests
 	core_utils
 	terrain_lib
 	Eigen3::Eigen
-	${GTEST_LIBRARIES}
+	GTest::gtest
+	GTest::gmock
 	)

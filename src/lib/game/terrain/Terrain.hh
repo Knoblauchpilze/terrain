@@ -21,7 +21,7 @@ class Terrain : public utils::CoreObject
   void save(const std::string &fileName) const;
 
   private:
-  float m_scale{2.0f};
+  float m_scale{5.0f};
   lattice::ILatticePtr m_lattice{};
 };
 

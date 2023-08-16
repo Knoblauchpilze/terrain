@@ -11,7 +11,9 @@ namespace pge::lattice {
 class ValueLattice : public ILattice
 {
   public:
-  ValueLattice(const noise::Seed seed) noexcept;
+  ValueLattice(IHasherPtr hasher,
+               noise::INoisePtr noise,
+               interpolation::IInterpolatorPtr interpolator) noexcept;
   ~ValueLattice() override = default;
 
   auto at(const float x, const float y) -> float override;
