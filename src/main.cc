@@ -4,7 +4,6 @@
 /// Useful links:
 /// https://medium.com/@henchman/adventures-in-procedural-terrain-generation-part-1-b64c29e2367a
 /// https://rtouti.github.io/graphics/perlin-noise-algorithm
-/// https://math.stackexchange.com/questions/184121/why-is-gradient-noise-better-quality-than-value-noise
 
 #include "App.hh"
 #include "AppDesc.hh"

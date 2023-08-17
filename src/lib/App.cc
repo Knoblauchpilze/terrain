@@ -115,6 +115,10 @@ void App::onInputs(const controls::State &c, const CoordinateFrame &cf)
     {
       m_mode = (DisplayMode::HEIGHT == m_mode ? DisplayMode::TERRAIN : DisplayMode::HEIGHT);
     }
+    if (c.keys[controls::keys::L])
+    {
+      m_game->toggleLatticeMode();
+    }
   }
 }
 
