@@ -1,6 +1,7 @@
 
 #include "Game.hh"
 #include "Bilinear.hh"
+#include "GradientLattice.hh"
 #include "Hasher.hh"
 #include "Menu.hh"
 #include "ValueLattice.hh"
@@ -106,16 +107,31 @@ void Game::save(const std::string &fileName) const
   m_terrain->save(fileName);
 }
 
+void Game::toggleLatticeMode()
+{
+  m_latticeMode = (m_latticeMode == LatticeMode::VALUE ? LatticeMode::GRADIENT : LatticeMode::VALUE);
+}
+
 void Game::generate()
 {
   const auto seed   = m_nextSeed;
   auto hasher       = std::make_unique<lattice::Hasher>(seed);
   auto noise        = std::make_unique<noise::WhiteNoise>();
   auto interpolator = std::make_unique<interpolation::Bilinear>();
-  auto lattice      = std::make_unique<lattice::ValueLattice>(std::move(hasher),
+  lattice::ILatticePtr lattice;
+  if (m_latticeMode == LatticeMode::VALUE)
+  {
+    lattice = std::make_unique<lattice::ValueLattice>(std::move(hasher),
+                                                      std::move(noise),
+                                                      std::move(interpolator));
+  }
+  else
+  {
+    lattice = std::make_unique<lattice::GradientLattice>(std::move(hasher),
                                                          std::move(noise),
                                                          std::move(interpolator));
-  m_terrain         = std::make_unique<terrain::Terrain>(std::move(lattice));
+  }
+  m_terrain = std::make_unique<terrain::Terrain>(std::move(lattice));
   ++m_nextSeed;
 }
 

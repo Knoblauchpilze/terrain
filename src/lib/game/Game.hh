@@ -72,6 +72,8 @@ class Game : public utils::CoreObject
 
   void save(const std::string &fileName) const;
 
+  void toggleLatticeMode();
+
   void generate();
 
   auto terrain() const noexcept -> const terrain::Terrain &;
@@ -151,6 +153,13 @@ class Game : public utils::CoreObject
   static constexpr auto DEFAULT_SEED = 1993;
   noise::Seed m_nextSeed{DEFAULT_SEED};
   terrain::TerrainPtr m_terrain{nullptr};
+
+  enum class LatticeMode
+  {
+    VALUE,
+    GRADIENT
+  };
+  LatticeMode m_latticeMode{LatticeMode::VALUE};
 };
 
 using GameShPtr = std::shared_ptr<Game>;
