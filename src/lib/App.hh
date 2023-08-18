@@ -111,13 +111,6 @@ class App : public PGEApp
   /// @brief - A description of the textures used to represent the elements of
   /// the game.
   sprites::TexturePackShPtr m_packs;
-
-  enum class DisplayMode
-  {
-    HEIGHT,
-    TERRAIN
-  };
-  DisplayMode m_mode{DisplayMode::HEIGHT};
 };
 
 } // namespace pge

@@ -113,7 +113,7 @@ void App::onInputs(const controls::State &c, const CoordinateFrame &cf)
     }
     if (c.keys[controls::keys::M])
     {
-      m_mode = (DisplayMode::HEIGHT == m_mode ? DisplayMode::TERRAIN : DisplayMode::HEIGHT);
+      m_game->toggleDisplayMode();
     }
     if (c.keys[controls::keys::L])
     {
@@ -330,7 +330,7 @@ inline void App::renderTerrain(const CoordinateFrame &cf)
       sp.x      = 1.0f * x;
       sp.y      = 1.0f * y;
       sp.radius = 1.0f;
-      if (DisplayMode::HEIGHT == m_mode)
+      if (DisplayMode::HEIGHT == m_game->displayMode())
       {
         sp.sprite.tint = colorFromHeight(terrain.height(x, y));
       }

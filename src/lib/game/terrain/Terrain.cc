@@ -63,4 +63,9 @@ void Terrain::save(const std::string &fileName) const
   warn("Should save " + fileName);
 }
 
+auto Terrain::scale() const noexcept -> int
+{
+  return m_scale;
+}
+
 } // namespace pge::terrain

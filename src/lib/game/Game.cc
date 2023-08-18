@@ -9,15 +9,16 @@
 
 namespace pge {
 
-constexpr auto DEFAULT_MENU_WIDTH = 100;
+constexpr auto DEFAULT_MENU_HEIGHT = 50;
 
 namespace {
 auto generateMenu(const olc::vi2d &pos,
                   const olc::vi2d &size,
                   const std::string &text,
                   const std::string &name,
-                  bool clickable     = false,
-                  olc::Pixel bgColor = olc::VERY_DARK_GREEN) -> pge::MenuShPtr
+                  bool clickable             = false,
+                  const menu::Layout &layout = menu::Layout::Vertical,
+                  olc::Pixel bgColor         = olc::VERY_DARK_GREEN) -> pge::MenuShPtr
 {
   auto fd = pge::menu::newMenuContent(text, "", size);
 
@@ -31,7 +32,7 @@ auto generateMenu(const olc::vi2d &pos,
                                      name,
                                      pge::menu::newColoredBackground(bgColor),
                                      fd,
-                                     pge::menu::Layout::Vertical,
+                                     layout,
                                      clickable,
                                      false);
 }
@@ -51,7 +52,7 @@ std::vector<MenuShPtr> Game::generateMenus(float width, float height)
 {
   std::vector<MenuShPtr> out;
 
-  auto menus = generateNoiseMenus(width, height);
+  auto menus = generateStatusMenus(width, height);
   for (auto &menu : menus)
   {
     out.push_back(menu);
@@ -112,6 +113,17 @@ void Game::toggleLatticeMode()
   m_latticeMode = (m_latticeMode == LatticeMode::VALUE ? LatticeMode::GRADIENT : LatticeMode::VALUE);
 }
 
+void Game::toggleDisplayMode()
+{
+  m_displayMode = (m_displayMode == DisplayMode::HEIGHT ? DisplayMode::TERRAIN
+                                                        : DisplayMode::HEIGHT);
+}
+
+auto Game::displayMode() const noexcept -> DisplayMode
+{
+  return m_displayMode;
+}
+
 void Game::generate()
 {
   const auto seed   = m_nextSeed;
@@ -154,25 +166,50 @@ void Game::enable(bool enable)
   }
 }
 
-void Game::updateUI() {}
+void Game::updateUI()
+{
+  const auto scaleText = "Scale: " + std::to_string(m_terrain->scale());
+  m_menus.scale->setText(scaleText);
 
-auto Game::generateNoiseMenus(int width, int height) -> std::vector<MenuShPtr>
+  std::string latticeText("Lattice: ");
+  latticeText += (m_latticeMode == LatticeMode::GRADIENT ? "gradient" : "value");
+  m_menus.lattice->setText(latticeText);
+
+  std::string displayText("Display: ");
+  displayText += (m_displayMode == DisplayMode::HEIGHT ? "height" : "terrain");
+  m_menus.display->setText(displayText);
+}
+
+auto Game::generateStatusMenus(int width, int /*height*/) -> std::vector<MenuShPtr>
 {
   std::vector<MenuShPtr> out{};
-  auto noises = generateMenu(olc::vi2d{width - DEFAULT_MENU_WIDTH, 0},
-                             olc::vi2d{DEFAULT_MENU_WIDTH, height},
+  auto status = generateMenu(olc::vi2d{0, 0},
+                             olc::vi2d{width, DEFAULT_MENU_HEIGHT},
                              "",
-                             "noises",
-                             false);
+                             "status",
+                             false,
+                             menu::Layout::Horizontal);
 
-  auto title = generateMenu(olc::vi2d{width - DEFAULT_MENU_WIDTH, 0},
-                            olc::vi2d{DEFAULT_MENU_WIDTH, height},
-                            "Noises",
-                            "title",
-                            false);
-  noises->addMenu(title);
+  m_menus.scale = generateMenu(olc::vi2d{0, 0},
+                               olc::vi2d{10, DEFAULT_MENU_HEIGHT},
+                               "Scale: N/A",
+                               "scale",
+                               false);
+  status->addMenu(m_menus.scale);
+  m_menus.lattice = generateMenu(olc::vi2d{0, 0},
+                                 olc::vi2d{10, DEFAULT_MENU_HEIGHT},
+                                 "Lattice: N/A",
+                                 "lattice",
+                                 false);
+  status->addMenu(m_menus.lattice);
+  m_menus.display = generateMenu(olc::vi2d{0, 0},
+                                 olc::vi2d{10, DEFAULT_MENU_HEIGHT},
+                                 "Display: N/A",
+                                 "display",
+                                 false);
+  status->addMenu(m_menus.display);
 
-  out.push_back(noises);
+  out.push_back(status);
   return out;
 }
 

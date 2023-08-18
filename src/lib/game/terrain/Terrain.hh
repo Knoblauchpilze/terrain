@@ -20,8 +20,10 @@ class Terrain : public utils::CoreObject
   void load(const std::string &fileName);
   void save(const std::string &fileName) const;
 
+  auto scale() const noexcept -> int;
+
   private:
-  float m_scale{5.0f};
+  int m_scale{5};
   lattice::ILatticePtr m_lattice{};
 };
 
