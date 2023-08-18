@@ -1,29 +1,19 @@
 
 #pragma once
 
+#include "AbstractLattice.hh"
 #include "IHasher.hh"
-#include "IInterpolator.hh"
-#include "ILattice.hh"
 #include "INoise.hh"
 
 namespace pge::lattice {
 
-class ValueLattice : public ILattice
+class ValueLattice : public AbstractLattice
 {
   public:
   ValueLattice(IHasherPtr hasher,
                noise::INoisePtr noise,
-               interpolation::IInterpolatorPtr interpolator) noexcept;
+               interpolation::IInterpolatorPtr interpolator);
   ~ValueLattice() override = default;
-
-  auto at(const float x, const float y) -> float override;
-
-  private:
-  IHasherPtr m_hasher;
-  noise::INoisePtr m_noise;
-  interpolation::IInterpolatorPtr m_interpolator;
-
-  auto generateLatticePointsAndInterpolate(const float x, const float y) -> float;
 };
 
 } // namespace pge::lattice

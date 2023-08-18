@@ -1,8 +1,6 @@
 
 #include "GradientGenerator.hh"
-#include "HasherMock.hh"
 #include "IValueGeneratorPreparer.hh"
-#include "NoiseMock.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
@@ -35,6 +33,7 @@ using Point        = utils::Vector2f;
 using LatticePoint = utils::Vector2i;
 using NoiseValues  = std::vector<float>;
 
+constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
 struct TestCase
 {
   Point point;
@@ -43,6 +42,7 @@ struct TestCase
   NoiseValues noise;
 
   float expected;
+  float threshold{REASONABLE_COMPARISON_THRESHOLD};
 };
 
 class GenerateForTestSuite : public GeneratorPreparer<GradientGenerator>,
@@ -55,7 +55,7 @@ class GenerateForTestSuite : public GeneratorPreparer<GradientGenerator>,
   }
 };
 
-auto generateTestname(const TestParamInfo<TestCase> &info) -> std::string
+auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
 {
   std::string str;
   str += std::to_string(info.param.point.x());
@@ -93,7 +93,7 @@ TEST_P(GenerateForTestSuite, Test_GenerateFor)
   }));
 
   const auto actual = generator->generateFor(param.latticePoint, param.point);
-  EXPECT_EQ(param.expected, actual);
+  EXPECT_NEAR(param.expected, actual, param.threshold);
 }
 } // namespace
 
@@ -103,7 +103,7 @@ INSTANTIATE_TEST_SUITE_P(
   Values(TestCase{Point(0.2f, 0.3f), LatticePoint(0, 1), NoiseValues{1.0f, 0.0f}, 0.2f},
          TestCase{Point(0.2f, 0.3f), LatticePoint(0, 1), NoiseValues{0.0f, 1.0f}, -0.7f},
          TestCase{Point(0.0f, 0.0f), LatticePoint(0, 0), NoiseValues{0.5f, 0.6f}, 0.0f},
-         TestCase{Point(-0.1f, 0.5f), LatticePoint(0, 1), NoiseValues{0.2f, 0.95f}, -0.495f}),
-  generateTestname);
+         TestCase{Point(-0.1f, 0.5f), LatticePoint(0, 1), NoiseValues{0.8f, 0.6f}, -0.38f}),
+  generateTestName);
 
 } // namespace pge::lattice
