@@ -8,10 +8,10 @@ namespace pge::lattice {
 
 struct Area
 {
-  utils::Vector2f topLeft;
-  utils::Vector2f topRight;
-  utils::Vector2f bottomRight;
-  utils::Vector2f bottomLeft;
+  utils::Vector2i topLeft;
+  utils::Vector2i topRight;
+  utils::Vector2i bottomRight;
+  utils::Vector2i bottomLeft;
 };
 
 class IAreaGenerator

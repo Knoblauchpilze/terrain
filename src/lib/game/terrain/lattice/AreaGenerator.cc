@@ -22,10 +22,10 @@ auto AreaGenerator::areaSurrounding(const float x, const float y) const noexcept
   const auto yRange = surroundWithIntegers(y);
 
   Area area;
-  area.topLeft     = utils::Vector2f(xRange.first, yRange.second);
-  area.topRight    = utils::Vector2f(xRange.second, yRange.second);
-  area.bottomRight = utils::Vector2f(xRange.second, yRange.first);
-  area.bottomLeft  = utils::Vector2f(xRange.first, yRange.first);
+  area.topLeft     = utils::Vector2i(xRange.first, yRange.second);
+  area.topRight    = utils::Vector2i(xRange.second, yRange.second);
+  area.bottomRight = utils::Vector2i(xRange.second, yRange.first);
+  area.bottomLeft  = utils::Vector2i(xRange.first, yRange.first);
 
   return area;
 }
