@@ -1,29 +1,19 @@
 
 #pragma once
 
+#include "AbstractLattice.hh"
 #include "IHasher.hh"
-#include "IInterpolator.hh"
-#include "ILattice.hh"
 #include "INoise.hh"
 
 namespace pge::lattice {
 
-class GradientLattice : public ILattice
+class GradientLattice : public AbstractLattice
 {
   public:
   GradientLattice(IHasherPtr hasher,
                   noise::INoisePtr noise,
-                  interpolation::IInterpolatorPtr interpolator) noexcept;
+                  interpolation::IInterpolatorPtr interpolator);
   ~GradientLattice() override = default;
-
-  auto at(const float x, const float y) -> float override;
-
-  private:
-  IHasherPtr m_hasher;
-  noise::INoisePtr m_noise;
-  interpolation::IInterpolatorPtr m_interpolator;
-
-  auto generateLatticePointsAndInterpolate(const float x, const float y) -> float;
 };
 
 } // namespace pge::lattice

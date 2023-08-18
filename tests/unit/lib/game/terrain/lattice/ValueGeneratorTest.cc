@@ -1,8 +1,6 @@
 
 #include "ValueGenerator.hh"
-#include "HasherMock.hh"
 #include "IValueGeneratorPreparer.hh"
-#include "NoiseMock.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;

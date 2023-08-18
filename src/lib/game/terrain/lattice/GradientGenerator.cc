@@ -14,14 +14,17 @@ auto GradientGenerator::generateFor(const utils::Vector2i &latticePoint,
   m_noise->seed(m_hasher->hash(latticePoint.x(), latticePoint.y()));
   /// TODO: The gradient should not be completely random, see here:
   /// https://mrl.cs.nyu.edu/~perlin/paper445.pdf
-  const auto gradX = m_noise->next();
-  const auto gradY = m_noise->next();
+  utils::Vector2f grad;
+  grad.x() = m_noise->next();
+  grad.y() = m_noise->next();
+  grad.normalize();
 
   // https://en.wikipedia.org/wiki/Perlin_noise#Implementation
   const auto distX = point.x() - latticePoint.x();
   const auto distY = point.y() - latticePoint.y();
 
-  const auto dot = gradX * distX + gradY * distY;
+  const auto dot = grad.x() * distX + grad.y() * distY;
+  // const auto dot = gradX * distX + gradY * distY;
 
   return dot;
 }

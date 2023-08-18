@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include "HasherMock.hh"
 #include "IValueGenerator.hh"
-#include "NoiseMock.hh"
+#include "MockHasher.hh"
+#include "MockNoise.hh"
 #include <gmock/gmock.h>
 
 namespace pge::lattice {
