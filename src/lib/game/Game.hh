@@ -15,6 +15,12 @@ namespace pge {
 class Menu;
 using MenuShPtr = std::shared_ptr<Menu>;
 
+enum class DisplayMode
+{
+  HEIGHT,
+  TERRAIN
+};
+
 class Game : public utils::CoreObject
 {
   public:
@@ -73,6 +79,8 @@ class Game : public utils::CoreObject
   void save(const std::string &fileName) const;
 
   void toggleLatticeMode();
+  void toggleDisplayMode();
+  auto displayMode() const noexcept -> DisplayMode;
 
   void generate();
 
@@ -88,7 +96,7 @@ class Game : public utils::CoreObject
   /// the UI and the text content of menus.
   virtual void updateUI();
 
-  auto generateNoiseMenus(int width, int height) -> std::vector<MenuShPtr>;
+  auto generateStatusMenus(int width, int height) -> std::vector<MenuShPtr>;
 
   private:
   /// @brief - Convenience structure allowing to group information
@@ -141,7 +149,11 @@ class Game : public utils::CoreObject
   /// @brief - Convenience structure allowing to regroup all info about the menu
   /// in a single struct.
   struct Menus
-  {};
+  {
+    MenuShPtr scale;
+    MenuShPtr lattice;
+    MenuShPtr display;
+  };
 
   /// @brief - The definition of the game state.
   State m_state{};
@@ -160,6 +172,7 @@ class Game : public utils::CoreObject
     GRADIENT
   };
   LatticeMode m_latticeMode{LatticeMode::VALUE};
+  DisplayMode m_displayMode{DisplayMode::HEIGHT};
 };
 
 using GameShPtr = std::shared_ptr<Game>;
