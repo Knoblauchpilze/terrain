@@ -29,6 +29,7 @@ auto ValueLattice::generateLatticePointsAndInterpolate(const float x, const floa
   const auto maxY = static_cast<int>(
     std::ceil(std::nextafter(y, std::numeric_limits<float>::infinity())));
 
+  // https://www.scratchapixel.com/lessons/procedural-generation-virtual-worlds/procedural-patterns-noise-part-1/creating-simple-1D-noise.html
   auto latticeValue = [this](const int x, const int y) -> float {
     m_noise->seed(m_hasher->hash(x, y));
     return m_noise->next();
