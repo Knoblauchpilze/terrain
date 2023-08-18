@@ -1,5 +1,5 @@
 
-#include "LatticeGenerator.hh"
+#include "AreaGenerator.hh"
 #include <gtest/gtest.h>
 #include <maths_utils/Vector2.hh>
 
@@ -18,7 +18,7 @@ struct TestCase
   int maxY;
 };
 
-using LatticeGeneratorTestSuite = TestWithParam<TestCase>;
+using AreaTestSuite = TestWithParam<TestCase>;
 
 auto generateTestname(const TestParamInfo<TestCase> &info) -> std::string
 {
@@ -29,11 +29,11 @@ auto generateTestname(const TestParamInfo<TestCase> &info) -> std::string
 }
 } // namespace
 
-TEST_P(LatticeGeneratorTestSuite, Test_LatticePoints)
+TEST_P(AreaTestSuite, Test)
 {
   const auto param = GetParam();
 
-  LatticeGenerator generator;
+  AreaGenerator generator;
   const auto area = generator.areaSurrounding(param.x, param.y);
 
   EXPECT_EQ(area.topLeft.x(), param.minX);
@@ -49,8 +49,8 @@ TEST_P(LatticeGeneratorTestSuite, Test_LatticePoints)
   EXPECT_EQ(area.bottomRight.y(), param.minY);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_LatticeGenerator,
-                         LatticeGeneratorTestSuite,
+INSTANTIATE_TEST_SUITE_P(Unit_Lattice_AreaGenerator,
+                         AreaTestSuite,
                          Values(TestCase{0.0f, 0.0f, 0, 1, 0, 1},
                                 TestCase{0.2f, 0.3f, 0, 1, 0, 1},
                                 TestCase{0.7f, 0.1f, 0, 1, 0, 1},
