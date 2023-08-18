@@ -12,8 +12,10 @@ auto GradientGenerator::generateFor(const utils::Vector2i &latticePoint,
                                     const utils::Vector2f &point) const noexcept -> float
 {
   m_noise->seed(m_hasher->hash(latticePoint.x(), latticePoint.y()));
-  const auto gradX = 2.0f * m_noise->next() - 1.0f;
-  const auto gradY = 2.0f * m_noise->next() - 1.0f;
+  /// TODO: The gradient should not be completely random, see here:
+  /// https://mrl.cs.nyu.edu/~perlin/paper445.pdf
+  const auto gradX = m_noise->next();
+  const auto gradY = m_noise->next();
 
   // https://en.wikipedia.org/wiki/Perlin_noise#Implementation
   const auto distX = point.x() - latticePoint.x();
@@ -21,7 +23,7 @@ auto GradientGenerator::generateFor(const utils::Vector2i &latticePoint,
 
   const auto dot = gradX * distX + gradY * distY;
 
-  return 0.5f * (dot + 1.0f);
+  return dot;
 }
 
 } // namespace pge::lattice
