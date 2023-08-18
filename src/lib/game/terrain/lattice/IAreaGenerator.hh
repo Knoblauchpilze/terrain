@@ -6,7 +6,7 @@
 
 namespace pge::lattice {
 
-struct LatticeArea
+struct Area
 {
   utils::Vector2f topLeft;
   utils::Vector2f topRight;
@@ -14,14 +14,14 @@ struct LatticeArea
   utils::Vector2f bottomLeft;
 };
 
-class ILatticeGenerator
+class IAreaGenerator
 {
   public:
-  virtual ~ILatticeGenerator() = default;
+  virtual ~IAreaGenerator() = default;
 
-  virtual auto areaSurrounding(const float x, const float y) const noexcept -> LatticeArea = 0;
+  virtual auto areaSurrounding(const float x, const float y) const noexcept -> Area = 0;
 };
 
-using ILatticeGeneratorPtr = std::unique_ptr<ILatticeGenerator>;
+using IAreaGeneratorPtr = std::unique_ptr<IAreaGenerator>;
 
 } // namespace pge::lattice

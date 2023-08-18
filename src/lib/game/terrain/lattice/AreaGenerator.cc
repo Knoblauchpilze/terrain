@@ -1,5 +1,5 @@
 
-#include "LatticeGenerator.hh"
+#include "AreaGenerator.hh"
 
 namespace pge::lattice {
 namespace {
@@ -16,12 +16,12 @@ auto surroundWithIntegers(const float val) -> Range
 }
 } // namespace
 
-auto LatticeGenerator::areaSurrounding(const float x, const float y) const noexcept -> LatticeArea
+auto AreaGenerator::areaSurrounding(const float x, const float y) const noexcept -> Area
 {
   const auto xRange = surroundWithIntegers(x);
   const auto yRange = surroundWithIntegers(y);
 
-  LatticeArea area;
+  Area area;
   area.topLeft     = utils::Vector2f(xRange.first, yRange.second);
   area.topRight    = utils::Vector2f(xRange.second, yRange.second);
   area.bottomRight = utils::Vector2f(xRange.second, yRange.first);
