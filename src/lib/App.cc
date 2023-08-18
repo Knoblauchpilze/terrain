@@ -239,6 +239,8 @@ void App::drawDebug(const RenderDesc &res)
     return;
   }
 
+  renderLattice(res.cf);
+
   // Draw cursor's position.
   olc::vi2d mp = GetMousePos();
   olc::vf2d it;
@@ -328,7 +330,7 @@ inline void App::renderTerrain(const CoordinateFrame &cf)
     {
       SpriteDesc sp;
       sp.x      = 1.0f * x;
-      sp.y      = 1.0f * y;
+      sp.y      = 1.0f * y + 1.0f;
       sp.radius = 1.0f;
       if (DisplayMode::HEIGHT == m_game->displayMode())
       {
@@ -340,6 +342,46 @@ inline void App::renderTerrain(const CoordinateFrame &cf)
       }
 
       drawRect(sp, cf);
+    }
+  }
+}
+
+inline void App::renderLattice(const CoordinateFrame &cf)
+{
+  const auto &terrain = m_game->terrain();
+  const auto scale    = terrain.scale();
+
+  const auto vp     = cf.tilesViewport();
+  const auto center = vp.center();
+  const auto dims   = vp.dims();
+
+  auto xMin       = static_cast<int>(std::floor(center.x - dims.x / 2.0f));
+  const auto xMax = static_cast<int>(std::ceil(center.x + dims.x / 2.0f));
+  auto yMin       = static_cast<int>(std::floor(center.y - dims.y / 2.0f));
+  const auto yMax = static_cast<int>(std::ceil(center.y + dims.y / 2.0f));
+
+  if (isFirstFrame())
+  {
+    log("x: " + std::to_string(xMin) + " (" + std::to_string(xMin % scale) + ")- "
+        + std::to_string(xMax) + " (" + std::to_string(xMax % scale) + ")");
+    log("y: " + std::to_string(yMin) + " (" + std::to_string(yMin % scale) + ")- "
+        + std::to_string(yMax) + " (" + std::to_string(yMax % scale) + ")");
+  }
+  xMin -= (xMin % scale);
+  yMin -= (yMin % scale);
+
+  for (auto y = yMin; y <= yMax; y += scale)
+  {
+    for (auto x = xMin; x <= xMax; x += scale)
+    {
+      const auto value = terrain.height(x, y);
+      std::string str;
+      str += std::to_string(value);
+
+      auto pos        = cf.tilesToPixels(x + 0.5f, y + 0.5f);
+      const auto size = GetTextSize(str);
+      pos -= size / 2.0f;
+      DrawString(pos, str, olc::DARK_RED);
     }
   }
 }

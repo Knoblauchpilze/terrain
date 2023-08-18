@@ -96,6 +96,7 @@ class App : public PGEApp
   void drawWarpedRect(const SpriteDesc &t, const CoordinateFrame &cf);
 
   void renderTerrain(const CoordinateFrame &cf);
+  void renderLattice(const CoordinateFrame &cf);
 
   private:
   /// @brief - The game managed by this application.
