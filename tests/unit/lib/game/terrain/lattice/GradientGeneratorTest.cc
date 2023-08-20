@@ -34,6 +34,7 @@ using LatticePoint = utils::Vector2i;
 using NoiseValues  = std::vector<float>;
 
 constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
+
 struct TestCase
 {
   Point point;
