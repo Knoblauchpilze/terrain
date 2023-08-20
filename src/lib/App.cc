@@ -360,13 +360,6 @@ inline void App::renderLattice(const CoordinateFrame &cf)
   auto yMin       = static_cast<int>(std::floor(center.y - dims.y / 2.0f));
   const auto yMax = static_cast<int>(std::ceil(center.y + dims.y / 2.0f));
 
-  if (isFirstFrame())
-  {
-    log("x: " + std::to_string(xMin) + " (" + std::to_string(xMin % scale) + ")- "
-        + std::to_string(xMax) + " (" + std::to_string(xMax % scale) + ")");
-    log("y: " + std::to_string(yMin) + " (" + std::to_string(yMin % scale) + ")- "
-        + std::to_string(yMax) + " (" + std::to_string(yMax % scale) + ")");
-  }
   xMin -= (xMin % scale);
   yMin -= (yMin % scale);
 

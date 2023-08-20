@@ -14,6 +14,7 @@ class WhiteNoise : public INoise
 
   void seed(const Seed seed) override;
   auto next() const noexcept -> float override;
+  auto nextRange(const float min, const float max) const noexcept -> float override;
 
   private:
   mutable std::mt19937 m_generator;
