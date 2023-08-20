@@ -140,6 +140,7 @@ void GameState::onSavedGamePicked(const std::string &game)
   info("Picked saved game \"" + game + "\"");
   setScreen(Screen::Game);
   m_game.load(game);
+  m_game.togglePause();
 }
 
 void GameState::generateHomeScreen(const olc::vi2d &dims)
@@ -149,7 +150,10 @@ void GameState::generateHomeScreen(const olc::vi2d &dims)
 
   // Add each option to the screen.
   MenuShPtr m = generateScreenOption(dims, "New game", olc::VERY_DARK_PINK, "new_game", true);
-  m->setSimpleAction([this](Game & /*g*/) { setScreen(Screen::Game); });
+  m->setSimpleAction([this](Game &g) {
+    setScreen(Screen::Game);
+    g.togglePause();
+  });
   m_home->addMenu(m);
 
   m = generateScreenOption(dims, "Load game", olc::VERY_DARK_PINK, "load_game", true);
