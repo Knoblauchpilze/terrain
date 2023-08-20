@@ -146,6 +146,7 @@ void App::loadMenuResources()
   m_state = std::make_shared<GameState>(olc::vi2d(ScreenWidth(), ScreenHeight()),
                                         Screen::Game,
                                         *m_game);
+  m_game->togglePause();
 
   m_menus = m_game->generateMenus(ScreenWidth(), ScreenHeight());
 }
@@ -251,6 +252,12 @@ void App::drawDebug(const RenderDesc &res)
   DrawString(olc::vi2d(0, h / 2), "Mouse coords      : " + mp.str(), olc::CYAN);
   DrawString(olc::vi2d(0, h / 2 + 1 * dOffset), "World cell coords : " + mtp.str(), olc::CYAN);
   DrawString(olc::vi2d(0, h / 2 + 2 * dOffset), "Intra cell        : " + it.str(), olc::CYAN);
+
+  const auto &terrain = m_game->terrain();
+  const olc::vf2d pTile(mtp.x + it.x, mtp.y + it.y);
+  DrawString(olc::vi2d(0, h / 2 + 3 * dOffset),
+             "Height: " + std::to_string(terrain.height(pTile.x, pTile.y)),
+             olc::CYAN);
 
   SetPixelMode(olc::Pixel::NORMAL);
 }
