@@ -6,10 +6,12 @@
 namespace pge::lattice {
 
 AbstractLattice::AbstractLattice(IValueGeneratorPtr valueGenerator,
-                                 interpolation::IInterpolatorPtr interpolator) noexcept
+                                 interpolation::IInterpolatorPtr interpolator,
+                                 std::optional<NormalizationFunc> normalization) noexcept
   : m_areaGenerator(std::make_unique<AreaGenerator>())
   , m_valueGenerator(std::move(valueGenerator))
   , m_interpolator(std::move(interpolator))
+  , m_normalization(std::move(normalization))
 {}
 
 auto AbstractLattice::at(const float x, const float y) -> float
@@ -27,7 +29,13 @@ auto AbstractLattice::at(const float x, const float y) -> float
   const auto px     = (x - area.bottomLeft.x()) / xRange;
   const auto py     = (y - area.bottomLeft.y()) / yRange;
 
-  return m_interpolator->interpolate(tl, tr, br, bl, px, py);
+  const auto val = m_interpolator->interpolate(tl, tr, br, bl, px, py);
+  if (!m_normalization)
+  {
+    return val;
+  }
+
+  return (*m_normalization)(val);
 }
 
 } // namespace pge::lattice
