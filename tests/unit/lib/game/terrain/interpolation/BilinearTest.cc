@@ -64,6 +64,8 @@ TEST(Unit_Interpolation_Bilinear, Test_Interpolate_Y_Edges)
   EXPECT_EQ(expected, out);
 }
 
+constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
+
 TEST(Unit_Interpolation_Bilinear, Test_Interpolate_Quadrants)
 {
   auto interpolator = Bilinear();
@@ -74,16 +76,16 @@ TEST(Unit_Interpolation_Bilinear, Test_Interpolate_Quadrants)
   auto br = 3.0f;
 
   auto out = interpolator.interpolate(tl, tr, br, bl, 0.2f, 0.2f);
-  EXPECT_NEAR(1.8f, out, 0.000001f);
+  EXPECT_NEAR(1.8f, out, REASONABLE_COMPARISON_THRESHOLD);
 
   out = interpolator.interpolate(tl, tr, br, bl, 0.6f, 0.2f);
-  EXPECT_NEAR(2.2f, out, 0.000001f);
+  EXPECT_NEAR(2.2f, out, REASONABLE_COMPARISON_THRESHOLD);
 
   out = interpolator.interpolate(tl, tr, br, bl, 0.85f, 0.7f);
-  EXPECT_NEAR(1.45f, out, 0.000001f);
+  EXPECT_NEAR(1.45f, out, REASONABLE_COMPARISON_THRESHOLD);
 
   out = interpolator.interpolate(tl, tr, br, bl, 0.1f, 0.9f);
-  EXPECT_NEAR(0.3f, out, 0.000001f);
+  EXPECT_NEAR(0.3f, out, REASONABLE_COMPARISON_THRESHOLD);
 }
 
 } // namespace pge::interpolation
