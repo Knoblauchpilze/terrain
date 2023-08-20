@@ -24,7 +24,7 @@ TEST_F(Unit_Lattice_GradientLattice, Test_UseHasher)
 TEST_F(Unit_Lattice_GradientLattice, Test_UseNoise)
 {
   EXPECT_CALL(*mockNoise, seed(_)).Times(4);
-  EXPECT_CALL(*mockNoise, next()).Times(8);
+  EXPECT_CALL(*mockNoise, nextRange(_, _)).Times(8);
   lattice->at(0, 0);
 }
 

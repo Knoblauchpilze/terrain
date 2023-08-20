@@ -15,8 +15,8 @@ auto GradientGenerator::generateFor(const utils::Vector2i &latticePoint,
   /// TODO: The gradient should not be completely random, see here:
   /// https://mrl.cs.nyu.edu/~perlin/paper445.pdf
   utils::Vector2f grad;
-  grad.x() = m_noise->next();
-  grad.y() = m_noise->next();
+  grad.x() = m_noise->nextRange(-1.0f, 1.0f);
+  grad.y() = m_noise->nextRange(-1.0f, 1.0f);
   grad.normalize();
 
   // https://en.wikipedia.org/wiki/Perlin_noise#Implementation
@@ -24,7 +24,6 @@ auto GradientGenerator::generateFor(const utils::Vector2i &latticePoint,
   const auto distY = point.y() - latticePoint.y();
 
   const auto dot = grad.x() * distX + grad.y() * distY;
-  // const auto dot = gradX * distX + gradY * distY;
 
   return dot;
 }

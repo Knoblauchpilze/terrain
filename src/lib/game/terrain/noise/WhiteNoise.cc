@@ -24,4 +24,15 @@ auto WhiteNoise::next() const noexcept -> float
   return m_distribution(m_generator);
 }
 
+auto WhiteNoise::nextRange(const float min, const float max) const noexcept -> float
+{
+  if (min == max)
+  {
+    return min;
+  }
+
+  const auto delta = max - min;
+  return next() * delta + min;
+}
+
 } // namespace pge::noise
