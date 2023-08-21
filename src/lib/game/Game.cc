@@ -126,22 +126,26 @@ auto Game::displayMode() const noexcept -> DisplayMode
 
 void Game::generate()
 {
-  const auto seed   = m_nextSeed;
-  auto hasher       = std::make_unique<lattice::Hasher>(seed);
-  auto noise        = std::make_unique<noise::WhiteNoise>();
+  const auto seed = m_nextSeed;
+  auto hasher     = std::make_unique<noise::Hasher>(seed);
+  noise::INoisePtr noise;
+  if (m_latticeMode == LatticeMode::VALUE)
+  {
+    noise = std::make_unique<noise::WhiteNoise>(std::move(hasher));
+  }
+  else
+  {
+    noise = std::make_unique<noise::WhiteNoise>(std::move(hasher), -1.0f, 1.0f);
+  }
   auto interpolator = std::make_unique<interpolation::Bilinear>();
   lattice::ILatticePtr lattice;
   if (m_latticeMode == LatticeMode::VALUE)
   {
-    lattice = std::make_unique<lattice::ValueLattice>(std::move(hasher),
-                                                      std::move(noise),
-                                                      std::move(interpolator));
+    lattice = std::make_unique<lattice::ValueLattice>(std::move(noise), std::move(interpolator));
   }
   else
   {
-    lattice = std::make_unique<lattice::GradientLattice>(std::move(hasher),
-                                                         std::move(noise),
-                                                         std::move(interpolator));
+    lattice = std::make_unique<lattice::GradientLattice>(std::move(noise), std::move(interpolator));
   }
   m_terrain = std::make_unique<terrain::Terrain>(std::move(lattice));
   ++m_nextSeed;

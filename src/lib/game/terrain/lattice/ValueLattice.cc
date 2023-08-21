@@ -5,12 +5,8 @@
 
 namespace pge::lattice {
 
-ValueLattice::ValueLattice(IHasherPtr hasher,
-                           noise::INoisePtr noise,
-                           interpolation::IInterpolatorPtr interpolator)
-  : AbstractLattice(std::make_unique<ValueGenerator>(std::move(hasher), std::move(noise)),
-                    std::move(interpolator),
-                    {})
+ValueLattice::ValueLattice(noise::INoisePtr noise, interpolation::IInterpolatorPtr interpolator)
+  : AbstractLattice(std::make_unique<ValueGenerator>(std::move(noise)), std::move(interpolator), {})
 {}
 
 } // namespace pge::lattice
