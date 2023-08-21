@@ -171,7 +171,7 @@ class Game : public utils::CoreObject
     VALUE,
     GRADIENT
   };
-  LatticeMode m_latticeMode{LatticeMode::VALUE};
+  LatticeMode m_latticeMode{LatticeMode::GRADIENT};
   DisplayMode m_displayMode{DisplayMode::HEIGHT};
 };
 

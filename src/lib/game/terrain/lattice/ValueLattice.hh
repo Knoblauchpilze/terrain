@@ -2,7 +2,6 @@
 #pragma once
 
 #include "AbstractLattice.hh"
-#include "IHasher.hh"
 #include "INoise.hh"
 
 namespace pge::lattice {
@@ -10,9 +9,7 @@ namespace pge::lattice {
 class ValueLattice : public AbstractLattice
 {
   public:
-  ValueLattice(IHasherPtr hasher,
-               noise::INoisePtr noise,
-               interpolation::IInterpolatorPtr interpolator);
+  ValueLattice(noise::INoisePtr noise, interpolation::IInterpolatorPtr interpolator);
   ~ValueLattice() override = default;
 };
 

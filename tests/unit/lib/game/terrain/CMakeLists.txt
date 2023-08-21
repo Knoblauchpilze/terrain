@@ -4,6 +4,10 @@ target_include_directories(terrain-tests PUBLIC
 	)
 
 add_subdirectory(
+	${CMAKE_CURRENT_SOURCE_DIR}/noise
+	)
+
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/interpolation
 	)
 
