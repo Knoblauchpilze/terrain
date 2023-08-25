@@ -356,7 +356,7 @@ inline void App::renderTerrain(const CoordinateFrame &cf)
 inline void App::renderLattice(const CoordinateFrame &cf)
 {
   const auto &terrain = m_game->terrain();
-  const auto scale    = terrain.scale();
+  const auto scale    = m_game->scale();
 
   const auto vp     = cf.tilesViewport();
   const auto center = vp.center();

@@ -12,7 +12,7 @@ namespace pge::terrain {
 class Terrain : public utils::CoreObject
 {
   public:
-  Terrain(lattice::ILatticePtr lattice) noexcept;
+  Terrain(lattice::ILatticePtr lattice, const int scale) noexcept;
 
   auto height(const float x, const float y) const -> float;
   auto at(const float x, const float y) const -> Type;
@@ -20,11 +20,9 @@ class Terrain : public utils::CoreObject
   void load(const std::string &fileName);
   void save(const std::string &fileName) const;
 
-  auto scale() const noexcept -> int;
-
   private:
-  int m_scale{5};
   lattice::ILatticePtr m_lattice{};
+  int m_scale;
 };
 
 using TerrainPtr = std::unique_ptr<Terrain>;

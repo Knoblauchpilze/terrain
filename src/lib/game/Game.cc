@@ -10,8 +10,11 @@ namespace pge {
 
 constexpr auto DEFAULT_MENU_HEIGHT = 50;
 
-constexpr auto MIN_NOISE_PERIOD = 32;
+constexpr auto MIN_NOISE_PERIOD = 4;
 constexpr auto MAX_NOISE_PERIOD = 1024;
+
+constexpr auto MIN_TERRAIN_SCALE = 2;
+constexpr auto MAX_TERRAIN_SCALE = 16;
 
 namespace {
 auto generateMenu(const olc::vi2d &pos,
@@ -113,6 +116,8 @@ void Game::save(const std::string &fileName) const
 void Game::toggleLatticeMode()
 {
   m_latticeMode = (m_latticeMode == LatticeMode::VALUE ? LatticeMode::GRADIENT : LatticeMode::VALUE);
+
+  generate();
 }
 
 void Game::toggleDisplayMode()
@@ -126,6 +131,22 @@ auto Game::displayMode() const noexcept -> DisplayMode
   return m_displayMode;
 }
 
+void Game::toggleTerrainScale()
+{
+  m_scale *= 2;
+  if (m_scale > MAX_TERRAIN_SCALE)
+  {
+    m_scale = MIN_TERRAIN_SCALE;
+  }
+
+  generate();
+}
+
+auto Game::scale() const noexcept -> int
+{
+  return m_scale;
+}
+
 void Game::toggleNoisePeriod()
 {
   m_period *= 2;
@@ -133,6 +154,8 @@ void Game::toggleNoisePeriod()
   {
     m_period = MIN_NOISE_PERIOD;
   }
+
+  generate();
 }
 
 void Game::generate()
@@ -158,7 +181,7 @@ void Game::generate()
   {
     lattice = std::make_unique<lattice::GradientLattice>(std::move(noise), std::move(interpolator));
   }
-  m_terrain = std::make_unique<terrain::Terrain>(std::move(lattice));
+  m_terrain = std::make_unique<terrain::Terrain>(std::move(lattice), m_scale);
   ++m_nextSeed;
 }
 
@@ -183,7 +206,7 @@ void Game::enable(bool enable)
 
 void Game::updateUI()
 {
-  auto text = "Scale: " + std::to_string(m_terrain->scale());
+  auto text = "Scale: " + std::to_string(m_scale);
   m_menus.scale->setText(text);
 
   text = "Lattice: ";
@@ -213,7 +236,8 @@ auto Game::generateStatusMenus(int width, int /*height*/) -> std::vector<MenuShP
                                olc::vi2d{10, DEFAULT_MENU_HEIGHT},
                                "Scale: N/A",
                                "scale",
-                               false);
+                               true);
+  m_menus.scale->setSimpleAction([](Game &g) { g.toggleTerrainScale(); });
   status->addMenu(m_menus.scale);
   m_menus.lattice = generateMenu(olc::vi2d{0, 0},
                                  olc::vi2d{10, DEFAULT_MENU_HEIGHT},
