@@ -36,9 +36,10 @@ auto heightToTerrainType(const float height) noexcept -> Type
 
 } // namespace
 
-Terrain::Terrain(lattice::ILatticePtr lattice) noexcept
+Terrain::Terrain(lattice::ILatticePtr lattice, const int scale) noexcept
   : utils::CoreObject("2d")
   , m_lattice(std::move(lattice))
+  , m_scale(scale)
 {
   setService("terrain");
 }
@@ -61,11 +62,6 @@ void Terrain::load(const std::string &fileName)
 void Terrain::save(const std::string &fileName) const
 {
   warn("Should save " + fileName);
-}
-
-auto Terrain::scale() const noexcept -> int
-{
-  return m_scale;
 }
 
 } // namespace pge::terrain
