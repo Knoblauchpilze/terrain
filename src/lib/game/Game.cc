@@ -2,14 +2,16 @@
 #include "Game.hh"
 #include "Bilinear.hh"
 #include "GradientLattice.hh"
-#include "Hasher.hh"
 #include "Menu.hh"
+#include "PeriodicNoise.hh"
 #include "ValueLattice.hh"
-#include "WhiteNoise.hh"
 
 namespace pge {
 
 constexpr auto DEFAULT_MENU_HEIGHT = 50;
+
+constexpr auto MIN_NOISE_PERIOD = 32;
+constexpr auto MAX_NOISE_PERIOD = 1024;
 
 namespace {
 auto generateMenu(const olc::vi2d &pos,
@@ -124,18 +126,27 @@ auto Game::displayMode() const noexcept -> DisplayMode
   return m_displayMode;
 }
 
+void Game::toggleNoisePeriod()
+{
+  m_period *= 2;
+  if (m_period > MAX_NOISE_PERIOD)
+  {
+    m_period = MIN_NOISE_PERIOD;
+  }
+}
+
 void Game::generate()
 {
   const auto seed = m_nextSeed;
-  auto hasher     = std::make_unique<noise::Hasher>(seed);
+  // auto hasher     = std::make_unique<noise::Hasher>(seed);
   noise::INoisePtr noise;
   if (m_latticeMode == LatticeMode::VALUE)
   {
-    noise = std::make_unique<noise::WhiteNoise>(std::move(hasher));
+    noise = std::make_unique<noise::PeriodicNoise>(m_period, seed);
   }
   else
   {
-    noise = std::make_unique<noise::WhiteNoise>(std::move(hasher), -1.0f, 1.0f);
+    noise = std::make_unique<noise::PeriodicNoise>(m_period, seed, -1.0f, 1.0f);
   }
   auto interpolator = std::make_unique<interpolation::Bilinear>();
   lattice::ILatticePtr lattice;
@@ -172,16 +183,20 @@ void Game::enable(bool enable)
 
 void Game::updateUI()
 {
-  const auto scaleText = "Scale: " + std::to_string(m_terrain->scale());
-  m_menus.scale->setText(scaleText);
+  auto text = "Scale: " + std::to_string(m_terrain->scale());
+  m_menus.scale->setText(text);
 
-  std::string latticeText("Lattice: ");
-  latticeText += (m_latticeMode == LatticeMode::GRADIENT ? "gradient" : "value");
-  m_menus.lattice->setText(latticeText);
+  text = "Lattice: ";
+  text += (m_latticeMode == LatticeMode::GRADIENT ? "gradient" : "value");
+  m_menus.lattice->setText(text);
 
-  std::string displayText("Display: ");
-  displayText += (m_displayMode == DisplayMode::HEIGHT ? "height" : "terrain");
-  m_menus.display->setText(displayText);
+  text = "Display: ";
+  text += (m_displayMode == DisplayMode::HEIGHT ? "height" : "terrain");
+  m_menus.display->setText(text);
+
+  text = "Period: ";
+  text += std::to_string(m_period);
+  m_menus.period->setText(text);
 }
 
 auto Game::generateStatusMenus(int width, int /*height*/) -> std::vector<MenuShPtr>
@@ -212,6 +227,13 @@ auto Game::generateStatusMenus(int width, int /*height*/) -> std::vector<MenuShP
                                  "display",
                                  false);
   status->addMenu(m_menus.display);
+  m_menus.period = generateMenu(olc::vi2d{0, 0},
+                                olc::vi2d{10, DEFAULT_MENU_HEIGHT},
+                                "Period: " + std::to_string(m_period),
+                                "period",
+                                true);
+  m_menus.period->setSimpleAction([](Game &g) { g.toggleNoisePeriod(); });
+  status->addMenu(m_menus.period);
 
   out.push_back(status);
   return out;

@@ -81,6 +81,7 @@ class Game : public utils::CoreObject
   void toggleLatticeMode();
   void toggleDisplayMode();
   auto displayMode() const noexcept -> DisplayMode;
+  void toggleNoisePeriod();
 
   void generate();
 
@@ -153,6 +154,7 @@ class Game : public utils::CoreObject
     MenuShPtr scale;
     MenuShPtr lattice;
     MenuShPtr display;
+    MenuShPtr period;
   };
 
   /// @brief - The definition of the game state.
@@ -164,6 +166,8 @@ class Game : public utils::CoreObject
 
   static constexpr auto DEFAULT_SEED = 1993;
   noise::Seed m_nextSeed{DEFAULT_SEED};
+  static constexpr auto DEFAULT_NOISE_PERIOD = 256;
+  int m_period{DEFAULT_NOISE_PERIOD};
   terrain::TerrainPtr m_terrain{nullptr};
 
   enum class LatticeMode
