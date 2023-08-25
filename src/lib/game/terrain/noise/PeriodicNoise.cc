@@ -3,6 +3,8 @@
 #include <chrono>
 #include <random>
 
+#include <iostream>
+
 // https://www.scratchapixel.com/lessons/procedural-generation-virtual-worlds/procedural-patterns-noise-part-1/creating-simple-2D-noise.html
 
 namespace pge::noise {
@@ -61,7 +63,7 @@ void PeriodicNoise::generate()
 void PeriodicNoise::generatePermutationsTable()
 {
   std::mt19937 generator(m_seed);
-  std::uniform_int_distribution<int> distribution(0, m_period);
+  std::uniform_int_distribution<int> distribution(0, m_period - 1);
 
   m_permutations.resize(2 * m_period);
   // https://en.cppreference.com/w/cpp/algorithm/iota
