@@ -8,6 +8,10 @@ PeriodicPerlinGenerator::PeriodicPerlinGenerator(const int period, const noise::
   : m_period(period)
   , m_modulusMask(m_period - 1)
 {
+  if (period % 2 != 0)
+  {
+    throw std::invalid_argument("Period " + std::to_string(period) + " is not a multiple of 2");
+  }
   generate(seed);
 }
 
