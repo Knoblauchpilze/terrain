@@ -3,7 +3,7 @@
 
 #include <memory>
 
-namespace pge::noise {
+namespace pge::lattice {
 
 class IHasher
 {
@@ -15,4 +15,4 @@ class IHasher
 
 using IHasherPtr = std::unique_ptr<IHasher>;
 
-} // namespace pge::noise
+} // namespace pge::lattice

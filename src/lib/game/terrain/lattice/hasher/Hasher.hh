@@ -4,7 +4,7 @@
 #include "IHasher.hh"
 #include "INoise.hh"
 
-namespace pge::noise {
+namespace pge::lattice {
 
 class Hasher : public IHasher
 {
@@ -18,4 +18,4 @@ class Hasher : public IHasher
   noise::Seed m_seed;
 };
 
-} // namespace pge::noise
+} // namespace pge::lattice

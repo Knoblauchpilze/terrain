@@ -355,8 +355,7 @@ inline void App::renderTerrain(const CoordinateFrame &cf)
 
 inline void App::renderLattice(const CoordinateFrame &cf)
 {
-  const auto &terrain = m_game->terrain();
-  const auto scale    = m_game->scale();
+  const auto scale = m_game->scale();
 
   const auto vp     = cf.tilesViewport();
   const auto center = vp.center();
@@ -374,14 +373,32 @@ inline void App::renderLattice(const CoordinateFrame &cf)
   {
     for (auto x = xMin; x <= xMax; x += scale)
     {
-      const auto value = terrain.height(x, y);
-      std::string str;
-      str += std::to_string(value);
+      const auto values = m_game->latticeAt(x, y);
 
-      auto pos        = cf.tilesToPixels(x + 0.5f, y + 0.5f);
-      const auto size = GetTextSize(str);
-      pos -= size / 2.0f;
-      DrawString(pos, str, olc::DARK_RED);
+      if (1 == values.size())
+      {
+        std::string str;
+        str += std::to_string(values[0]);
+
+        auto pos        = cf.tilesToPixels(x + 0.5f, y + 0.5f);
+        const auto size = GetTextSize(str);
+        pos -= size / 2.0f;
+        DrawString(pos, str, olc::DARK_RED);
+      }
+      else if (2 == values.size())
+      {
+        const auto basePos = cf.tilesToPixels(x + 0.5f, y + 0.5f);
+
+        auto str            = std::to_string(values[1]);
+        const auto baseSize = GetTextSize(str);
+        auto pos            = basePos - baseSize / 2.0f;
+        DrawString(pos, str, olc::DARK_RED);
+
+        str       = std::to_string(values[0]);
+        auto size = GetTextSize(str);
+        pos       = olc::vf2d(basePos.x - size.x / 2.0f, basePos.y - baseSize.y / 2.0f - size.y);
+        DrawString(pos, str, olc::DARK_RED);
+      }
     }
   }
 }

@@ -18,9 +18,15 @@ class Unit_Lattice_GradientLattice : public LatticePreparer<GradientLattice>, pu
   }
 };
 
+TEST_F(Unit_Lattice_GradientLattice, Test_UseHasher)
+{
+  EXPECT_CALL(*mockHasher, hash(_, _)).Times(4);
+  lattice->at(0, 0);
+}
+
 TEST_F(Unit_Lattice_GradientLattice, Test_UseNoise)
 {
-  EXPECT_CALL(*mockNoise, at(_, _)).Times(8);
+  EXPECT_CALL(*mockNoise, next()).Times(8);
   lattice->at(0, 0);
 }
 
@@ -103,10 +109,11 @@ TEST_P(GradientTestSuite, Test_Value)
   const auto param = GetParam();
 
   constexpr auto SEED = 1993;
-  auto hasher         = std::make_unique<noise::Hasher>(SEED);
-  auto noise          = std::make_unique<noise::WhiteNoise>(std::move(hasher), -1.0f, 1.0f);
+  auto hasher         = std::make_unique<lattice::Hasher>(SEED);
+  auto noise          = std::make_unique<noise::WhiteNoise>(-1.0f, 1.0f);
   auto interpolator   = std::make_unique<interpolation::Bilinear>();
-  auto lattice        = std::make_unique<lattice::GradientLattice>(std::move(noise),
+  auto lattice        = std::make_unique<lattice::GradientLattice>(std::move(hasher),
+                                                            std::move(noise),
                                                             std::move(interpolator));
 
   const auto actual = lattice->at(param.x, param.y);

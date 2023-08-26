@@ -10,6 +10,7 @@
 
 namespace pge::lattice {
 
+template<typename ValueType>
 class AbstractLattice : public ILattice
 {
   public:
@@ -20,15 +21,17 @@ class AbstractLattice : public ILattice
   protected:
   using NormalizationFunc = std::function<float(const float)>;
 
-  AbstractLattice(IValueGeneratorPtr valueGenerator,
+  AbstractLattice(IValueGeneratorPtr<ValueType> valueGenerator,
                   interpolation::IInterpolatorPtr interpolator,
                   std::optional<NormalizationFunc> normalization) noexcept;
 
   private:
   IAreaGeneratorPtr m_areaGenerator;
-  IValueGeneratorPtr m_valueGenerator;
+  IValueGeneratorPtr<ValueType> m_valueGenerator;
   interpolation::IInterpolatorPtr m_interpolator;
   std::optional<NormalizationFunc> m_normalization;
 };
 
 } // namespace pge::lattice
+
+#include "AbstractLattice.hxx"

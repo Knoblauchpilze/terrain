@@ -1,20 +1,24 @@
 
+#pragma once
+
 #include "AbstractLattice.hh"
 #include "AreaGenerator.hh"
 #include <cmath>
 
 namespace pge::lattice {
 
-AbstractLattice::AbstractLattice(IValueGeneratorPtr valueGenerator,
-                                 interpolation::IInterpolatorPtr interpolator,
-                                 std::optional<NormalizationFunc> normalization) noexcept
+template<typename ValueType>
+AbstractLattice<ValueType>::AbstractLattice(IValueGeneratorPtr<ValueType> valueGenerator,
+                                            interpolation::IInterpolatorPtr interpolator,
+                                            std::optional<NormalizationFunc> normalization) noexcept
   : m_areaGenerator(std::make_unique<AreaGenerator>())
   , m_valueGenerator(std::move(valueGenerator))
   , m_interpolator(std::move(interpolator))
   , m_normalization(std::move(normalization))
 {}
 
-auto AbstractLattice::at(const float x, const float y) -> float
+template<typename ValueType>
+auto AbstractLattice<ValueType>::at(const float x, const float y) -> float
 {
   // https://www.scratchapixel.com/lessons/procedural-generation-virtual-worlds/procedural-patterns-noise-part-1/creating-simple-1D-noise.html
   const auto area = m_areaGenerator->areaSurrounding(x, y);
