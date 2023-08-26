@@ -1,8 +1,11 @@
 
 #pragma once
 
+#include "AbstractGradientGenerator.hh"
+#include "IHasher.hh"
 #include "INoise.hh"
 #include "Terrain.hh"
+#include "ValueGenerator.hh"
 #include <core_utils/CoreObject.hh>
 #include <core_utils/TimeUtils.hh>
 #include <memory>
@@ -27,7 +30,7 @@ class Game : public utils::CoreObject
   /// @brief - Create a new game with default parameters.
   Game();
 
-  ~Game();
+  ~Game() = default;
 
   /// @brief - Used to perform the creation of the menus allowing to control the
   /// world wrapped by this game.
@@ -84,6 +87,7 @@ class Game : public utils::CoreObject
   void toggleTerrainScale();
   auto scale() const noexcept -> int;
   void toggleNoisePeriod();
+  auto latticeAt(const int x, const int y) const -> std::vector<float>;
 
   void generate();
 
@@ -174,10 +178,14 @@ class Game : public utils::CoreObject
   static constexpr auto DEFAULT_TERRAIN_SCALE = 2;
   int m_scale{DEFAULT_TERRAIN_SCALE};
 
+  lattice::ValueGeneratorPtr m_valueGenerator{nullptr};
+  lattice::AbstractGradientGeneratorPtr m_gradientGenerator{nullptr};
+
   enum class LatticeMode
   {
     VALUE,
-    GRADIENT
+    GRADIENT,
+    PERLIN
   };
   LatticeMode m_latticeMode{LatticeMode::GRADIENT};
   DisplayMode m_displayMode{DisplayMode::HEIGHT};

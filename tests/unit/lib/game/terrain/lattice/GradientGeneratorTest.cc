@@ -6,7 +6,8 @@
 using namespace ::testing;
 
 namespace pge::lattice {
-class Unit_Lattice_GradientGenerator : public GeneratorPreparer<GradientGenerator>, public Test
+class Unit_Lattice_GradientGenerator : public GeneratorPreparer<GradientGenerator, utils::Vector2f>,
+                                       public Test
 {
   protected:
   void SetUp() override
@@ -15,10 +16,16 @@ class Unit_Lattice_GradientGenerator : public GeneratorPreparer<GradientGenerato
   }
 };
 
+TEST_F(Unit_Lattice_GradientGenerator, Test_UseHasher)
+{
+  EXPECT_CALL(*mockHasher, hash(_, _)).Times(1);
+  generator->generateFor(utils::Vector2i(), utils::Vector2f());
+}
+
 TEST_F(Unit_Lattice_GradientGenerator, Test_UseNoise)
 {
-  EXPECT_CALL(*mockNoise, seed(_, _)).Times(1);
-  EXPECT_CALL(*mockNoise, at(_, _)).Times(2);
+  EXPECT_CALL(*mockNoise, seed(_)).Times(1);
+  EXPECT_CALL(*mockNoise, next()).Times(2);
   generator->generateFor(utils::Vector2i(), utils::Vector2f());
 }
 
@@ -40,7 +47,7 @@ struct TestCase
   float threshold{REASONABLE_COMPARISON_THRESHOLD};
 };
 
-class GenerateForTestSuite : public GeneratorPreparer<GradientGenerator>,
+class GenerateForTestSuite : public GeneratorPreparer<GradientGenerator, utils::Vector2f>,
                              public TestWithParam<TestCase>
 {
   protected:
@@ -76,7 +83,7 @@ TEST_P(GenerateForTestSuite, Test_GenerateFor)
 {
   const auto param = GetParam();
 
-  ON_CALL(*mockNoise, at(_, _)).WillByDefault(Invoke([&param]() -> float {
+  ON_CALL(*mockNoise, next()).WillByDefault(Invoke([&param]() -> float {
     static auto id = 0u;
     const auto out = param.noise[id];
     ++id;

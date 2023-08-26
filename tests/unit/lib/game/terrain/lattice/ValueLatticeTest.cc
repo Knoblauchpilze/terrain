@@ -18,9 +18,15 @@ class Unit_Lattice_ValueLattice : public LatticePreparer<ValueLattice>, public T
   }
 };
 
+TEST_F(Unit_Lattice_ValueLattice, Test_UseHasher)
+{
+  EXPECT_CALL(*mockHasher, hash(_, _)).Times(4);
+  lattice->at(0, 0);
+}
+
 TEST_F(Unit_Lattice_ValueLattice, Test_UseNoise)
 {
-  EXPECT_CALL(*mockNoise, at(_, _)).Times(4);
+  EXPECT_CALL(*mockNoise, next()).Times(4);
   lattice->at(0, 0);
 }
 
@@ -104,10 +110,12 @@ TEST_P(ValueTestSuite, Test_Value)
   const auto param = GetParam();
 
   constexpr auto SEED = 1993;
-  auto hasher         = std::make_unique<noise::Hasher>(SEED);
-  auto noise          = std::make_unique<noise::WhiteNoise>(std::move(hasher));
+  auto hasher         = std::make_unique<lattice::Hasher>(SEED);
+  auto noise          = std::make_unique<noise::WhiteNoise>();
   auto interpolator   = std::make_unique<interpolation::Bilinear>();
-  auto lattice = std::make_unique<lattice::ValueLattice>(std::move(noise), std::move(interpolator));
+  auto lattice        = std::make_unique<lattice::ValueLattice>(std::move(hasher),
+                                                         std::move(noise),
+                                                         std::move(interpolator));
 
   const auto actual = lattice->at(param.x, param.y);
   EXPECT_NEAR(actual, param.expected, param.threshold);

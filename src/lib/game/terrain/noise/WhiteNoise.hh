@@ -10,16 +10,14 @@ namespace pge::noise {
 class WhiteNoise : public INoise
 {
   public:
-  WhiteNoise(IHasherPtr hasher) noexcept;
-  WhiteNoise(IHasherPtr hasher, const float min, const float max) noexcept;
+  WhiteNoise() noexcept;
+  WhiteNoise(const float min, const float max) noexcept;
   ~WhiteNoise() override = default;
 
-  void seed(const int x, const int y) override;
-  auto at(const int x, const int y) const noexcept -> float override;
+  void seed(const Seed seed) override;
+  auto next() const noexcept -> float override;
 
   private:
-  IHasherPtr m_hasher;
-
   mutable std::mt19937 m_generator;
   mutable std::uniform_real_distribution<float> m_distribution;
 };

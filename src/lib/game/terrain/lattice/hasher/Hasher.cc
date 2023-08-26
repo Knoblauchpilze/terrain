@@ -1,7 +1,7 @@
 
 #include "Hasher.hh"
 
-namespace pge::noise {
+namespace pge::lattice {
 
 Hasher::Hasher(const noise::Seed seed) noexcept
   : m_seed(seed)
@@ -20,4 +20,4 @@ auto Hasher::hash(const int x, const int y) -> float
   return hash ^ m_seed;
 }
 
-} // namespace pge::noise
+} // namespace pge::lattice

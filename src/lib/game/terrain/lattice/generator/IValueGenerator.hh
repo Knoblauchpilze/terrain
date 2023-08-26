@@ -6,16 +6,20 @@
 
 namespace pge::lattice {
 
+// https://stackoverflow.com/questions/7968023/c-virtual-template-method
+template<typename ValueType>
 class IValueGenerator
 {
   public:
   virtual ~IValueGenerator() = default;
 
+  virtual auto at(const utils::Vector2i &latticePoint) const noexcept -> ValueType = 0;
   virtual auto generateFor(const utils::Vector2i &latticePoint,
                            const utils::Vector2f &point) const noexcept -> float
     = 0;
 };
 
-using IValueGeneratorPtr = std::unique_ptr<IValueGenerator>;
+template<typename ValueType>
+using IValueGeneratorPtr = std::unique_ptr<IValueGenerator<ValueType>>;
 
 } // namespace pge::lattice

@@ -2,14 +2,17 @@
 #pragma once
 
 #include "AbstractLattice.hh"
+#include "IHasher.hh"
 #include "INoise.hh"
 
 namespace pge::lattice {
 
-class ValueLattice : public AbstractLattice
+class ValueLattice : public AbstractLattice<float>
 {
   public:
-  ValueLattice(noise::INoisePtr noise, interpolation::IInterpolatorPtr interpolator);
+  ValueLattice(IHasherPtr hasher,
+               noise::INoisePtr noise,
+               interpolation::IInterpolatorPtr interpolator);
   ~ValueLattice() override = default;
 };
 
