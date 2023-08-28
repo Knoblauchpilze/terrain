@@ -256,7 +256,7 @@ void App::drawDebug(const RenderDesc &res)
   const auto &terrain = m_game->terrain();
   const olc::vf2d pTile(mtp.x + it.x, mtp.y + it.y);
   DrawString(olc::vi2d(0, h / 2 + 3 * dOffset),
-             "Height: " + std::to_string(terrain.height(pTile.x, pTile.y)),
+             "Height            : " + std::to_string(terrain.height(pTile.x, pTile.y)),
              olc::CYAN);
 
   SetPixelMode(olc::Pixel::NORMAL);
