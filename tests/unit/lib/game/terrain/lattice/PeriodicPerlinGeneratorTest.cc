@@ -99,8 +99,9 @@ TEST_P(AtTestSuite, Test_At)
 
 INSTANTIATE_TEST_SUITE_P(Unit_Lattice_PeriodicPerlinGenerator,
                          AtTestSuite,
-                         Values(TestCase{LatticePoint(0, 1), utils::Vector2f(-0.862648f, 0.505804f)},
-                                TestCase{LatticePoint(1, 2), utils::Vector2f(0.140594f, 0.990067f)}),
+                         Values(TestCase{LatticePoint(0, 1),
+                                         utils::Vector2f(-0.842704f, -0.538378f)},
+                                TestCase{LatticePoint(1, 2), utils::Vector2f(0.456030f, 0.889964f)}),
                          generateTestName);
 } // namespace at
 
@@ -152,11 +153,11 @@ TEST_P(PerlinGenerateForTestSuite, Test_GenerateFor)
 
 INSTANTIATE_TEST_SUITE_P(Unit_Lattice_PeriodicPerlinGenerator,
                          PerlinGenerateForTestSuite,
-                         Values(TestCase{Point(0.2f, 0.3f), LatticePoint(0, 1), -0.526593f},
-                                TestCase{Point(1.2f, 2.3f), LatticePoint(1, 2), 0.325139f},
-                                TestCase{Point(-0.2f, 1.45f), LatticePoint(-1, 2), -0.970153f},
-                                TestCase{Point(-0.89f, -0.37f), LatticePoint(-1, 0), -0.309069f},
-                                TestCase{Point(0.78f, -0.37f), LatticePoint(1, -1), -0.153782f}),
+                         Values(TestCase{Point(0.2f, 0.3f), LatticePoint(0, 1), 0.208323f},
+                                TestCase{Point(1.2f, 2.3f), LatticePoint(1, 2), 0.358195f},
+                                TestCase{Point(-0.2f, 1.45f), LatticePoint(-1, 2), 0.874921f},
+                                TestCase{Point(-0.89f, -0.37f), LatticePoint(-1, 0), 0.004732f},
+                                TestCase{Point(0.78f, -0.37f), LatticePoint(1, -1), -0.575866f}),
                          generateTestName);
 } // namespace generate_for
 } // namespace pge::lattice
