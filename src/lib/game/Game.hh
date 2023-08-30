@@ -185,9 +185,10 @@ class Game : public utils::CoreObject
   {
     VALUE,
     GRADIENT,
-    PERLIN
+    PERIODIC_GRADIENT,
+    PERIODIC_PERLIN,
   };
-  LatticeMode m_latticeMode{LatticeMode::GRADIENT};
+  LatticeMode m_latticeMode{LatticeMode::PERIODIC_GRADIENT};
   DisplayMode m_displayMode{DisplayMode::HEIGHT};
 };
 

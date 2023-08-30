@@ -385,7 +385,7 @@ inline void App::renderLattice(const CoordinateFrame &cf)
         pos -= size / 2.0f;
         DrawString(pos, str, olc::DARK_RED);
       }
-      else if (2 == values.size())
+      else
       {
         const auto basePos = cf.tilesToPixels(x + 0.5f, y + 0.5f);
 

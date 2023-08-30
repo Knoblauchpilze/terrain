@@ -7,11 +7,11 @@
 
 namespace pge::lattice {
 
-class PeriodicPerlinGenerator : public AbstractPeriodicGradientGenerator
+class PeriodicGradientGenerator : public AbstractPeriodicGradientGenerator
 {
   public:
-  PeriodicPerlinGenerator(const int period, const noise::Seed seed);
-  ~PeriodicPerlinGenerator() override = default;
+  PeriodicGradientGenerator(const int period, const noise::Seed seed);
+  ~PeriodicGradientGenerator() override = default;
 
   auto gradientAt(const int id) const noexcept -> utils::Vector2f override;
 

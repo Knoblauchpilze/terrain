@@ -2,7 +2,6 @@
 #pragma once
 
 #include "IValueGenerator.hh"
-#include <maths_utils/Vector2.hh>
 #include <memory>
 
 namespace pge::lattice {

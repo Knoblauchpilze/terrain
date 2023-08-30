@@ -5,71 +5,55 @@
 namespace pge::lattice {
 
 PeriodicPerlinGenerator::PeriodicPerlinGenerator(const int period, const noise::Seed seed)
-  : m_period(period)
-  , m_modulusMask(m_period - 1)
+  : AbstractPeriodicGradientGenerator(period, seed)
 {
-  if (period % 2 != 0)
-  {
-    throw std::invalid_argument("Period " + std::to_string(period) + " is not a multiple of 2");
-  }
-  generate(seed);
+  generate(period, seed);
 }
 
-auto PeriodicPerlinGenerator::at(const utils::Vector2i &latticePoint) const noexcept
-  -> utils::Vector2f
+auto PeriodicPerlinGenerator::gradientAt(const int id) const noexcept -> utils::Vector2f
 {
-  // https://stackoverflow.com/questions/3072665/bitwise-and-in-place-of-modulus-operator
-  const auto xMod = latticePoint.x() & m_modulusMask;
-  const auto yMod = latticePoint.y() & m_modulusMask;
-
-  const auto id   = m_permutations[m_permutations[xMod] + yMod];
-  const auto grad = m_gradients[id];
-
-  return grad;
+  return m_gradients[id];
 }
 
-void PeriodicPerlinGenerator::generate(const noise::Seed seed)
+void PeriodicPerlinGenerator::generate(const int period, const noise::Seed seed)
 {
   std::mt19937 generator(seed);
   /// TODO: The gradient should not be completely random, see here:
   /// https://mrl.cs.nyu.edu/~perlin/paper445.pdf
-  std::uniform_real_distribution<float> distribution(-1.0f, 1.0f);
+  std::uniform_int_distribution<int> distribution(0, 3);
 
-  m_gradients.resize(m_period);
+  /// https://mrl.cs.nyu.edu/~perlin/paper445.pdf
+  const auto intToGrad = [](const int id) {
+    switch (id)
+    {
+      case 0:
+        return utils::Vector2f(1.0f, 1.0f);
+      case 1:
+        return utils::Vector2f(-1.0f, 1.0f);
+      case 2:
+        return utils::Vector2f(1.0f, -1.0f);
+      case 3:
+      default:
+        return utils::Vector2f(-1.0f, -1.0f);
+    }
+  };
+
+  std::vector<int> rnd;
+
+  m_gradients.resize(period);
   /// https://www.scratchapixel.com/lessons/procedural-generation-virtual-worlds/perlin-noise-part-2/perlin-noise.html
   std::for_each(m_gradients.begin(),
                 m_gradients.end(),
-                [&distribution, &generator](utils::Vector2f &grad) {
-                  grad.x() = distribution(generator);
-                  grad.y() = distribution(generator);
-
-                  grad.normalize();
+                [&distribution, &generator, &intToGrad, &rnd](utils::Vector2f &grad) {
+                  rnd.push_back(distribution(generator));
+                  grad = intToGrad(rnd.back());
                 });
 
   auto id = 0;
   for (const auto &v : m_gradients)
   {
-    std::cout << "grad[" << id << "]: " << v.toString() << std::endl;
+    std::cout << "perlin[" << id << "]: " << v.toString() << " (" << rnd[id] << ")" << std::endl;
     ++id;
-  }
-
-  generatePermutationsTable(seed);
-}
-
-void PeriodicPerlinGenerator::generatePermutationsTable(const noise::Seed seed)
-{
-  std::mt19937 generator(seed);
-  std::uniform_int_distribution<int> distribution(0, m_period - 1);
-
-  m_permutations.resize(2 * m_period);
-  // https://en.cppreference.com/w/cpp/algorithm/iota
-  std::iota(m_permutations.begin(), m_permutations.end(), 0);
-
-  for (auto i = 0; i < m_period; ++i)
-  {
-    auto k = distribution(generator);
-    std::swap(m_permutations[i], m_permutations[k]);
-    m_permutations[i + m_period] = m_permutations[i];
   }
 }
 

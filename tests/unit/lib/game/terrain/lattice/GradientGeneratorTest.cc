@@ -25,7 +25,7 @@ TEST_F(Unit_Lattice_GradientGenerator, Test_UseHasher)
 TEST_F(Unit_Lattice_GradientGenerator, Test_UseNoise)
 {
   EXPECT_CALL(*mockNoise, seed(_)).Times(1);
-  EXPECT_CALL(*mockNoise, next()).Times(2);
+  EXPECT_CALL(*mockNoise, next()).Times(3);
   generator->generateFor(utils::Vector2i(), utils::Vector2f());
 }
 
