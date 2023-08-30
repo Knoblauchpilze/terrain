@@ -65,7 +65,7 @@ The performance values are very different based on whether we use a fully proced
 
 Note that these consideration might seem important in this app as we're basically just generating some terrain but it might be less the case in an app where the terrain is generated once and for all, or on a chunk basis.
 
-The code for the benchmark can be found in the dedicated [PR #1](https://github.com/Knoblauchpilze/terrain/pull/1).
+The code for the benchmark can be found in the dedicated [PR #2](https://github.com/Knoblauchpilze/terrain/pull/2).
 
 ## Periodic noise
 
