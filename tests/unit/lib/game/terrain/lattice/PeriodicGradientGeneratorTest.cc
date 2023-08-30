@@ -1,5 +1,5 @@
 
-#include "PeriodicPerlinGenerator.hh"
+#include "PeriodicGradientGenerator.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
@@ -13,14 +13,14 @@ constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
 using Point        = utils::Vector2f;
 using LatticePoint = utils::Vector2i;
 
-TEST(Unit_Lattice_PeriodicPerlinGenerator, Test_PeriodOddThrowException)
+TEST(Unit_Lattice_PeriodicGradientGenerator, Test_PeriodOddThrowException)
 {
-  EXPECT_THROW(PeriodicPerlinGenerator(3, DEFAULT_SEED), std::invalid_argument);
+  EXPECT_THROW(PeriodicGradientGenerator(3, DEFAULT_SEED), std::invalid_argument);
 }
 
-TEST(Unit_Lattice_PeriodicPerlinGenerator, Test_PeriodicX)
+TEST(Unit_Lattice_PeriodicGradientGenerator, Test_PeriodicX)
 {
-  PeriodicPerlinGenerator generator{DEFAULT_PERIOD, DEFAULT_SEED};
+  PeriodicGradientGenerator generator{DEFAULT_PERIOD, DEFAULT_SEED};
 
   auto p        = utils::Vector2i(0, 1);
   const auto v1 = generator.at(p);
@@ -36,9 +36,9 @@ TEST(Unit_Lattice_PeriodicPerlinGenerator, Test_PeriodicX)
   EXPECT_NEAR(v1.y(), v3.y(), REASONABLE_COMPARISON_THRESHOLD);
 }
 
-TEST(Unit_Lattice_PeriodicPerlinGenerator, Test_PeriodicY)
+TEST(Unit_Lattice_PeriodicGradientGenerator, Test_PeriodicY)
 {
-  PeriodicPerlinGenerator generator{DEFAULT_PERIOD, DEFAULT_SEED};
+  PeriodicGradientGenerator generator{DEFAULT_PERIOD, DEFAULT_SEED};
 
   auto p        = utils::Vector2i(0, 1);
   const auto v1 = generator.at(p);
@@ -90,14 +90,14 @@ auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
 TEST_P(AtTestSuite, Test_At)
 {
   const auto param = GetParam();
-  PeriodicPerlinGenerator generator{param.period, param.seed};
+  PeriodicGradientGenerator generator{param.period, param.seed};
 
   const auto actual = generator.at(param.latticePoint);
   EXPECT_NEAR(actual.x(), param.expected.x(), param.threshold);
   EXPECT_NEAR(actual.y(), param.expected.y(), param.threshold);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Lattice_PeriodicPerlinGenerator,
+INSTANTIATE_TEST_SUITE_P(Unit_Lattice_PeriodicGradientGenerator,
                          AtTestSuite,
                          Values(TestCase{LatticePoint(0, 1),
                                          utils::Vector2f(-0.842704f, -0.538378f)},
@@ -145,13 +145,13 @@ auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
 TEST_P(PerlinGenerateForTestSuite, Test_GenerateFor)
 {
   const auto param = GetParam();
-  PeriodicPerlinGenerator generator{param.period, param.seed};
+  PeriodicGradientGenerator generator{param.period, param.seed};
 
   const auto actual = generator.generateFor(param.latticePoint, param.point);
   EXPECT_NEAR(actual, param.expected, param.threshold);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Lattice_PeriodicPerlinGenerator,
+INSTANTIATE_TEST_SUITE_P(Unit_Lattice_PeriodicGradientGenerator,
                          PerlinGenerateForTestSuite,
                          Values(TestCase{Point(0.2f, 0.3f), LatticePoint(0, 1), 0.208323f},
                                 TestCase{Point(1.2f, 2.3f), LatticePoint(1, 2), 0.358195f},
