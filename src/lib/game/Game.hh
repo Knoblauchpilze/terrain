@@ -104,6 +104,7 @@ class Game : public utils::CoreObject
   virtual void updateUI();
 
   auto generateStatusMenus(int width, int height) -> std::vector<MenuShPtr>;
+  auto generatePerformanceMenus(int width, int height) -> std::vector<MenuShPtr>;
 
   private:
   /// @brief - Convenience structure allowing to group information
@@ -161,6 +162,17 @@ class Game : public utils::CoreObject
     MenuShPtr lattice;
     MenuShPtr display;
     MenuShPtr period;
+
+    MenuShPtr height;
+    MenuShPtr at;
+    MenuShPtr area;
+    MenuShPtr generateFor;
+    MenuShPtr interpolate;
+    MenuShPtr normalize;
+
+    MenuShPtr modulus;
+    MenuShPtr perm;
+    MenuShPtr grad;
   };
 
   /// @brief - The definition of the game state.

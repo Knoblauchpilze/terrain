@@ -23,6 +23,11 @@ class PeriodicPerlinGenerator : public AbstractGradientGenerator
 
   void generate(const noise::Seed seed);
   void generatePermutationsTable(const noise::Seed seed);
+
+  public:
+  mutable int64_t modulusDuration{0};
+  mutable int64_t permDuration{0};
+  mutable int64_t gradDuration{0};
 };
 
 } // namespace pge::lattice

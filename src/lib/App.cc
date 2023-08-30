@@ -331,10 +331,17 @@ inline void App::renderTerrain(const CoordinateFrame &cf)
   const auto yMin = static_cast<int>(std::floor(center.y - dims.y / 2.0f));
   const auto yMax = static_cast<int>(std::ceil(center.y + dims.y / 2.0f));
 
+  // int64_t lattice{0};
+  // int64_t render{0};
+  // int64_t loopX{0};
+  // const auto beginY = std::chrono::high_resolution_clock::now();
+
   for (auto y = yMin; y <= yMax; ++y)
   {
+    // const auto beginX = std::chrono::high_resolution_clock::now();
     for (auto x = xMin; x <= xMax; ++x)
     {
+      // const auto begin = std::chrono::high_resolution_clock::now();
       SpriteDesc sp;
       sp.x      = 1.0f * x;
       sp.y      = 1.0f * y + 1.0f;
@@ -347,10 +354,28 @@ inline void App::renderTerrain(const CoordinateFrame &cf)
       {
         sp.sprite.tint = colorFromTerrain(terrain.at(x, y));
       }
+      // const auto mid = std::chrono::high_resolution_clock::now();
 
       drawRect(sp, cf);
+      // const auto end = std::chrono::high_resolution_clock::now();
+      // lattice += std::chrono::duration_cast<std::chrono::nanoseconds>(mid - begin).count();
+      // render += std::chrono::duration_cast<std::chrono::nanoseconds>(end - mid).count();
     }
+
+    // const auto endX = std::chrono::high_resolution_clock::now();
+    // loopX += std::chrono::duration_cast<std::chrono::nanoseconds>(endX - beginX).count();
   }
+  // const auto endY = std::chrono::high_resolution_clock::now();
+
+  // auto total = std::chrono::duration_cast<std::chrono::nanoseconds>(endY - beginY).count();
+
+  // const auto readable = [](const int64_t v) -> std::string {
+  //   constexpr auto NANOSECOND_TO_MILLISECOND = 1.0f / 1'000'000.0f;
+  //   return std::to_string(v * NANOSECOND_TO_MILLISECOND) + "ms";
+  // };
+  // std::cout << "[" << xMin << " - " << xMax << "][" << yMin << " - " << yMax
+  //           << "] Total: " << readable(total) << ", loop: " << readable(loopX)
+  //           << ", render: " << readable(render) << ", lattice: " << readable(lattice) << std::endl;
 }
 
 inline void App::renderLattice(const CoordinateFrame &cf)

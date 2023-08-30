@@ -2,6 +2,7 @@
 #pragma once
 
 #include "ILattice.hh"
+#include "Performance.hh"
 #include "Type.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
@@ -20,9 +21,14 @@ class Terrain : public utils::CoreObject
   void load(const std::string &fileName);
   void save(const std::string &fileName) const;
 
+  auto timers() const noexcept -> Performance;
+  void increaseTimers() noexcept;
+
   private:
   lattice::ILatticePtr m_lattice{};
   int m_scale;
+
+  mutable Performance m_timers{};
 };
 
 using TerrainPtr = std::unique_ptr<Terrain>;
