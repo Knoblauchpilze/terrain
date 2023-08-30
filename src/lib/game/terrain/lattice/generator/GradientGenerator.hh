@@ -18,6 +18,11 @@ class GradientGenerator : public AbstractGradientGenerator
   private:
   IHasherPtr m_hasher;
   noise::INoisePtr m_noise;
+
+  public:
+  mutable int64_t modulusDuration{0};
+  mutable int64_t permDuration{0};
+  mutable int64_t gradDuration{0};
 };
 
 } // namespace pge::lattice

@@ -11,9 +11,12 @@
 #include "ValueLattice.hh"
 #include "WhiteNoise.hh"
 
+#include <sstream>
+
 namespace pge {
 
-constexpr auto DEFAULT_MENU_HEIGHT = 50;
+constexpr auto STATUS_MENU_HEIGHT      = 50;
+constexpr auto PERFORMANCE_MENU_HEIGHT = 25;
 
 constexpr auto MIN_NOISE_PERIOD = 4;
 constexpr auto MAX_NOISE_PERIOD = 1024;
@@ -66,6 +69,12 @@ std::vector<MenuShPtr> Game::generateMenus(float width, float height)
     out.push_back(menu);
   }
 
+  menus = generatePerformanceMenus(width, height);
+  for (auto &menu : menus)
+  {
+    out.push_back(menu);
+  }
+
   return out;
 }
 
@@ -88,6 +97,7 @@ bool Game::step(float /*tDelta*/)
   }
 
   updateUI();
+  m_terrain->increaseTimers();
 
   return true;
 }
@@ -295,39 +305,102 @@ void Game::updateUI()
   text = "Period: ";
   text += std::to_string(m_period);
   m_menus.period->setText(text);
+
+  const auto perf = m_terrain->timers();
+  if (perf.steps == 0)
+  {
+    return;
+  }
+  constexpr auto NANOSECOND_TO_MILLISECOND = 1.0f / 1'000'000.0f;
+
+  const auto readable = [](const int64_t v, const int64_t steps) -> std::string {
+    auto out = NANOSECOND_TO_MILLISECOND * v;
+    out /= steps;
+
+    std::stringstream ss;
+    ss.precision(3);
+
+    ss << out;
+    return ss.str();
+  };
+
+  text = "H: ";
+  text += readable(perf.heightDuration, perf.steps);
+  text += "ms";
+  m_menus.height->setText(text);
+
+  text = "A: ";
+  text += readable(perf.atDuration, perf.steps);
+  text += "ms";
+  m_menus.at->setText(text);
+
+  text = "Ar: ";
+  text += readable(perf.areaDuration, perf.steps);
+  text += "ms";
+  m_menus.area->setText(text);
+
+  text = "G: ";
+  text += readable(perf.generateForDuration, perf.steps);
+  text += "ms";
+  m_menus.generateFor->setText(text);
+
+  text = "I: ";
+  text += readable(perf.interpolateDuration, perf.steps);
+  text += "ms";
+  m_menus.interpolate->setText(text);
+
+  text = "N: ";
+  text += readable(perf.normalizeDuration, perf.steps);
+  text += "ms";
+  m_menus.normalize->setText(text);
+
+  text = "M: ";
+  text += readable(perf.modulusDuration, perf.steps);
+  text += "ms";
+  m_menus.modulus->setText(text);
+
+  text = "P: ";
+  text += readable(perf.permDuration, perf.steps);
+  text += "ms";
+  m_menus.perm->setText(text);
+
+  text = "Gr: ";
+  text += readable(perf.gradDuration, perf.steps);
+  text += "ms";
+  m_menus.grad->setText(text);
 }
 
 auto Game::generateStatusMenus(int width, int /*height*/) -> std::vector<MenuShPtr>
 {
   std::vector<MenuShPtr> out{};
   auto status = generateMenu(olc::vi2d{0, 0},
-                             olc::vi2d{width, DEFAULT_MENU_HEIGHT},
+                             olc::vi2d{width, STATUS_MENU_HEIGHT},
                              "",
                              "status",
                              false,
                              menu::Layout::Horizontal);
 
   m_menus.scale = generateMenu(olc::vi2d{0, 0},
-                               olc::vi2d{10, DEFAULT_MENU_HEIGHT},
+                               olc::vi2d{10, STATUS_MENU_HEIGHT},
                                "Scale: N/A",
                                "scale",
                                true);
   m_menus.scale->setSimpleAction([](Game &g) { g.toggleTerrainScale(); });
   status->addMenu(m_menus.scale);
   m_menus.lattice = generateMenu(olc::vi2d{0, 0},
-                                 olc::vi2d{10, DEFAULT_MENU_HEIGHT},
+                                 olc::vi2d{10, STATUS_MENU_HEIGHT},
                                  "Lattice: N/A",
                                  "lattice",
                                  false);
   status->addMenu(m_menus.lattice);
   m_menus.display = generateMenu(olc::vi2d{0, 0},
-                                 olc::vi2d{10, DEFAULT_MENU_HEIGHT},
+                                 olc::vi2d{10, STATUS_MENU_HEIGHT},
                                  "Display: N/A",
                                  "display",
                                  false);
   status->addMenu(m_menus.display);
   m_menus.period = generateMenu(olc::vi2d{0, 0},
-                                olc::vi2d{10, DEFAULT_MENU_HEIGHT},
+                                olc::vi2d{10, STATUS_MENU_HEIGHT},
                                 "Period: " + std::to_string(m_period),
                                 "period",
                                 true);
@@ -335,6 +408,76 @@ auto Game::generateStatusMenus(int width, int /*height*/) -> std::vector<MenuShP
   status->addMenu(m_menus.period);
 
   out.push_back(status);
+  return out;
+}
+
+auto Game::generatePerformanceMenus(int width, int height) -> std::vector<MenuShPtr>
+{
+  std::vector<MenuShPtr> out{};
+  auto perf = generateMenu(olc::vi2d{0, height - PERFORMANCE_MENU_HEIGHT},
+                           olc::vi2d{width, PERFORMANCE_MENU_HEIGHT},
+                           "",
+                           "perf",
+                           false,
+                           menu::Layout::Horizontal);
+
+  m_menus.height = generateMenu(olc::vi2d{0, 0},
+                                olc::vi2d{10, PERFORMANCE_MENU_HEIGHT},
+                                "H: N/A",
+                                "height",
+                                false);
+  perf->addMenu(m_menus.height);
+  m_menus.at = generateMenu(olc::vi2d{0, 0},
+                            olc::vi2d{10, PERFORMANCE_MENU_HEIGHT},
+                            "A: N/A",
+                            "at",
+                            false);
+  perf->addMenu(m_menus.at);
+  m_menus.area = generateMenu(olc::vi2d{0, 0},
+                              olc::vi2d{10, PERFORMANCE_MENU_HEIGHT},
+                              "Ar: N/A",
+                              "area",
+                              false);
+  perf->addMenu(m_menus.area);
+  m_menus.generateFor = generateMenu(olc::vi2d{0, 0},
+                                     olc::vi2d{10, PERFORMANCE_MENU_HEIGHT},
+                                     "G: N/A",
+                                     "generateFor",
+                                     false);
+  perf->addMenu(m_menus.generateFor);
+  m_menus.interpolate = generateMenu(olc::vi2d{0, 0},
+                                     olc::vi2d{10, PERFORMANCE_MENU_HEIGHT},
+                                     "I: N/A",
+                                     "interpolate",
+                                     false);
+  perf->addMenu(m_menus.interpolate);
+  m_menus.normalize = generateMenu(olc::vi2d{0, 0},
+                                   olc::vi2d{10, PERFORMANCE_MENU_HEIGHT},
+                                   "N: N/A",
+                                   "normalize",
+                                   false);
+  perf->addMenu(m_menus.normalize);
+  m_menus.modulus = generateMenu(olc::vi2d{0, 0},
+                                 olc::vi2d{10, PERFORMANCE_MENU_HEIGHT},
+                                 "M: N/A",
+                                 "modulus",
+                                 false);
+  perf->addMenu(m_menus.modulus);
+  m_menus.perm = generateMenu(olc::vi2d{0, 0},
+                              olc::vi2d{10, PERFORMANCE_MENU_HEIGHT},
+                              "P: N/A",
+                              "perm",
+                              false);
+  perf->addMenu(m_menus.perm);
+  m_menus.grad = generateMenu(olc::vi2d{0, 0},
+                              olc::vi2d{10, PERFORMANCE_MENU_HEIGHT},
+                              "Gr: N/A",
+                              "grad",
+                              false);
+  perf->addMenu(m_menus.grad);
+
+  out.push_back(perf);
+
   return out;
 }
 

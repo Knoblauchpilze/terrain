@@ -30,6 +30,16 @@ class AbstractLattice : public ILattice
   IValueGeneratorPtr<ValueType> m_valueGenerator;
   interpolation::IInterpolatorPtr m_interpolator;
   std::optional<NormalizationFunc> m_normalization;
+
+  public:
+  int64_t areaDuration{0};
+  int64_t generateForDuration{0};
+  int64_t interpolateDuration{0};
+  int64_t normalizeDuration{0};
+
+  int64_t modulusDuration{0};
+  int64_t permDuration{0};
+  int64_t gradDuration{0};
 };
 
 } // namespace pge::lattice

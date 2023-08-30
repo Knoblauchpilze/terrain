@@ -2,6 +2,8 @@
 #include "PeriodicPerlinGenerator.hh"
 #include <random>
 
+#include <chrono>
+
 namespace pge::lattice {
 
 PeriodicPerlinGenerator::PeriodicPerlinGenerator(const int period, const noise::Seed seed)
@@ -18,12 +20,27 @@ PeriodicPerlinGenerator::PeriodicPerlinGenerator(const int period, const noise::
 auto PeriodicPerlinGenerator::at(const utils::Vector2i &latticePoint) const noexcept
   -> utils::Vector2f
 {
+  this->modulusDuration = 0;
+  this->permDuration    = 0;
+  this->gradDuration    = 0;
+  const auto st         = std::chrono::steady_clock::now();
+
   // https://stackoverflow.com/questions/3072665/bitwise-and-in-place-of-modulus-operator
   const auto xMod = latticePoint.x() & m_modulusMask;
   const auto yMod = latticePoint.y() & m_modulusMask;
 
-  const auto id   = m_permutations[m_permutations[xMod] + yMod];
+  const auto p1 = std::chrono::steady_clock::now();
+
+  const auto id = m_permutations[m_permutations[xMod] + yMod];
+
+  const auto p2 = std::chrono::steady_clock::now();
+
   const auto grad = m_gradients[id];
+
+  const auto p3         = std::chrono::steady_clock::now();
+  this->modulusDuration = std::chrono::duration_cast<std::chrono::nanoseconds>(p1 - st).count();
+  this->permDuration    = std::chrono::duration_cast<std::chrono::nanoseconds>(p2 - p1).count();
+  this->gradDuration    = std::chrono::duration_cast<std::chrono::nanoseconds>(p3 - p2).count();
 
   return grad;
 }
