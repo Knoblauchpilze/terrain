@@ -5,6 +5,8 @@
 #include "GradientLattice.hh"
 #include "Hasher.hh"
 #include "Menu.hh"
+#include "PeriodicGradientGenerator.hh"
+#include "PeriodicGradientLattice.hh"
 #include "PeriodicPerlinGenerator.hh"
 #include "PeriodicPerlinLattice.hh"
 #include "ValueGenerator.hh"
@@ -19,7 +21,7 @@ constexpr auto MIN_NOISE_PERIOD = 4;
 constexpr auto MAX_NOISE_PERIOD = 1024;
 
 constexpr auto MIN_TERRAIN_SCALE = 2;
-constexpr auto MAX_TERRAIN_SCALE = 16;
+constexpr auto MAX_TERRAIN_SCALE = 64;
 
 namespace {
 auto generateMenu(const olc::vi2d &pos,
@@ -124,11 +126,13 @@ void Game::toggleLatticeMode()
       m_latticeMode = LatticeMode::GRADIENT;
       break;
     case LatticeMode::GRADIENT:
-      m_latticeMode = LatticeMode::PERLIN;
+      m_latticeMode = LatticeMode::PERIODIC_GRADIENT;
       break;
-    case LatticeMode::PERLIN:
+    case LatticeMode::PERIODIC_GRADIENT:
+      m_latticeMode = LatticeMode::PERIODIC_PERLIN;
+      break;
     default:
-      m_latticeMode = LatticeMode::VALUE;
+      m_latticeMode = LatticeMode::PERIODIC_GRADIENT;
       break;
   }
 
@@ -180,12 +184,13 @@ auto Game::latticeAt(const int x, const int y) const -> std::vector<float>
   switch (m_latticeMode)
   {
     case LatticeMode::VALUE:
-      out.push_back(m_valueGenerator->at(utils::Vector2i(x, y)));
+      out.push_back(m_valueGenerator->at(utils::Vector2i(x / m_scale, y / m_scale)));
       break;
     case LatticeMode::GRADIENT:
-    case LatticeMode::PERLIN:
+    case LatticeMode::PERIODIC_GRADIENT:
+    case LatticeMode::PERIODIC_PERLIN:
     {
-      const auto grad = m_gradientGenerator->at(utils::Vector2i(x, y));
+      const auto grad = m_gradientGenerator->at(utils::Vector2i(x / m_scale, y / m_scale));
       out.push_back(grad.x());
       out.push_back(grad.y());
     }
@@ -215,7 +220,10 @@ void Game::generate()
                                                                          std::move(noiseCopy));
     }
     break;
-    case LatticeMode::PERLIN:
+    case LatticeMode::PERIODIC_GRADIENT:
+      m_gradientGenerator = std::make_unique<lattice::PeriodicGradientGenerator>(m_period, seed);
+      break;
+    case LatticeMode::PERIODIC_PERLIN:
       m_gradientGenerator = std::make_unique<lattice::PeriodicPerlinGenerator>(m_period, seed);
       break;
     case LatticeMode::VALUE:
@@ -241,7 +249,12 @@ void Game::generate()
                                                            std::move(noise),
                                                            std::move(interpolator));
       break;
-    case LatticeMode::PERLIN:
+    case LatticeMode::PERIODIC_GRADIENT:
+      lattice = std::make_unique<lattice::PeriodicGradientLattice>(m_period,
+                                                                   seed,
+                                                                   std::move(interpolator));
+      break;
+    case LatticeMode::PERIODIC_PERLIN:
       lattice = std::make_unique<lattice::PeriodicPerlinLattice>(m_period,
                                                                  seed,
                                                                  std::move(interpolator));
@@ -285,7 +298,9 @@ void Game::updateUI()
   text = "Lattice: ";
   text += (m_latticeMode == LatticeMode::GRADIENT
              ? "gradient"
-             : (m_latticeMode == LatticeMode::PERLIN ? "perlin" : "value"));
+             : (m_latticeMode == LatticeMode::PERIODIC_GRADIENT
+                  ? "periodic gradient"
+                  : (m_latticeMode == LatticeMode::PERIODIC_PERLIN ? "periodic perlin" : "value")));
   m_menus.lattice->setText(text);
 
   text = "Display: ";

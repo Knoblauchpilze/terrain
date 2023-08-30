@@ -59,6 +59,10 @@ In general:
 
 The [Terrain](src/lib/game/terrain/Terrain.hh) class is using a lattice to combine it into a consistent value. It uses layered noise and various frequencies to generate coherent values (TODO).
 
+## Further ideas
+
+This [article](https://www.codeproject.com/Articles/785084/A-generic-lattice-noise-algorithm-an-evolution-of) about generalizing the use of a lattice to create noise seems pretty interesting.
+
 # Benchmark
 
 The performance values are very different based on whether we use a fully procedural generation or a periodic one. The periodic value allows to skip the expensive `seed` operation of the noise generator for each coordinate but doesn't allow for infinite generation of different landscape.
