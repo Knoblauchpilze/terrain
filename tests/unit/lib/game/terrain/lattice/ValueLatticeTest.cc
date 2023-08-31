@@ -1,14 +1,14 @@
 
 #include "ValueLattice.hh"
 #include "Bilinear.hh"
-#include "Hasher.hh"
+#include "Hasher2d.hh"
 #include "ILatticePreparer.hh"
 #include "WhiteNoise.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
 
-namespace pge::lattice {
+namespace pge::terrain {
 class Unit_Lattice_ValueLattice : public LatticePreparer<ValueLattice>, public Test
 {
   protected:
@@ -20,20 +20,20 @@ class Unit_Lattice_ValueLattice : public LatticePreparer<ValueLattice>, public T
 
 TEST_F(Unit_Lattice_ValueLattice, Test_UseHasher)
 {
-  EXPECT_CALL(*mockHasher, hash(_, _)).Times(4);
-  lattice->at(0, 0);
+  EXPECT_CALL(*mockHasher, hash(_)).Times(4);
+  lattice->at({});
 }
 
 TEST_F(Unit_Lattice_ValueLattice, Test_UseNoise)
 {
   EXPECT_CALL(*mockNoise, next()).Times(4);
-  lattice->at(0, 0);
+  lattice->at({});
 }
 
 TEST_F(Unit_Lattice_ValueLattice, Test_UseInterpolate)
 {
   EXPECT_CALL(*mockInterpolator, interpolate(_, _, _, _, _, _)).Times(1);
-  lattice->at(0, 0);
+  lattice->at({});
 }
 
 namespace {
@@ -69,7 +69,7 @@ TEST_P(InterpolateValueTestSuite, Test_Interpolate)
   const auto param = GetParam();
 
   EXPECT_CALL(*mockInterpolator, interpolate(_, _, _, _, param.px, param.py)).Times(1);
-  lattice->at(param.x, param.y);
+  lattice->at(Point2d(param.x, param.y));
 }
 } // namespace
 
@@ -110,14 +110,14 @@ TEST_P(ValueTestSuite, Test_Value)
   const auto param = GetParam();
 
   constexpr auto SEED = 1993;
-  auto hasher         = std::make_unique<lattice::Hasher>(SEED);
-  auto noise          = std::make_unique<noise::WhiteNoise>();
-  auto interpolator   = std::make_unique<interpolation::Bilinear>();
-  auto lattice        = std::make_unique<lattice::ValueLattice>(std::move(hasher),
-                                                         std::move(noise),
-                                                         std::move(interpolator));
+  auto hasher         = std::make_unique<Hasher2d>(SEED);
+  auto noise          = std::make_unique<WhiteNoise>();
+  auto interpolator   = std::make_unique<Bilinear>();
+  auto lattice        = std::make_unique<ValueLattice>(std::move(hasher),
+                                                std::move(noise),
+                                                std::move(interpolator));
 
-  const auto actual = lattice->at(param.x, param.y);
+  const auto actual = lattice->at(Point2d(param.x, param.y));
   EXPECT_NEAR(actual, param.expected, param.threshold);
 }
 } // namespace
@@ -133,4 +133,4 @@ INSTANTIATE_TEST_SUITE_P(Unit_Lattice_ValueLattice,
                                 TestCaseValue{0.01f, 0.79f, 0.5179381f}),
                          generateTestNameForValue);
 
-} // namespace pge::lattice
+} // namespace pge::terrain

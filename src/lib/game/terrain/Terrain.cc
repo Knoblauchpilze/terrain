@@ -36,7 +36,7 @@ auto heightToTerrainType(const float height) noexcept -> Type
 
 } // namespace
 
-Terrain::Terrain(lattice::ILatticePtr lattice, const int scale) noexcept
+Terrain::Terrain(ILattice2dPtr lattice, const int scale) noexcept
   : utils::CoreObject("2d")
   , m_lattice(std::move(lattice))
   , m_scale(scale)
@@ -46,7 +46,7 @@ Terrain::Terrain(lattice::ILatticePtr lattice, const int scale) noexcept
 
 auto Terrain::height(const float x, const float y) const -> float
 {
-  return m_lattice->at(x / m_scale, y / m_scale);
+  return m_lattice->at(Point2d(x / m_scale, y / m_scale));
 }
 
 auto Terrain::at(const float x, const float y) const -> Type

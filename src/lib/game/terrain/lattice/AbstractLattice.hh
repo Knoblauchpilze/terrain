@@ -4,34 +4,35 @@
 #include "IAreaGenerator.hh"
 #include "IInterpolator.hh"
 #include "ILattice.hh"
+#include "IPoint.hh"
 #include "IValueGenerator.hh"
 #include <functional>
 #include <optional>
 
-namespace pge::lattice {
+namespace pge::terrain {
 
-template<typename ValueType>
-class AbstractLattice : public ILattice
+template<int ValueDimension>
+class AbstractLattice : public ILattice<2>
 {
   public:
   ~AbstractLattice() override = default;
 
-  auto at(const float x, const float y) -> float override;
+  auto at(const Point2d &point) -> float override;
 
   protected:
   using NormalizationFunc = std::function<float(const float)>;
 
-  AbstractLattice(IValueGeneratorPtr<ValueType> valueGenerator,
-                  interpolation::IInterpolatorPtr interpolator,
+  AbstractLattice(IValueGeneratorPtr<2, ValueDimension> valueGenerator,
+                  IInterpolatorPtr interpolator,
                   std::optional<NormalizationFunc> normalization) noexcept;
 
   private:
-  IAreaGeneratorPtr m_areaGenerator;
-  IValueGeneratorPtr<ValueType> m_valueGenerator;
-  interpolation::IInterpolatorPtr m_interpolator;
+  IArea2dGeneratorPtr m_areaGenerator;
+  IValueGeneratorPtr<2, ValueDimension> m_valueGenerator;
+  IInterpolatorPtr m_interpolator;
   std::optional<NormalizationFunc> m_normalization;
 };
 
-} // namespace pge::lattice
+} // namespace pge::terrain
 
 #include "AbstractLattice.hxx"

@@ -1,18 +1,26 @@
 
 #pragma once
 
+#include "IValueGenerator.hh"
 #include <memory>
 
-namespace pge::lattice {
+namespace pge::terrain {
 
+template<int Dimension>
 class ILattice
 {
   public:
   virtual ~ILattice() = default;
 
-  virtual auto at(const float x, const float y) -> float = 0;
+  using LatticePoint = ILatticePoint<Dimension>;
+  using Point        = IPoint<Dimension>;
+
+  virtual auto at(const Point &point) -> float = 0;
 };
 
-using ILatticePtr = std::unique_ptr<ILattice>;
+template<int Dimension>
+using ILatticePtr = std::unique_ptr<ILattice<Dimension>>;
 
-} // namespace pge::lattice
+using ILattice2dPtr = ILatticePtr<2>;
+
+} // namespace pge::terrain

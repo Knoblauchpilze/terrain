@@ -4,7 +4,7 @@
 
 using namespace ::testing;
 
-namespace pge::noise {
+namespace pge::terrain {
 constexpr auto DEFAULT_SEED = 10;
 
 TEST(Unit_Noise_WhiteNoise, Test_ReturnSameValueWithSameSeed)
@@ -71,4 +71,4 @@ INSTANTIATE_TEST_SUITE_P(Unit_Noise_WhiteNoise,
                                 TestCase{5, -0.822405f, -1.0f, -0.2f}),
                          generateTestName);
 
-} // namespace pge::noise
+} // namespace pge::terrain

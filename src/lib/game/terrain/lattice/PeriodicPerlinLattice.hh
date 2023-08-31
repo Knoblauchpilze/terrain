@@ -4,15 +4,13 @@
 #include "AbstractLattice.hh"
 #include "INoise.hh"
 
-namespace pge::lattice {
+namespace pge::terrain {
 
-class PeriodicPerlinLattice : public AbstractLattice<utils::Vector2f>
+class PeriodicPerlinLattice : public AbstractLattice<2>
 {
   public:
-  PeriodicPerlinLattice(const int period,
-                        const noise::Seed seed,
-                        interpolation::IInterpolatorPtr interpolator);
+  PeriodicPerlinLattice(const int period, const Seed seed, IInterpolatorPtr interpolator);
   ~PeriodicPerlinLattice() override = default;
 };
 
-} // namespace pge::lattice
+} // namespace pge::terrain

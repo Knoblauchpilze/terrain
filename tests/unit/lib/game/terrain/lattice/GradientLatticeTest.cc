@@ -1,14 +1,14 @@
 
 #include "GradientLattice.hh"
 #include "Bilinear.hh"
-#include "Hasher.hh"
+#include "Hasher2d.hh"
 #include "ILatticePreparer.hh"
 #include "WhiteNoise.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
 
-namespace pge::lattice {
+namespace pge::terrain {
 class Unit_Lattice_GradientLattice : public LatticePreparer<GradientLattice>, public Test
 {
   protected:
@@ -20,20 +20,20 @@ class Unit_Lattice_GradientLattice : public LatticePreparer<GradientLattice>, pu
 
 TEST_F(Unit_Lattice_GradientLattice, Test_UseHasher)
 {
-  EXPECT_CALL(*mockHasher, hash(_, _)).Times(4);
-  lattice->at(0, 0);
+  EXPECT_CALL(*mockHasher, hash(_)).Times(4);
+  lattice->at({});
 }
 
 TEST_F(Unit_Lattice_GradientLattice, Test_UseNoise)
 {
   EXPECT_CALL(*mockNoise, next()).Times(8);
-  lattice->at(0, 0);
+  lattice->at({});
 }
 
 TEST_F(Unit_Lattice_GradientLattice, Test_UseInterpolate)
 {
   EXPECT_CALL(*mockInterpolator, interpolate(_, _, _, _, _, _)).Times(1);
-  lattice->at(0, 0);
+  lattice->at({});
 }
 
 namespace {
@@ -68,7 +68,7 @@ TEST_P(InterpolateGradientTestSuite, Test_Interpolate)
   const auto param = GetParam();
 
   EXPECT_CALL(*mockInterpolator, interpolate(_, _, _, _, param.px, param.py)).Times(1);
-  lattice->at(param.x, param.y);
+  lattice->at(Point2d(param.x, param.y));
 }
 } // namespace
 
@@ -109,14 +109,14 @@ TEST_P(GradientTestSuite, Test_Value)
   const auto param = GetParam();
 
   constexpr auto SEED = 1993;
-  auto hasher         = std::make_unique<lattice::Hasher>(SEED);
-  auto noise          = std::make_unique<noise::WhiteNoise>(-1.0f, 1.0f);
-  auto interpolator   = std::make_unique<interpolation::Bilinear>();
-  auto lattice        = std::make_unique<lattice::GradientLattice>(std::move(hasher),
-                                                            std::move(noise),
-                                                            std::move(interpolator));
+  auto hasher         = std::make_unique<Hasher2d>(SEED);
+  auto noise          = std::make_unique<WhiteNoise>(-1.0f, 1.0f);
+  auto interpolator   = std::make_unique<Bilinear>();
+  auto lattice        = std::make_unique<GradientLattice>(std::move(hasher),
+                                                   std::move(noise),
+                                                   std::move(interpolator));
 
-  const auto actual = lattice->at(param.x, param.y);
+  const auto actual = lattice->at(Point2d(param.x, param.y));
   EXPECT_NEAR(actual, param.expected, param.threshold);
 }
 } // namespace
@@ -132,4 +132,4 @@ INSTANTIATE_TEST_SUITE_P(Unit_Lattice_GradientLattice,
                                 TestCaseValue{0.01f, 0.79f, 0.3415382f}),
                          generateTestNameForValue);
 
-} // namespace pge::lattice
+} // namespace pge::terrain

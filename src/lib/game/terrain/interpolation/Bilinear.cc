@@ -1,7 +1,7 @@
 
 #include "Bilinear.hh"
 
-namespace pge::interpolation {
+namespace pge::terrain {
 
 auto Bilinear::interpolate(const float tl,
                            const float tr,
@@ -16,4 +16,4 @@ auto Bilinear::interpolate(const float tl,
   return (1.0f - py) * bottom + py * top;
 }
 
-} // namespace pge::interpolation
+} // namespace pge::terrain

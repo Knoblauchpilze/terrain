@@ -5,15 +5,13 @@
 #include "IHasher.hh"
 #include "INoise.hh"
 
-namespace pge::lattice {
+namespace pge::terrain {
 
-class ValueLattice : public AbstractLattice<float>
+class ValueLattice : public AbstractLattice<1>
 {
   public:
-  ValueLattice(IHasherPtr hasher,
-               noise::INoisePtr noise,
-               interpolation::IInterpolatorPtr interpolator);
+  ValueLattice(IHasher2dPtr hasher, INoisePtr noise, IInterpolatorPtr interpolator);
   ~ValueLattice() override = default;
 };
 
-} // namespace pge::lattice
+} // namespace pge::terrain

@@ -1,11 +1,11 @@
 
 #pragma once
 
-namespace pge::interpolation {
+namespace pge::terrain {
 
 enum class Algorithm
 {
   BILINEAR,
 };
 
-} // namespace pge::interpolation
+} // namespace pge::terrain

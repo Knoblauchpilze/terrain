@@ -2,14 +2,12 @@
 #include "ValueLattice.hh"
 #include "ValueGenerator.hh"
 
-namespace pge::lattice {
+namespace pge::terrain {
 
-ValueLattice::ValueLattice(IHasherPtr hasher,
-                           noise::INoisePtr noise,
-                           interpolation::IInterpolatorPtr interpolator)
+ValueLattice::ValueLattice(IHasher2dPtr hasher, INoisePtr noise, IInterpolatorPtr interpolator)
   : AbstractLattice(std::make_unique<ValueGenerator>(std::move(hasher), std::move(noise)),
                     std::move(interpolator),
                     {})
 {}
 
-} // namespace pge::lattice
+} // namespace pge::terrain

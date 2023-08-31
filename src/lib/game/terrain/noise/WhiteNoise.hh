@@ -5,7 +5,7 @@
 #include "INoise.hh"
 #include <random>
 
-namespace pge::noise {
+namespace pge::terrain {
 
 class WhiteNoise : public INoise
 {
@@ -22,4 +22,4 @@ class WhiteNoise : public INoise
   mutable std::uniform_real_distribution<float> m_distribution;
 };
 
-} // namespace pge::noise
+} // namespace pge::terrain
