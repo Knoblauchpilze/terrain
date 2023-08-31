@@ -52,7 +52,7 @@ auto AbstractPeriodicGradientGenerator::hash(const LatticePoint &latticePoint) c
     seed           = m_permutations[seed] + mod;
   }
 
-  return seed;
+  return m_permutations[seed];
 }
 
 } // namespace pge::terrain
