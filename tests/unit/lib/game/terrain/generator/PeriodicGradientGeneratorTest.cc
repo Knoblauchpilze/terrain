@@ -114,7 +114,7 @@ struct TestCase
   float threshold{REASONABLE_COMPARISON_THRESHOLD};
 };
 
-using PerlinGenerateForTestSuite = TestWithParam<TestCase>;
+using PeriodicGenerateForTestSuite = TestWithParam<TestCase>;
 
 auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
 {
@@ -138,7 +138,7 @@ auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
   return str;
 }
 
-TEST_P(PerlinGenerateForTestSuite, Test_GenerateFor)
+TEST_P(PeriodicGenerateForTestSuite, Test_GenerateFor)
 {
   const auto param = GetParam();
   PeriodicGradientGenerator generator{param.period, param.seed};
@@ -148,7 +148,7 @@ TEST_P(PerlinGenerateForTestSuite, Test_GenerateFor)
 }
 
 INSTANTIATE_TEST_SUITE_P(Unit_Lattice_PeriodicGradientGenerator,
-                         PerlinGenerateForTestSuite,
+                         PeriodicGenerateForTestSuite,
                          Values(TestCase{Point2d(0.2f, 0.3f), LatticePoint2d(0, 1), 0.208323f},
                                 TestCase{Point2d(1.2f, 2.3f), LatticePoint2d(1, 2), 0.358195f},
                                 TestCase{Point2d(-0.2f, 1.45f), LatticePoint2d(-1, 2), 0.874921f},
