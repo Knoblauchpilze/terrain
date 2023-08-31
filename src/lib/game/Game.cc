@@ -236,8 +236,8 @@ void Game::generate()
 
       auto noiseCopy   = std::make_unique<terrain::WhiteNoise>();
       auto hasherCopy  = std::make_unique<terrain::Hasher2d>(seed);
-      m_valueGenerator = std::make_unique<terrain::ValueGenerator>(std::move(hasherCopy),
-                                                                   std::move(noiseCopy));
+      m_valueGenerator = std::make_unique<terrain::ValueGenerator<2>>(std::move(hasherCopy),
+                                                                      std::move(noiseCopy));
     }
     break;
   }
@@ -264,10 +264,12 @@ void Game::generate()
       break;
     case LatticeMode::VALUE:
     default:
-      lattice = std::make_unique<terrain::ValueLattice>(std::move(hasher),
-                                                        std::move(noise),
-                                                        std::move(interpolator));
-      break;
+    {
+      lattice = std::make_unique<terrain::ValueLattice2d>(std::move(hasher),
+                                                          std::move(noise),
+                                                          std::move(interpolator));
+    }
+    break;
   }
 
   m_terrain = std::make_unique<terrain::Terrain>(std::move(lattice), m_scale);

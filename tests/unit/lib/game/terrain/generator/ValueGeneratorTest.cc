@@ -6,7 +6,7 @@
 using namespace ::testing;
 
 namespace pge::terrain {
-class Unit_Lattice_ValueGenerator : public GeneratorPreparer<ValueGenerator, 2, 1>, public Test
+class Unit_Lattice_ValueGenerator : public GeneratorPreparer<ValueGenerator<2>, 2, 1>, public Test
 {
   protected:
   void SetUp() override

@@ -9,7 +9,7 @@
 using namespace ::testing;
 
 namespace pge::terrain {
-class Unit_Lattice_ValueLattice : public LatticePreparer<ValueLattice>, public Test
+class Unit_Lattice_ValueLattice : public LatticePreparer<ValueLattice2d>, public Test
 {
   protected:
   void SetUp() override
@@ -46,7 +46,7 @@ struct TestCaseForInterpolate
   float py;
 };
 
-class InterpolateValueTestSuite : public LatticePreparer<ValueLattice>,
+class InterpolateValueTestSuite : public LatticePreparer<ValueLattice2d>,
                                   public TestWithParam<TestCaseForInterpolate>
 {
   protected:
@@ -113,9 +113,9 @@ TEST_P(ValueTestSuite, Test_Value)
   auto hasher         = std::make_unique<Hasher2d>(SEED);
   auto noise          = std::make_unique<WhiteNoise>();
   auto interpolator   = std::make_unique<Bilinear>();
-  auto lattice        = std::make_unique<ValueLattice>(std::move(hasher),
-                                                std::move(noise),
-                                                std::move(interpolator));
+  auto lattice        = std::make_unique<ValueLattice2d>(std::move(hasher),
+                                                  std::move(noise),
+                                                  std::move(interpolator));
 
   const auto actual = lattice->at(Point2d(param.x, param.y));
   EXPECT_NEAR(actual, param.expected, param.threshold);

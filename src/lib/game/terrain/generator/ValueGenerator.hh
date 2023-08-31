@@ -8,21 +8,30 @@
 
 namespace pge::terrain {
 
-class ValueGenerator : public IValueGenerator<2, 1>
+template<int Dimension>
+class ValueGenerator : public IValueGenerator<Dimension, 1>
 {
   public:
-  ValueGenerator(IHasher2dPtr hasher, INoisePtr noise);
+  ValueGenerator(IHasherPtr<Dimension> hasher, INoisePtr noise);
   ~ValueGenerator() override = default;
 
-  auto at(const LatticePoint2d &latticePoint) const noexcept -> Point1d override;
-  auto generateFor(const LatticePoint2d &latticePoint, const Point2d &point) const noexcept
+  using LatticePoint = ILatticePoint<Dimension>;
+  using Point        = IPoint<Dimension>;
+
+  auto at(const LatticePoint &latticePoint) const noexcept -> Point1d override;
+  auto generateFor(const LatticePoint &latticePoint, const Point &point) const noexcept
     -> float override;
 
   private:
-  IHasher2dPtr m_hasher;
+  IHasherPtr<Dimension> m_hasher;
   INoisePtr m_noise;
 };
 
-using ValueGeneratorPtr = std::unique_ptr<ValueGenerator>;
+template<int Dimension>
+using ValueGeneratorPtr = std::unique_ptr<ValueGenerator<Dimension>>;
+
+using ValueGenerator2dPtr = ValueGeneratorPtr<2>;
 
 } // namespace pge::terrain
+
+#include "ValueGenerator.hxx"

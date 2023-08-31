@@ -178,7 +178,7 @@ class Game : public utils::CoreObject
   static constexpr auto DEFAULT_TERRAIN_SCALE = 2;
   int m_scale{DEFAULT_TERRAIN_SCALE};
 
-  terrain::ValueGeneratorPtr m_valueGenerator{nullptr};
+  terrain::ValueGenerator2dPtr m_valueGenerator{nullptr};
   terrain::AbstractGradientGeneratorPtr m_gradientGenerator{nullptr};
 
   enum class LatticeMode
