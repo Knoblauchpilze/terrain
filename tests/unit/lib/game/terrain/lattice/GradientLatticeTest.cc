@@ -9,7 +9,7 @@
 using namespace ::testing;
 
 namespace pge::terrain {
-class Unit_Lattice_GradientLattice : public LatticePreparer<GradientLattice>, public Test
+class Unit_Terrain_GradientLattice : public LatticePreparer<GradientLattice>, public Test
 {
   protected:
   void SetUp() override
@@ -18,19 +18,19 @@ class Unit_Lattice_GradientLattice : public LatticePreparer<GradientLattice>, pu
   }
 };
 
-TEST_F(Unit_Lattice_GradientLattice, Test_UseHasher)
+TEST_F(Unit_Terrain_GradientLattice, Test_UseHasher)
 {
   EXPECT_CALL(*mockHasher, hash(_, _)).Times(4);
   lattice->at(0, 0);
 }
 
-TEST_F(Unit_Lattice_GradientLattice, Test_UseNoise)
+TEST_F(Unit_Terrain_GradientLattice, Test_UseNoise)
 {
   EXPECT_CALL(*mockNoise, next()).Times(8);
   lattice->at(0, 0);
 }
 
-TEST_F(Unit_Lattice_GradientLattice, Test_UseInterpolate)
+TEST_F(Unit_Terrain_GradientLattice, Test_UseInterpolate)
 {
   EXPECT_CALL(*mockInterpolator, interpolate(_, _, _, _, _, _)).Times(1);
   lattice->at(0, 0);
@@ -72,7 +72,7 @@ TEST_P(InterpolateGradientTestSuite, Test_Interpolate)
 }
 } // namespace
 
-INSTANTIATE_TEST_SUITE_P(Unit_Lattice_GradientLattice,
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice,
                          InterpolateGradientTestSuite,
                          Values(TestCaseInterpolate{0.0f, 0.0f, 0.0f, 0.0f},
                                 TestCaseInterpolate{0.5f, 0.0f, 0.5f, 0.0f},
@@ -121,7 +121,7 @@ TEST_P(GradientTestSuite, Test_Value)
 }
 } // namespace
 
-INSTANTIATE_TEST_SUITE_P(Unit_Lattice_GradientLattice,
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice,
                          GradientTestSuite,
                          Values(TestCaseValue{0.0f, 0.0f, 0.5f},
                                 TestCaseValue{0.0f, 1.0f, 0.5f},

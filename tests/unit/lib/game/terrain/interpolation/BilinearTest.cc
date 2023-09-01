@@ -6,7 +6,7 @@ using namespace ::testing;
 
 namespace pge::terrain {
 
-TEST(Unit_Interpolation_Bilinear, Test_Interpolate_LatticePoints)
+TEST(Unit_Terrain_Bilinear, Test_Interpolate_LatticePoints)
 {
   auto interpolator = Bilinear();
 
@@ -28,7 +28,7 @@ TEST(Unit_Interpolation_Bilinear, Test_Interpolate_LatticePoints)
   EXPECT_EQ(tl, out);
 }
 
-TEST(Unit_Interpolation_Bilinear, Test_Interpolate_X_Edges)
+TEST(Unit_Terrain_Bilinear, Test_Interpolate_X_Edges)
 {
   auto interpolator = Bilinear();
 
@@ -46,7 +46,7 @@ TEST(Unit_Interpolation_Bilinear, Test_Interpolate_X_Edges)
   EXPECT_EQ(expected, out);
 }
 
-TEST(Unit_Interpolation_Bilinear, Test_Interpolate_Y_Edges)
+TEST(Unit_Terrain_Bilinear, Test_Interpolate_Y_Edges)
 {
   auto interpolator = Bilinear();
 
@@ -66,7 +66,7 @@ TEST(Unit_Interpolation_Bilinear, Test_Interpolate_Y_Edges)
 
 constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
 
-TEST(Unit_Interpolation_Bilinear, Test_Interpolate_Quadrants)
+TEST(Unit_Terrain_Bilinear, Test_Interpolate_Quadrants)
 {
   auto interpolator = Bilinear();
 

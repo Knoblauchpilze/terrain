@@ -13,12 +13,12 @@ constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
 using Point        = utils::Vector2f;
 using LatticePoint = utils::Vector2i;
 
-TEST(Unit_Lattice_PeriodicGradientGenerator, Test_PeriodOddThrowException)
+TEST(Unit_Terrain_PeriodicGradientGenerator, Test_PeriodOddThrowException)
 {
   EXPECT_THROW(PeriodicGradientGenerator(3, DEFAULT_SEED), std::invalid_argument);
 }
 
-TEST(Unit_Lattice_PeriodicGradientGenerator, Test_PeriodicX)
+TEST(Unit_Terrain_PeriodicGradientGenerator, Test_PeriodicX)
 {
   PeriodicGradientGenerator generator{DEFAULT_PERIOD, DEFAULT_SEED};
 
@@ -36,7 +36,7 @@ TEST(Unit_Lattice_PeriodicGradientGenerator, Test_PeriodicX)
   EXPECT_NEAR(v1.y(), v3.y(), REASONABLE_COMPARISON_THRESHOLD);
 }
 
-TEST(Unit_Lattice_PeriodicGradientGenerator, Test_PeriodicY)
+TEST(Unit_Terrain_PeriodicGradientGenerator, Test_PeriodicY)
 {
   PeriodicGradientGenerator generator{DEFAULT_PERIOD, DEFAULT_SEED};
 
@@ -97,7 +97,7 @@ TEST_P(AtTestSuite, Test_At)
   EXPECT_NEAR(actual.y(), param.expected.y(), param.threshold);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Lattice_PeriodicGradientGenerator,
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicGradientGenerator,
                          AtTestSuite,
                          Values(TestCase{LatticePoint(0, 1),
                                          utils::Vector2f(-0.842704f, -0.538378f)},
@@ -151,7 +151,7 @@ TEST_P(PerlinGenerateForTestSuite, Test_GenerateFor)
   EXPECT_NEAR(actual, param.expected, param.threshold);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Lattice_PeriodicGradientGenerator,
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicGradientGenerator,
                          PerlinGenerateForTestSuite,
                          Values(TestCase{Point(0.2f, 0.3f), LatticePoint(0, 1), 0.208323f},
                                 TestCase{Point(1.2f, 2.3f), LatticePoint(1, 2), 0.358195f},

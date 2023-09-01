@@ -6,7 +6,7 @@
 using namespace ::testing;
 
 namespace pge::terrain {
-class Unit_Lattice_ValueGenerator : public GeneratorPreparer<ValueGenerator, float>, public Test
+class Unit_Terrain_ValueGenerator : public GeneratorPreparer<ValueGenerator, float>, public Test
 {
   protected:
   void SetUp() override
@@ -15,20 +15,20 @@ class Unit_Lattice_ValueGenerator : public GeneratorPreparer<ValueGenerator, flo
   }
 };
 
-TEST_F(Unit_Lattice_ValueGenerator, Test_UseHasher)
+TEST_F(Unit_Terrain_ValueGenerator, Test_UseHasher)
 {
   EXPECT_CALL(*mockHasher, hash(_, _)).Times(1);
   generator->generateFor(utils::Vector2i(), utils::Vector2f());
 }
 
-TEST_F(Unit_Lattice_ValueGenerator, Test_UseNoise)
+TEST_F(Unit_Terrain_ValueGenerator, Test_UseNoise)
 {
   EXPECT_CALL(*mockNoise, seed(_)).Times(1);
   EXPECT_CALL(*mockNoise, next()).Times(1);
   generator->generateFor(utils::Vector2i(), utils::Vector2f());
 }
 
-TEST_F(Unit_Lattice_ValueGenerator, Test_GenerateFor)
+TEST_F(Unit_Terrain_ValueGenerator, Test_GenerateFor)
 {
   ON_CALL(*mockHasher, hash(_, _)).WillByDefault(Return(1));
   ON_CALL(*mockNoise, next()).WillByDefault(Return(1.0f));
