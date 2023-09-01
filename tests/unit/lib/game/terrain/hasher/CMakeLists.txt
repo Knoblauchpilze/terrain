@@ -4,4 +4,5 @@ target_include_directories(terrain-tests PUBLIC
 	)
 
 target_sources(terrain-tests PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}/HasherTest.cc
 	)
