@@ -50,8 +50,8 @@ TEST(Unit_Terrain_PeriodicGradientGenerator, Test_PeriodicY)
 
   p             = LatticePoint2d(0, 1 - 3 * DEFAULT_PERIOD);
   const auto v3 = generator.at(p);
-  EXPECT_NEAR(v1(0), v3.x(), REASONABLE_COMPARISON_THRESHOLD);
-  EXPECT_NEAR(v1(1), v3.y(), REASONABLE_COMPARISON_THRESHOLD);
+  EXPECT_NEAR(v1(0), v3(0), REASONABLE_COMPARISON_THRESHOLD);
+  EXPECT_NEAR(v1(1), v3(1), REASONABLE_COMPARISON_THRESHOLD);
 }
 
 namespace at {
@@ -122,15 +122,15 @@ using PerlinGenerateForTestSuite = TestWithParam<TestCase>;
 auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
 {
   std::string str;
-  str += std::to_string(info.param.point.x());
+  str += std::to_string(info.param.point(0));
   str += "x";
-  str += std::to_string(info.param.point.y());
+  str += std::to_string(info.param.point(1));
 
   str += "_";
 
-  str += std::to_string(info.param.latticePoint.x());
+  str += std::to_string(info.param.latticePoint(0));
   str += "x";
-  str += std::to_string(info.param.latticePoint.y());
+  str += std::to_string(info.param.latticePoint(1));
 
   str += "_";
 
