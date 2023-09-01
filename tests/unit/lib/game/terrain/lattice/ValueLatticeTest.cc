@@ -9,7 +9,7 @@
 using namespace ::testing;
 
 namespace pge::terrain {
-class Unit_Lattice_ValueLattice : public LatticePreparer<ValueLattice>, public Test
+class Unit_Terrain_ValueLattice : public LatticePreparer<ValueLattice>, public Test
 {
   protected:
   void SetUp() override
@@ -18,19 +18,19 @@ class Unit_Lattice_ValueLattice : public LatticePreparer<ValueLattice>, public T
   }
 };
 
-TEST_F(Unit_Lattice_ValueLattice, Test_UseHasher)
+TEST_F(Unit_Terrain_ValueLattice, Test_UseHasher)
 {
   EXPECT_CALL(*mockHasher, hash(_, _)).Times(4);
   lattice->at(0, 0);
 }
 
-TEST_F(Unit_Lattice_ValueLattice, Test_UseNoise)
+TEST_F(Unit_Terrain_ValueLattice, Test_UseNoise)
 {
   EXPECT_CALL(*mockNoise, next()).Times(4);
   lattice->at(0, 0);
 }
 
-TEST_F(Unit_Lattice_ValueLattice, Test_UseInterpolate)
+TEST_F(Unit_Terrain_ValueLattice, Test_UseInterpolate)
 {
   EXPECT_CALL(*mockInterpolator, interpolate(_, _, _, _, _, _)).Times(1);
   lattice->at(0, 0);
@@ -73,7 +73,7 @@ TEST_P(InterpolateValueTestSuite, Test_Interpolate)
 }
 } // namespace
 
-INSTANTIATE_TEST_SUITE_P(Unit_Lattice_ValueLattice,
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_ValueLattice,
                          InterpolateValueTestSuite,
                          Values(TestCaseForInterpolate{0.0f, 0.0f, 0.0f, 0.0f},
                                 TestCaseForInterpolate{0.5f, 0.0f, 0.5f, 0.0f},
@@ -122,7 +122,7 @@ TEST_P(ValueTestSuite, Test_Value)
 }
 } // namespace
 
-INSTANTIATE_TEST_SUITE_P(Unit_Lattice_ValueLattice,
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_ValueLattice,
                          ValueTestSuite,
                          Values(TestCaseValue{0.0f, 0.0f, 0.1004222f},
                                 TestCaseValue{0.0f, 1.0f, 0.6273638f},

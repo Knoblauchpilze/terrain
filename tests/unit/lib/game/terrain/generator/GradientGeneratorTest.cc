@@ -6,7 +6,7 @@
 using namespace ::testing;
 
 namespace pge::terrain {
-class Unit_Lattice_GradientGenerator : public GeneratorPreparer<GradientGenerator, utils::Vector2f>,
+class Unit_Terrain_GradientGenerator : public GeneratorPreparer<GradientGenerator, utils::Vector2f>,
                                        public Test
 {
   protected:
@@ -16,13 +16,13 @@ class Unit_Lattice_GradientGenerator : public GeneratorPreparer<GradientGenerato
   }
 };
 
-TEST_F(Unit_Lattice_GradientGenerator, Test_UseHasher)
+TEST_F(Unit_Terrain_GradientGenerator, Test_UseHasher)
 {
   EXPECT_CALL(*mockHasher, hash(_, _)).Times(1);
   generator->generateFor(utils::Vector2i(), utils::Vector2f());
 }
 
-TEST_F(Unit_Lattice_GradientGenerator, Test_UseNoise)
+TEST_F(Unit_Terrain_GradientGenerator, Test_UseNoise)
 {
   EXPECT_CALL(*mockNoise, seed(_)).Times(1);
   EXPECT_CALL(*mockNoise, next()).Times(2);
@@ -100,7 +100,7 @@ TEST_P(GenerateForTestSuite, Test_GenerateFor)
 } // namespace
 
 INSTANTIATE_TEST_SUITE_P(
-  Unit_Lattice_GradientGenerator,
+  Unit_Terrain_GradientGenerator,
   GenerateForTestSuite,
   Values(TestCase{Point(0.2f, 0.3f), LatticePoint(0, 1), NoiseValues{1.0f, 0.0f}, 0.2f},
          TestCase{Point(0.2f, 0.3f), LatticePoint(0, 1), NoiseValues{0.0f, 1.0f}, -0.7f},

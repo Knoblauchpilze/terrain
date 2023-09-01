@@ -49,7 +49,7 @@ TEST_P(AreaTestSuite, Test)
   EXPECT_EQ(area.bottomRight.y(), param.minY);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Lattice_AreaGenerator,
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_AreaGenerator,
                          AreaTestSuite,
                          Values(TestCase{0.0f, 0.0f, 0, 1, 0, 1},
                                 TestCase{0.2f, 0.3f, 0, 1, 0, 1},
