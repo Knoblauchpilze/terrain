@@ -1,7 +1,8 @@
 
 #include "PeriodicGradientGenerator.hh"
-#include <iostream>
 #include <random>
+
+#include <iostream>
 
 namespace pge::terrain {
 PeriodicGradientGenerator::PeriodicGradientGenerator(const int period, const Seed seed)

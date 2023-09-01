@@ -101,7 +101,7 @@ INSTANTIATE_TEST_SUITE_P(
   Unit_Terrain_PeriodicGradientGenerator,
   AtTestSuite,
   Values(TestCase{LatticePoint2d{0, 1}, Point3d{0.261125f, 0.931419f, -0.253521f}},
-         TestCase{LatticePoint2d{1, 2}, Point3d{-0.541128f, -0.661083f, -0.51976f}}),
+         TestCase{LatticePoint2d{1, 2}, Point3d{-0.403105f, 0.236356f, 0.884105f}}),
   generateTestName);
 } // namespace at
 
@@ -154,7 +154,7 @@ TEST_P(PerlinGenerateForTestSuite, Test_GenerateFor)
 INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicGradientGenerator,
                          PerlinGenerateForTestSuite,
                          Values(TestCase{Point2d{0.2f, 0.3f}, LatticePoint2d{0, 1}, -0.599768f},
-                                TestCase{Point2d{1.2f, 2.3f}, LatticePoint2d{1, 2}, -0.30655f},
+                                TestCase{Point2d{1.2f, 2.3f}, LatticePoint2d{1, 2}, -0.009714f},
                                 TestCase{Point2d{-0.2f, 1.45f}, LatticePoint2d{-1, 2}, -0.478953f},
                                 TestCase{Point2d{-0.89f, -0.37f}, LatticePoint2d{-1, 0}, -0.10899f},
                                 TestCase{Point2d{0.78f, -0.37f}, LatticePoint2d{1, -1}, 0.006288f}),

@@ -38,6 +38,10 @@ void AbstractPeriodicGradientGenerator::generatePermutationsTable(const Seed see
   {
     auto k = distribution(generator);
     std::swap(m_permutations[i], m_permutations[k]);
+  }
+
+  for (auto i = 0; i < m_period; ++i)
+  {
     m_permutations[i + m_period] = m_permutations[i];
   }
 }
