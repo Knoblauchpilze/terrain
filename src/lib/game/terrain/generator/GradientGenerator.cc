@@ -8,12 +8,13 @@ GradientGenerator::GradientGenerator(IHasher2dPtr hasher, INoisePtr noise)
   , m_noise(std::move(noise))
 {}
 
-auto GradientGenerator::at(const LatticePoint2d &latticePoint) const noexcept -> utils::Vector2f
+auto GradientGenerator::at(const LatticePoint2d &latticePoint) const noexcept -> Point2d
 {
-  utils::Vector2f grad;
   m_noise->seed(m_hasher->hash(latticePoint));
-  grad.x() = m_noise->next();
-  grad.y() = m_noise->next();
+
+  Point2d grad;
+  grad(0) = m_noise->next();
+  grad(1) = m_noise->next();
 
   grad.normalize();
 

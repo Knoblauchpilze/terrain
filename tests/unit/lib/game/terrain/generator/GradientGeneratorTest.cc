@@ -6,7 +6,7 @@
 using namespace ::testing;
 
 namespace pge::terrain {
-class Unit_Terrain_GradientGenerator : public GeneratorPreparer<GradientGenerator, utils::Vector2f>,
+class Unit_Terrain_GradientGenerator : public GeneratorPreparer<GradientGenerator, Point2d>,
                                        public Test
 {
   protected:
@@ -47,7 +47,7 @@ struct TestCase
   float threshold{REASONABLE_COMPARISON_THRESHOLD};
 };
 
-class GenerateForTestSuite : public GeneratorPreparer<GradientGenerator, utils::Vector2f>,
+class GenerateForTestSuite : public GeneratorPreparer<GradientGenerator, Point2d>,
                              public TestWithParam<TestCase>
 {
   protected:
@@ -60,15 +60,15 @@ class GenerateForTestSuite : public GeneratorPreparer<GradientGenerator, utils::
 auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
 {
   std::string str;
-  str += std::to_string(info.param.point.x());
+  str += std::to_string(info.param.point(0));
   str += "x";
-  str += std::to_string(info.param.point.y());
+  str += std::to_string(info.param.point(1));
 
   str += "_";
 
-  str += std::to_string(info.param.latticePoint.x());
+  str += std::to_string(info.param.latticePoint(0));
   str += "x";
-  str += std::to_string(info.param.latticePoint.y());
+  str += std::to_string(info.param.latticePoint(1));
 
   str += "_";
 
@@ -102,10 +102,10 @@ TEST_P(GenerateForTestSuite, Test_GenerateFor)
 INSTANTIATE_TEST_SUITE_P(
   Unit_Terrain_GradientGenerator,
   GenerateForTestSuite,
-  Values(TestCase{Point(0.2f, 0.3f), LatticePoint(0, 1), NoiseValues{1.0f, 0.0f}, 0.2f},
-         TestCase{Point(0.2f, 0.3f), LatticePoint(0, 1), NoiseValues{0.0f, 1.0f}, -0.7f},
-         TestCase{Point(0.0f, 0.0f), LatticePoint(0, 0), NoiseValues{0.5f, 0.6f}, 0.0f},
-         TestCase{Point(-0.1f, 0.5f), LatticePoint(0, 1), NoiseValues{0.8f, 0.6f}, -0.38f}),
+  Values(TestCase{Point{0.2f, 0.3f}, LatticePoint{0, 1}, NoiseValues{1.0f, 0.0f}, 0.2f},
+         TestCase{Point{0.2f, 0.3f}, LatticePoint{0, 1}, NoiseValues{0.0f, 1.0f}, -0.7f},
+         TestCase{Point{0.0f, 0.0f}, LatticePoint{0, 0}, NoiseValues{0.5f, 0.6f}, 0.0f},
+         TestCase{Point{-0.1f, 0.5f}, LatticePoint{0, 1}, NoiseValues{0.8f, 0.6f}, -0.38f}),
   generateTestName);
 
 } // namespace pge::terrain
