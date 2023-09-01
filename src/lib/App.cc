@@ -374,30 +374,36 @@ inline void App::renderLattice(const CoordinateFrame &cf)
     for (auto x = xMin; x <= xMax; x += scale)
     {
       const auto values = m_game->latticeAt(x, y);
+      const auto center = cf.tilesToPixels(x + 0.5f, y + 0.5f);
 
       if (1 == values.size())
       {
-        std::string str;
-        str += std::to_string(values[0]);
-
-        auto pos        = cf.tilesToPixels(x + 0.5f, y + 0.5f);
+        const auto str  = std::to_string(values[0]);
         const auto size = GetTextSize(str);
-        pos -= size / 2.0f;
-        DrawString(pos, str, olc::DARK_RED);
+        const auto sPos = center - size / 2.0f;
+        DrawString(sPos, str, olc::DARK_RED);
       }
-      else
+      else if (3 == values.size())
       {
-        const auto basePos = cf.tilesToPixels(x + 0.5f, y + 0.5f);
-
-        auto str            = std::to_string(values[1]);
-        const auto baseSize = GetTextSize(str);
-        auto pos            = basePos - baseSize / 2.0f;
-        DrawString(pos, str, olc::DARK_RED);
-
-        str       = std::to_string(values[0]);
+        // y
+        auto str  = std::to_string(values[1]);
         auto size = GetTextSize(str);
-        pos       = olc::vf2d(basePos.x - size.x / 2.0f, basePos.y - baseSize.y / 2.0f - size.y);
-        DrawString(pos, str, olc::DARK_RED);
+        auto sPos = center - size / 2.0f;
+        DrawString(sPos, str, olc::DARK_GREEN);
+
+        const olc::vi2d refSize{0, size.y};
+
+        // x
+        str  = std::to_string(values[0]);
+        size = GetTextSize(str);
+        sPos = center - refSize - size / 2.0f;
+        DrawString(sPos, str, olc::DARK_RED);
+
+        // z
+        str  = std::to_string(values[2]);
+        size = GetTextSize(str);
+        sPos = center + refSize - olc::vi2d{size.x / 2, 0};
+        DrawString(sPos, str, olc::DARK_BLUE);
       }
     }
   }
