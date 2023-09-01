@@ -18,7 +18,7 @@ class Unit_Terrain_GradientGenerator : public GeneratorPreparer<GradientGenerato
 
 TEST_F(Unit_Terrain_GradientGenerator, Test_UseHasher)
 {
-  EXPECT_CALL(*mockHasher, hash(_, _)).Times(1);
+  EXPECT_CALL(*mockHasher, hash(_)).Times(1);
   generator->generateFor(utils::Vector2i(), utils::Vector2f());
 }
 

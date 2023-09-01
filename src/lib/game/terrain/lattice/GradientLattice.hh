@@ -10,7 +10,7 @@ namespace pge::terrain {
 class GradientLattice : public AbstractLattice<utils::Vector2f>
 {
   public:
-  GradientLattice(IHasherPtr hasher, INoisePtr noise, IInterpolatorPtr interpolator);
+  GradientLattice(IHasher2dPtr hasher, INoisePtr noise, IInterpolatorPtr interpolator);
   ~GradientLattice() override = default;
 };
 

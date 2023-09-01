@@ -13,7 +13,7 @@ template<typename Lattice>
 class LatticePreparer
 {
   protected:
-  MockHasher *mockHasher{nullptr};
+  MockHasher2d *mockHasher{nullptr};
   MockNoise *mockNoise{nullptr};
   MockInterpolator *mockInterpolator{nullptr};
 
@@ -21,7 +21,7 @@ class LatticePreparer
 
   void prepareLattice()
   {
-    auto hasher       = std::make_unique<::testing::NiceMock<MockHasher>>();
+    auto hasher       = std::make_unique<::testing::NiceMock<MockHasher2d>>();
     mockHasher        = hasher.get();
     auto noise        = std::make_unique<::testing::NiceMock<MockNoise>>();
     mockNoise         = noise.get();

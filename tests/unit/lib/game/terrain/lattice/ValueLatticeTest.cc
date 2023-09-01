@@ -20,7 +20,7 @@ class Unit_Terrain_ValueLattice : public LatticePreparer<ValueLattice>, public T
 
 TEST_F(Unit_Terrain_ValueLattice, Test_UseHasher)
 {
-  EXPECT_CALL(*mockHasher, hash(_, _)).Times(4);
+  EXPECT_CALL(*mockHasher, hash(_)).Times(4);
   lattice->at(0, 0);
 }
 
@@ -110,7 +110,7 @@ TEST_P(ValueTestSuite, Test_Value)
   const auto param = GetParam();
 
   constexpr auto SEED = 1993;
-  auto hasher         = std::make_unique<Hasher>(SEED);
+  auto hasher         = std::make_unique<Hasher2d>(SEED);
   auto noise          = std::make_unique<WhiteNoise>();
   auto interpolator   = std::make_unique<Bilinear>();
   auto lattice        = std::make_unique<ValueLattice>(std::move(hasher),

@@ -11,7 +11,7 @@ namespace pge::terrain {
 class ValueGenerator : public IValueGenerator<float>
 {
   public:
-  ValueGenerator(IHasherPtr hasher, INoisePtr noise);
+  ValueGenerator(IHasher2dPtr hasher, INoisePtr noise);
   ~ValueGenerator() override = default;
 
   auto at(const utils::Vector2i &latticePoint) const noexcept -> float override;
@@ -19,7 +19,7 @@ class ValueGenerator : public IValueGenerator<float>
     -> float override;
 
   private:
-  IHasherPtr m_hasher;
+  IHasher2dPtr m_hasher;
   INoisePtr m_noise;
 };
 

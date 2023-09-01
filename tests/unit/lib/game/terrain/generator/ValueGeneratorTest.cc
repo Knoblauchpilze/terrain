@@ -17,7 +17,7 @@ class Unit_Terrain_ValueGenerator : public GeneratorPreparer<ValueGenerator, flo
 
 TEST_F(Unit_Terrain_ValueGenerator, Test_UseHasher)
 {
-  EXPECT_CALL(*mockHasher, hash(_, _)).Times(1);
+  EXPECT_CALL(*mockHasher, hash(_)).Times(1);
   generator->generateFor(utils::Vector2i(), utils::Vector2f());
 }
 
@@ -30,7 +30,7 @@ TEST_F(Unit_Terrain_ValueGenerator, Test_UseNoise)
 
 TEST_F(Unit_Terrain_ValueGenerator, Test_GenerateFor)
 {
-  ON_CALL(*mockHasher, hash(_, _)).WillByDefault(Return(1));
+  ON_CALL(*mockHasher, hash(_)).WillByDefault(Return(1));
   ON_CALL(*mockNoise, next()).WillByDefault(Return(1.0f));
   const auto actual = generator->generateFor(utils::Vector2i(), utils::Vector2f());
   EXPECT_EQ(1.0f, actual);
