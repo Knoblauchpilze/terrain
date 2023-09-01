@@ -170,13 +170,10 @@ class Game : public utils::CoreObject
   /// simulation.
   Menus m_menus{};
 
-  static constexpr auto DEFAULT_SEED = 1993;
-  terrain::Seed m_nextSeed{DEFAULT_SEED};
-  static constexpr auto DEFAULT_NOISE_PERIOD = 4;
-  int m_period{DEFAULT_NOISE_PERIOD};
+  terrain::Seed m_nextSeed{1993};
+  int m_period{16};
   terrain::TerrainPtr m_terrain{nullptr};
-  static constexpr auto DEFAULT_TERRAIN_SCALE = 2;
-  int m_scale{DEFAULT_TERRAIN_SCALE};
+  int m_scale{8};
 
   terrain::ValueGeneratorPtr m_valueGenerator{nullptr};
   terrain::AbstractGradientGeneratorPtr m_gradientGenerator{nullptr};
@@ -188,7 +185,7 @@ class Game : public utils::CoreObject
     PERIODIC_GRADIENT,
     PERIODIC_PERLIN,
   };
-  LatticeMode m_latticeMode{LatticeMode::PERIODIC_GRADIENT};
+  LatticeMode m_latticeMode{LatticeMode::PERIODIC_PERLIN};
   DisplayMode m_displayMode{DisplayMode::HEIGHT};
 };
 
