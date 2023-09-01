@@ -3,14 +3,12 @@
 #include "GradientGenerator.hh"
 #include <numbers>
 
-namespace pge::lattice {
+namespace pge::terrain {
 
 // https://en.cppreference.com/w/cpp/numeric/constants
 constexpr auto MAGNITUDE_PERLIN_NOISE = std::numbers::sqrt2_v<float> / 2.0f;
 
-GradientLattice::GradientLattice(IHasherPtr hasher,
-                                 noise::INoisePtr noise,
-                                 interpolation::IInterpolatorPtr interpolator)
+GradientLattice::GradientLattice(IHasherPtr hasher, INoisePtr noise, IInterpolatorPtr interpolator)
   : AbstractLattice(std::make_unique<GradientGenerator>(std::move(hasher), std::move(noise)),
                     std::move(interpolator),
                     {[](const float value) -> float {
@@ -18,4 +16,4 @@ GradientLattice::GradientLattice(IHasherPtr hasher,
                     }})
 {}
 
-} // namespace pge::lattice
+} // namespace pge::terrain

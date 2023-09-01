@@ -2,7 +2,7 @@
 #include "AreaGenerator.hh"
 #include "Range.hh"
 
-namespace pge::lattice {
+namespace pge::terrain {
 
 auto AreaGenerator::areaSurrounding(const float x, const float y) const noexcept -> Area
 {
@@ -18,4 +18,4 @@ auto AreaGenerator::areaSurrounding(const float x, const float y) const noexcept
   return area;
 }
 
-} // namespace pge::lattice
+} // namespace pge::terrain

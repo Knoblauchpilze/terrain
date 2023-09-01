@@ -8,7 +8,7 @@
 #include <functional>
 #include <optional>
 
-namespace pge::lattice {
+namespace pge::terrain {
 
 template<typename ValueType>
 class AbstractLattice : public ILattice
@@ -22,16 +22,16 @@ class AbstractLattice : public ILattice
   using NormalizationFunc = std::function<float(const float)>;
 
   AbstractLattice(IValueGeneratorPtr<ValueType> valueGenerator,
-                  interpolation::IInterpolatorPtr interpolator,
+                  IInterpolatorPtr interpolator,
                   std::optional<NormalizationFunc> normalization) noexcept;
 
   private:
   IAreaGeneratorPtr m_areaGenerator;
   IValueGeneratorPtr<ValueType> m_valueGenerator;
-  interpolation::IInterpolatorPtr m_interpolator;
+  IInterpolatorPtr m_interpolator;
   std::optional<NormalizationFunc> m_normalization;
 };
 
-} // namespace pge::lattice
+} // namespace pge::terrain
 
 #include "AbstractLattice.hxx"

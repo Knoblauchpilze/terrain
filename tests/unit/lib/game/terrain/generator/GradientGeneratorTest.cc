@@ -5,7 +5,7 @@
 
 using namespace ::testing;
 
-namespace pge::lattice {
+namespace pge::terrain {
 class Unit_Lattice_GradientGenerator : public GeneratorPreparer<GradientGenerator, utils::Vector2f>,
                                        public Test
 {
@@ -108,4 +108,4 @@ INSTANTIATE_TEST_SUITE_P(
          TestCase{Point(-0.1f, 0.5f), LatticePoint(0, 1), NoiseValues{0.8f, 0.6f}, -0.38f}),
   generateTestName);
 
-} // namespace pge::lattice
+} // namespace pge::terrain

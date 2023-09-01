@@ -3,7 +3,7 @@
 
 #include <memory>
 
-namespace pge::interpolation {
+namespace pge::terrain {
 
 class IInterpolator
 {
@@ -32,4 +32,4 @@ class IInterpolator
 
 using IInterpolatorPtr = std::unique_ptr<IInterpolator>;
 
-} // namespace pge::interpolation
+} // namespace pge::terrain

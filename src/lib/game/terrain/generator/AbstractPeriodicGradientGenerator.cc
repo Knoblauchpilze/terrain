@@ -2,10 +2,10 @@
 #include "AbstractPeriodicGradientGenerator.hh"
 #include <random>
 
-namespace pge::lattice {
+namespace pge::terrain {
 
 AbstractPeriodicGradientGenerator::AbstractPeriodicGradientGenerator(const int period,
-                                                                     const noise::Seed seed)
+                                                                     const Seed seed)
   : m_period(period)
   , m_modulusMask(m_period - 1)
 {
@@ -29,7 +29,7 @@ auto AbstractPeriodicGradientGenerator::at(const utils::Vector2i &latticePoint) 
   return grad;
 }
 
-void AbstractPeriodicGradientGenerator::generatePermutationsTable(const noise::Seed seed)
+void AbstractPeriodicGradientGenerator::generatePermutationsTable(const Seed seed)
 {
   std::mt19937 generator(seed);
   std::uniform_int_distribution<int> distribution(0, m_period - 1);
@@ -46,4 +46,4 @@ void AbstractPeriodicGradientGenerator::generatePermutationsTable(const noise::S
   }
 }
 
-} // namespace pge::lattice
+} // namespace pge::terrain

@@ -2,7 +2,7 @@
 #include "Range.hh"
 #include <cmath>
 
-namespace pge::lattice {
+namespace pge::terrain {
 
 auto surroundWithIntegers(const float val) -> Range
 {
@@ -14,4 +14,4 @@ auto surroundWithIntegers(const float val) -> Range
   return Range{min, max};
 }
 
-} // namespace pge::lattice
+} // namespace pge::terrain

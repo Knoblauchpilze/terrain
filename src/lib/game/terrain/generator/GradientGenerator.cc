@@ -1,9 +1,9 @@
 
 #include "GradientGenerator.hh"
 
-namespace pge::lattice {
+namespace pge::terrain {
 
-GradientGenerator::GradientGenerator(IHasherPtr hasher, noise::INoisePtr noise)
+GradientGenerator::GradientGenerator(IHasherPtr hasher, INoisePtr noise)
   : m_hasher(std::move(hasher))
   , m_noise(std::move(noise))
 {}
@@ -20,4 +20,4 @@ auto GradientGenerator::at(const utils::Vector2i &latticePoint) const noexcept -
   return grad;
 }
 
-} // namespace pge::lattice
+} // namespace pge::terrain

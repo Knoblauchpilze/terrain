@@ -1,11 +1,10 @@
 
 #pragma once
 
+#include "Seed.hh"
 #include <memory>
 
-namespace pge::noise {
-
-using Seed = int;
+namespace pge::terrain {
 
 class INoise
 {
@@ -18,4 +17,4 @@ class INoise
 
 using INoisePtr = std::unique_ptr<INoise>;
 
-} // namespace pge::noise
+} // namespace pge::terrain

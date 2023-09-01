@@ -4,7 +4,7 @@
 #include "IAreaGenerator.hh"
 #include <memory>
 
-namespace pge::lattice {
+namespace pge::terrain {
 
 // https://stackoverflow.com/questions/7968023/c-virtual-template-method
 template<typename ValueType>
@@ -22,4 +22,4 @@ class IValueGenerator
 template<typename ValueType>
 using IValueGeneratorPtr = std::unique_ptr<IValueGenerator<ValueType>>;
 
-} // namespace pge::lattice
+} // namespace pge::terrain

@@ -5,19 +5,19 @@
 #include "IHasher.hh"
 #include "INoise.hh"
 
-namespace pge::lattice {
+namespace pge::terrain {
 
 class GradientGenerator : public AbstractGradientGenerator
 {
   public:
-  GradientGenerator(IHasherPtr hasher, noise::INoisePtr noise);
+  GradientGenerator(IHasherPtr hasher, INoisePtr noise);
   ~GradientGenerator() override = default;
 
   auto at(const utils::Vector2i &latticePoint) const noexcept -> utils::Vector2f override;
 
   private:
   IHasherPtr m_hasher;
-  noise::INoisePtr m_noise;
+  INoisePtr m_noise;
 };
 
-} // namespace pge::lattice
+} // namespace pge::terrain

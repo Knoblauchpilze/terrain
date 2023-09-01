@@ -7,7 +7,7 @@
 #include "MockNoise.hh"
 #include <gmock/gmock.h>
 
-namespace pge::lattice {
+namespace pge::terrain {
 
 template<typename Lattice>
 class LatticePreparer
@@ -34,4 +34,4 @@ class LatticePreparer
   }
 };
 
-} // namespace pge::lattice
+} // namespace pge::terrain

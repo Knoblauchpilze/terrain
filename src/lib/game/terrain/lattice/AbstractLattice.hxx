@@ -5,11 +5,11 @@
 #include "AreaGenerator.hh"
 #include <cmath>
 
-namespace pge::lattice {
+namespace pge::terrain {
 
 template<typename ValueType>
 AbstractLattice<ValueType>::AbstractLattice(IValueGeneratorPtr<ValueType> valueGenerator,
-                                            interpolation::IInterpolatorPtr interpolator,
+                                            IInterpolatorPtr interpolator,
                                             std::optional<NormalizationFunc> normalization) noexcept
   : m_areaGenerator(std::make_unique<AreaGenerator>())
   , m_valueGenerator(std::move(valueGenerator))
@@ -42,4 +42,4 @@ auto AbstractLattice<ValueType>::at(const float x, const float y) -> float
   return (*m_normalization)(val);
 }
 
-} // namespace pge::lattice
+} // namespace pge::terrain

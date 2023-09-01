@@ -3,7 +3,7 @@
 
 #include "AbstractGradientGenerator.hh"
 #include "IHasher.hh"
-#include "INoise.hh"
+#include "Seed.hh"
 #include "Terrain.hh"
 #include "ValueGenerator.hh"
 #include <core_utils/CoreObject.hh>
@@ -171,15 +171,15 @@ class Game : public utils::CoreObject
   Menus m_menus{};
 
   static constexpr auto DEFAULT_SEED = 1993;
-  noise::Seed m_nextSeed{DEFAULT_SEED};
+  terrain::Seed m_nextSeed{DEFAULT_SEED};
   static constexpr auto DEFAULT_NOISE_PERIOD = 4;
   int m_period{DEFAULT_NOISE_PERIOD};
   terrain::TerrainPtr m_terrain{nullptr};
   static constexpr auto DEFAULT_TERRAIN_SCALE = 2;
   int m_scale{DEFAULT_TERRAIN_SCALE};
 
-  lattice::ValueGeneratorPtr m_valueGenerator{nullptr};
-  lattice::AbstractGradientGeneratorPtr m_gradientGenerator{nullptr};
+  terrain::ValueGeneratorPtr m_valueGenerator{nullptr};
+  terrain::AbstractGradientGeneratorPtr m_gradientGenerator{nullptr};
 
   enum class LatticeMode
   {

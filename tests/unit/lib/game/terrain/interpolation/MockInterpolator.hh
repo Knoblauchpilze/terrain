@@ -4,9 +4,9 @@
 #include "IInterpolator.hh"
 #include <gmock/gmock.h>
 
-namespace pge::lattice {
+namespace pge::terrain {
 
-class MockInterpolator : public interpolation::IInterpolator
+class MockInterpolator : public IInterpolator
 {
   public:
   MOCK_METHOD(float,
@@ -15,4 +15,4 @@ class MockInterpolator : public interpolation::IInterpolator
               (const, override));
 };
 
-} // namespace pge::lattice
+} // namespace pge::terrain

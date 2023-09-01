@@ -2,15 +2,15 @@
 #pragma once
 
 #include "AbstractPeriodicGradientGenerator.hh"
-#include "INoise.hh"
+#include "Seed.hh"
 #include <vector>
 
-namespace pge::lattice {
+namespace pge::terrain {
 
 class PeriodicGradientGenerator : public AbstractPeriodicGradientGenerator
 {
   public:
-  PeriodicGradientGenerator(const int period, const noise::Seed seed);
+  PeriodicGradientGenerator(const int period, const Seed seed);
   ~PeriodicGradientGenerator() override = default;
 
   auto gradientAt(const int id) const noexcept -> utils::Vector2f override;
@@ -18,7 +18,7 @@ class PeriodicGradientGenerator : public AbstractPeriodicGradientGenerator
   private:
   std::vector<utils::Vector2f> m_gradients{};
 
-  void generate(const int period, const noise::Seed seed);
+  void generate(const int period, const Seed seed);
 };
 
-} // namespace pge::lattice
+} // namespace pge::terrain

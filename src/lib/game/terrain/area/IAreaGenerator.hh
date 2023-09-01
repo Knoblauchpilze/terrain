@@ -4,7 +4,7 @@
 #include <maths_utils/Vector2.hh>
 #include <memory>
 
-namespace pge::lattice {
+namespace pge::terrain {
 
 struct Area
 {
@@ -24,4 +24,4 @@ class IAreaGenerator
 
 using IAreaGeneratorPtr = std::unique_ptr<IAreaGenerator>;
 
-} // namespace pge::lattice
+} // namespace pge::terrain

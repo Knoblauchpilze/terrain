@@ -2,16 +2,16 @@
 #pragma once
 
 #include "AbstractGradientGenerator.hh"
-#include "INoise.hh"
+#include "Seed.hh"
 #include <functional>
 #include <vector>
 
-namespace pge::lattice {
+namespace pge::terrain {
 
 class AbstractPeriodicGradientGenerator : public AbstractGradientGenerator
 {
   public:
-  AbstractPeriodicGradientGenerator(const int period, const noise::Seed seed);
+  AbstractPeriodicGradientGenerator(const int period, const Seed seed);
   ~AbstractPeriodicGradientGenerator() override = default;
 
   auto at(const utils::Vector2i &latticePoint) const noexcept -> utils::Vector2f override;
@@ -22,7 +22,7 @@ class AbstractPeriodicGradientGenerator : public AbstractGradientGenerator
   int m_modulusMask;
   std::vector<int> m_permutations{};
 
-  void generatePermutationsTable(const noise::Seed seed);
+  void generatePermutationsTable(const Seed seed);
 };
 
-} // namespace pge::lattice
+} // namespace pge::terrain

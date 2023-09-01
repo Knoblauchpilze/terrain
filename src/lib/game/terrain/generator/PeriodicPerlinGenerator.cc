@@ -2,9 +2,9 @@
 #include "PeriodicPerlinGenerator.hh"
 #include <random>
 
-namespace pge::lattice {
+namespace pge::terrain {
 
-PeriodicPerlinGenerator::PeriodicPerlinGenerator(const int period, const noise::Seed seed)
+PeriodicPerlinGenerator::PeriodicPerlinGenerator(const int period, const Seed seed)
   : AbstractPeriodicGradientGenerator(period, seed)
 {
   generate(period, seed);
@@ -15,7 +15,7 @@ auto PeriodicPerlinGenerator::gradientAt(const int id) const noexcept -> utils::
   return m_gradients[id];
 }
 
-void PeriodicPerlinGenerator::generate(const int period, const noise::Seed seed)
+void PeriodicPerlinGenerator::generate(const int period, const Seed seed)
 {
   std::mt19937 generator(seed);
   /// TODO: The gradient should not be completely random, see here:
@@ -57,4 +57,4 @@ void PeriodicPerlinGenerator::generate(const int period, const noise::Seed seed)
   }
 }
 
-} // namespace pge::lattice
+} // namespace pge::terrain

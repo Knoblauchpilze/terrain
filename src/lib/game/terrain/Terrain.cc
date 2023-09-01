@@ -36,7 +36,7 @@ auto heightToTerrainType(const float height) noexcept -> Type
 
 } // namespace
 
-Terrain::Terrain(lattice::ILatticePtr lattice, const int scale) noexcept
+Terrain::Terrain(ILatticePtr lattice, const int scale) noexcept
   : utils::CoreObject("2d")
   , m_lattice(std::move(lattice))
   , m_scale(scale)

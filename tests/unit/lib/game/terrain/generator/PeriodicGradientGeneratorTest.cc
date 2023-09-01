@@ -4,7 +4,7 @@
 
 using namespace ::testing;
 
-namespace pge::lattice {
+namespace pge::terrain {
 constexpr auto DEFAULT_PERIOD = 8;
 constexpr auto DEFAULT_SEED   = 2023;
 
@@ -62,7 +62,7 @@ struct TestCase
   utils::Vector2f expected;
 
   int period{DEFAULT_PERIOD};
-  noise::Seed seed{DEFAULT_SEED};
+  Seed seed{DEFAULT_SEED};
   float threshold{REASONABLE_COMPARISON_THRESHOLD};
 };
 
@@ -114,7 +114,7 @@ struct TestCase
   float expected;
 
   int period{DEFAULT_PERIOD};
-  noise::Seed seed{DEFAULT_SEED};
+  Seed seed{DEFAULT_SEED};
   float threshold{REASONABLE_COMPARISON_THRESHOLD};
 };
 
@@ -160,4 +160,4 @@ INSTANTIATE_TEST_SUITE_P(Unit_Lattice_PeriodicGradientGenerator,
                                 TestCase{Point(0.78f, -0.37f), LatticePoint(1, -1), -0.575866f}),
                          generateTestName);
 } // namespace generate_for
-} // namespace pge::lattice
+} // namespace pge::terrain
