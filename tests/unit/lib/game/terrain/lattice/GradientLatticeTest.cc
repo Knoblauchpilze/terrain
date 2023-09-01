@@ -27,7 +27,7 @@ TEST_F(Unit_Terrain_GradientLattice, Test_UseHasher)
 
 TEST_F(Unit_Terrain_GradientLattice, Test_UseNoise)
 {
-  EXPECT_CALL(*mockNoise, next()).Times(8);
+  EXPECT_CALL(*mockNoise, next()).Times(12);
   lattice->at({});
 }
 
@@ -125,11 +125,11 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice,
                          GradientTestSuite,
                          Values(TestCaseValue{Point2d{0.0f, 0.0f}, 0.5f},
                                 TestCaseValue{Point2d{0.0f, 1.0f}, 0.5f},
-                                TestCaseValue{Point2d{0.5f, 0.5f}, 0.4747550f},
-                                TestCaseValue{Point2d{0.1f, 0.32f}, 0.3119567f},
-                                TestCaseValue{Point2d{0.49f, 0.98f}, 0.4773225f},
-                                TestCaseValue{Point2d{0.67f, 0.51f}, 0.5752330f},
-                                TestCaseValue{Point2d{0.01f, 0.79f}, 0.3415382f}),
+                                TestCaseValue{Point2d{0.5f, 0.5f}, 0.483331f},
+                                TestCaseValue{Point2d{0.1f, 0.32f}, 0.32799f},
+                                TestCaseValue{Point2d{0.49f, 0.98f}, 0.504369f},
+                                TestCaseValue{Point2d{0.67f, 0.51f}, 0.570583f},
+                                TestCaseValue{Point2d{0.01f, 0.79f}, 0.352243f}),
                          generateTestNameForValue);
 
 } // namespace pge::terrain

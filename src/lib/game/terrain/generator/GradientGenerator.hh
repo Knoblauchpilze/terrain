@@ -13,7 +13,7 @@ class GradientGenerator : public AbstractGradientGenerator
   GradientGenerator(IHasher2dPtr hasher, INoisePtr noise);
   ~GradientGenerator() override = default;
 
-  auto at(const LatticePoint2d &latticePoint) const noexcept -> Point2d override;
+  auto at(const LatticePoint2d &latticePoint) const noexcept -> Point3d override;
 
   private:
   IHasher2dPtr m_hasher;

@@ -6,7 +6,7 @@
 
 namespace pge::terrain {
 
-class AbstractGradientGenerator : public IGradientGenerator<2>
+class AbstractGradientGenerator : public IGradientGenerator<3>
 {
   public:
   AbstractGradientGenerator()           = default;

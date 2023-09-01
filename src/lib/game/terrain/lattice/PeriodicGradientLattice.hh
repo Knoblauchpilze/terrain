@@ -7,7 +7,7 @@
 
 namespace pge::terrain {
 
-class PeriodicGradientLattice : public AbstractLattice<Point2d>
+class PeriodicGradientLattice : public AbstractLattice<Point3d>
 {
   public:
   PeriodicGradientLattice(const int period, const Seed seed, IInterpolatorPtr interpolator);

@@ -11,7 +11,7 @@ PeriodicPerlinGenerator::PeriodicPerlinGenerator(const int period, const Seed se
   generate(period, seed);
 }
 
-auto PeriodicPerlinGenerator::gradientAt(const int id) const noexcept -> Point2d
+auto PeriodicPerlinGenerator::gradientAt(const int id) const noexcept -> Point3d
 {
   return m_gradients[id];
 }
@@ -37,7 +37,7 @@ void PeriodicPerlinGenerator::generate(const int period, const Seed seed)
   std::mt19937 generator(seed);
   /// TODO: The gradient should not be completely random, see here:
   /// https://mrl.cs.nyu.edu/~perlin/paper445.pdf
-  std::uniform_int_distribution<int> distribution(0, 3);
+  std::uniform_int_distribution<int> distribution(0, 11);
 
   std::vector<int> rnd;
 
@@ -46,14 +46,15 @@ void PeriodicPerlinGenerator::generate(const int period, const Seed seed)
   for (auto &grad : m_gradients)
   {
     rnd.push_back(distribution(generator));
-    grad = DEFAULT_GRADIENTS[rnd.back()].head(2);
+    grad = DEFAULT_GRADIENTS[rnd.back()];
   }
 
   auto id = 0;
+  std::cout << "seed: " << seed << ", period: " << period << std::endl;
   for (const auto &v : m_gradients)
   {
-    std::cout << "perlin[" << id << "]: " << v(0) << "x" << v(1) << " (" << rnd[id] << ")"
-              << std::endl;
+    std::cout << "perlin[" << id << "]: " << v(0) << "x" << v(1) << "x" << v(2) << " (" << rnd[id]
+              << ")" << std::endl;
     ++id;
   }
 }

@@ -8,7 +8,7 @@
 
 namespace pge::terrain {
 
-class GradientLattice : public AbstractLattice<Point2d>
+class GradientLattice : public AbstractLattice<Point3d>
 {
   public:
   GradientLattice(IHasher2dPtr hasher, INoisePtr noise, IInterpolatorPtr interpolator);
