@@ -3,7 +3,6 @@
 #include "IPoint.hh"
 #include "Range.hh"
 #include <gtest/gtest.h>
-#include <maths_utils/Vector2.hh>
 
 using namespace ::testing;
 
