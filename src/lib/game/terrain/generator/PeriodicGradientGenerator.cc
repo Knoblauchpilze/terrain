@@ -10,7 +10,7 @@ PeriodicGradientGenerator::PeriodicGradientGenerator(const int period, const See
   generate(period, seed);
 }
 
-auto PeriodicGradientGenerator::gradientAt(const int id) const noexcept -> Point2d
+auto PeriodicGradientGenerator::gradientAt(const int id) const noexcept -> Point3d
 {
   return m_gradients[id];
 }
@@ -30,9 +30,10 @@ void PeriodicGradientGenerator::generate(const int period, const Seed seed)
   }
 
   auto id = 0;
+  std::cout << "seed: " << seed << ", period: " << period << std::endl;
   for (const auto &v : m_gradients)
   {
-    std::cout << "gradient[" << id << "]: " << v(0) << "x" << v(1) << std::endl;
+    std::cout << "gradient[" << id << "]: " << v(0) << "x" << v(1) << "x" << v(2) << std::endl;
     ++id;
   }
 }

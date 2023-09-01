@@ -17,7 +17,7 @@ AbstractPeriodicGradientGenerator::AbstractPeriodicGradientGenerator(const int p
 }
 
 auto AbstractPeriodicGradientGenerator::at(const LatticePoint2d &latticePoint) const noexcept
-  -> Point2d
+  -> Point3d
 {
   const auto id   = hash(latticePoint);
   const auto grad = gradientAt(id);
