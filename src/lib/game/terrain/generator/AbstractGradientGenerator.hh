@@ -1,12 +1,12 @@
 
 #pragma once
 
-#include "IValueGenerator.hh"
+#include "IGradientGenerator.hh"
 #include <memory>
 
 namespace pge::terrain {
 
-class AbstractGradientGenerator : public IValueGenerator<Point2d>
+class AbstractGradientGenerator : public IGradientGenerator<2>
 {
   public:
   AbstractGradientGenerator()           = default;
