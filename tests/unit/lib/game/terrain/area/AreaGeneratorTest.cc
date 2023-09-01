@@ -5,7 +5,7 @@
 
 using namespace ::testing;
 
-namespace pge::lattice {
+namespace pge::terrain {
 namespace {
 struct TestCase
 {
@@ -61,4 +61,4 @@ INSTANTIATE_TEST_SUITE_P(Unit_Lattice_AreaGenerator,
                                 TestCase{-1.7f, -1.99f, -2, -1, -2, -1}),
                          generateTestname);
 
-} // namespace pge::lattice
+} // namespace pge::terrain

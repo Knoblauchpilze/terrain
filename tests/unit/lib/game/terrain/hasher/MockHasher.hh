@@ -4,7 +4,7 @@
 #include "IHasher.hh"
 #include <gmock/gmock.h>
 
-namespace pge::lattice {
+namespace pge::terrain {
 
 // // http://google.github.io/googletest/gmock_for_dummies.html#writing-the-mock-class
 class MockHasher : public IHasher
@@ -13,4 +13,4 @@ class MockHasher : public IHasher
   MOCK_METHOD(float, hash, (const int, const int), (override));
 };
 
-} // namespace pge::lattice
+} // namespace pge::terrain

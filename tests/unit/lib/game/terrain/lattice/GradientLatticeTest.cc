@@ -8,7 +8,7 @@
 
 using namespace ::testing;
 
-namespace pge::lattice {
+namespace pge::terrain {
 class Unit_Lattice_GradientLattice : public LatticePreparer<GradientLattice>, public Test
 {
   protected:
@@ -109,12 +109,12 @@ TEST_P(GradientTestSuite, Test_Value)
   const auto param = GetParam();
 
   constexpr auto SEED = 1993;
-  auto hasher         = std::make_unique<lattice::Hasher>(SEED);
-  auto noise          = std::make_unique<noise::WhiteNoise>(-1.0f, 1.0f);
-  auto interpolator   = std::make_unique<interpolation::Bilinear>();
-  auto lattice        = std::make_unique<lattice::GradientLattice>(std::move(hasher),
-                                                            std::move(noise),
-                                                            std::move(interpolator));
+  auto hasher         = std::make_unique<Hasher>(SEED);
+  auto noise          = std::make_unique<WhiteNoise>(-1.0f, 1.0f);
+  auto interpolator   = std::make_unique<Bilinear>();
+  auto lattice        = std::make_unique<GradientLattice>(std::move(hasher),
+                                                   std::move(noise),
+                                                   std::move(interpolator));
 
   const auto actual = lattice->at(param.x, param.y);
   EXPECT_NEAR(actual, param.expected, param.threshold);
@@ -132,4 +132,4 @@ INSTANTIATE_TEST_SUITE_P(Unit_Lattice_GradientLattice,
                                 TestCaseValue{0.01f, 0.79f, 0.3415382f}),
                          generateTestNameForValue);
 
-} // namespace pge::lattice
+} // namespace pge::terrain

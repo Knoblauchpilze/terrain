@@ -1,9 +1,9 @@
 
 #include "ValueGenerator.hh"
 
-namespace pge::lattice {
+namespace pge::terrain {
 
-ValueGenerator::ValueGenerator(IHasherPtr hasher, noise::INoisePtr noise)
+ValueGenerator::ValueGenerator(IHasherPtr hasher, INoisePtr noise)
   : m_hasher(std::move(hasher))
   , m_noise(std::move(noise))
 {}
@@ -20,4 +20,4 @@ auto ValueGenerator::generateFor(const utils::Vector2i &latticePoint,
   return at(latticePoint);
 }
 
-} // namespace pge::lattice
+} // namespace pge::terrain

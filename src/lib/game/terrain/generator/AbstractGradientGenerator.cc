@@ -1,7 +1,7 @@
 
 #include "AbstractGradientGenerator.hh"
 
-namespace pge::lattice {
+namespace pge::terrain {
 
 auto AbstractGradientGenerator::generateFor(const utils::Vector2i &latticePoint,
                                             const utils::Vector2f &point) const noexcept -> float
@@ -18,4 +18,4 @@ auto AbstractGradientGenerator::generateFor(const utils::Vector2i &latticePoint,
   return dot;
 }
 
-} // namespace pge::lattice
+} // namespace pge::terrain

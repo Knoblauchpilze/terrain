@@ -5,15 +5,13 @@
 #include "IHasher.hh"
 #include "INoise.hh"
 
-namespace pge::lattice {
+namespace pge::terrain {
 
 class GradientLattice : public AbstractLattice<utils::Vector2f>
 {
   public:
-  GradientLattice(IHasherPtr hasher,
-                  noise::INoisePtr noise,
-                  interpolation::IInterpolatorPtr interpolator);
+  GradientLattice(IHasherPtr hasher, INoisePtr noise, IInterpolatorPtr interpolator);
   ~GradientLattice() override = default;
 };
 
-} // namespace pge::lattice
+} // namespace pge::terrain

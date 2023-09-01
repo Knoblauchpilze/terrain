@@ -3,7 +3,7 @@
 
 #include "IAreaGenerator.hh"
 
-namespace pge::lattice {
+namespace pge::terrain {
 
 class AreaGenerator : public IAreaGenerator
 {
@@ -13,4 +13,4 @@ class AreaGenerator : public IAreaGenerator
   auto areaSurrounding(const float x, const float y) const noexcept -> Area override;
 };
 
-} // namespace pge::lattice
+} // namespace pge::terrain

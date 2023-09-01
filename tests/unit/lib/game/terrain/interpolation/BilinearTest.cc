@@ -4,7 +4,7 @@
 
 using namespace ::testing;
 
-namespace pge::interpolation {
+namespace pge::terrain {
 
 TEST(Unit_Interpolation_Bilinear, Test_Interpolate_LatticePoints)
 {
@@ -88,4 +88,4 @@ TEST(Unit_Interpolation_Bilinear, Test_Interpolate_Quadrants)
   EXPECT_NEAR(0.3f, out, REASONABLE_COMPARISON_THRESHOLD);
 }
 
-} // namespace pge::interpolation
+} // namespace pge::terrain

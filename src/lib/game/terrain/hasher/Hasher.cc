@@ -1,9 +1,9 @@
 
 #include "Hasher.hh"
 
-namespace pge::lattice {
+namespace pge::terrain {
 
-Hasher::Hasher(const noise::Seed seed) noexcept
+Hasher::Hasher(const Seed seed) noexcept
   : m_seed(seed)
 {}
 
@@ -20,4 +20,4 @@ auto Hasher::hash(const int x, const int y) -> float
   return hash ^ m_seed;
 }
 
-} // namespace pge::lattice
+} // namespace pge::terrain

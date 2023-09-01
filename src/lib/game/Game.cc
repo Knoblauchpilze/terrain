@@ -205,63 +205,63 @@ auto Game::latticeAt(const int x, const int y) const -> std::vector<float>
 void Game::generate()
 {
   const auto seed = m_nextSeed;
-  auto hasher     = std::make_unique<lattice::Hasher>(seed);
+  auto hasher     = std::make_unique<terrain::Hasher>(seed);
 
-  noise::INoisePtr noise;
+  terrain::INoisePtr noise;
   switch (m_latticeMode)
   {
     case LatticeMode::GRADIENT:
     {
-      noise = std::make_unique<noise::WhiteNoise>(-1.0f, 1.0f);
+      noise = std::make_unique<terrain::WhiteNoise>(-1.0f, 1.0f);
 
-      auto noiseCopy      = std::make_unique<noise::WhiteNoise>();
-      auto hasherCopy     = std::make_unique<lattice::Hasher>(seed);
-      m_gradientGenerator = std::make_unique<lattice::GradientGenerator>(std::move(hasherCopy),
+      auto noiseCopy      = std::make_unique<terrain::WhiteNoise>();
+      auto hasherCopy     = std::make_unique<terrain::Hasher>(seed);
+      m_gradientGenerator = std::make_unique<terrain::GradientGenerator>(std::move(hasherCopy),
                                                                          std::move(noiseCopy));
     }
     break;
     case LatticeMode::PERIODIC_GRADIENT:
-      m_gradientGenerator = std::make_unique<lattice::PeriodicGradientGenerator>(m_period, seed);
+      m_gradientGenerator = std::make_unique<terrain::PeriodicGradientGenerator>(m_period, seed);
       break;
     case LatticeMode::PERIODIC_PERLIN:
-      m_gradientGenerator = std::make_unique<lattice::PeriodicPerlinGenerator>(m_period, seed);
+      m_gradientGenerator = std::make_unique<terrain::PeriodicPerlinGenerator>(m_period, seed);
       break;
     case LatticeMode::VALUE:
     default:
     {
-      noise = std::make_unique<noise::WhiteNoise>();
+      noise = std::make_unique<terrain::WhiteNoise>();
 
-      auto noiseCopy   = std::make_unique<noise::WhiteNoise>();
-      auto hasherCopy  = std::make_unique<lattice::Hasher>(seed);
-      m_valueGenerator = std::make_unique<lattice::ValueGenerator>(std::move(hasherCopy),
+      auto noiseCopy   = std::make_unique<terrain::WhiteNoise>();
+      auto hasherCopy  = std::make_unique<terrain::Hasher>(seed);
+      m_valueGenerator = std::make_unique<terrain::ValueGenerator>(std::move(hasherCopy),
                                                                    std::move(noiseCopy));
     }
     break;
   }
 
-  auto interpolator = std::make_unique<interpolation::Bilinear>();
+  auto interpolator = std::make_unique<terrain::Bilinear>();
 
-  lattice::ILatticePtr lattice;
+  terrain::ILatticePtr lattice;
   switch (m_latticeMode)
   {
     case LatticeMode::GRADIENT:
-      lattice = std::make_unique<lattice::GradientLattice>(std::move(hasher),
+      lattice = std::make_unique<terrain::GradientLattice>(std::move(hasher),
                                                            std::move(noise),
                                                            std::move(interpolator));
       break;
     case LatticeMode::PERIODIC_GRADIENT:
-      lattice = std::make_unique<lattice::PeriodicGradientLattice>(m_period,
+      lattice = std::make_unique<terrain::PeriodicGradientLattice>(m_period,
                                                                    seed,
                                                                    std::move(interpolator));
       break;
     case LatticeMode::PERIODIC_PERLIN:
-      lattice = std::make_unique<lattice::PeriodicPerlinLattice>(m_period,
+      lattice = std::make_unique<terrain::PeriodicPerlinLattice>(m_period,
                                                                  seed,
                                                                  std::move(interpolator));
       break;
     case LatticeMode::VALUE:
     default:
-      lattice = std::make_unique<lattice::ValueLattice>(std::move(hasher),
+      lattice = std::make_unique<terrain::ValueLattice>(std::move(hasher),
                                                         std::move(noise),
                                                         std::move(interpolator));
       break;

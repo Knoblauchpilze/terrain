@@ -4,7 +4,7 @@
 #include "IValueGenerator.hh"
 #include <memory>
 
-namespace pge::lattice {
+namespace pge::terrain {
 
 class AbstractGradientGenerator : public IValueGenerator<utils::Vector2f>
 {
@@ -18,4 +18,4 @@ class AbstractGradientGenerator : public IValueGenerator<utils::Vector2f>
 
 using AbstractGradientGeneratorPtr = std::unique_ptr<AbstractGradientGenerator>;
 
-} // namespace pge::lattice
+} // namespace pge::terrain

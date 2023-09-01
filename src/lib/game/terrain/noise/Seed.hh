@@ -3,9 +3,6 @@
 
 namespace pge::terrain {
 
-enum class Algorithm
-{
-  BILINEAR,
-};
+using Seed = int;
 
 } // namespace pge::terrain

@@ -4,13 +4,13 @@
 #include "INoise.hh"
 #include <gmock/gmock.h>
 
-namespace pge::lattice {
+namespace pge::terrain {
 
-class MockNoise : public noise::INoise
+class MockNoise : public INoise
 {
   public:
-  MOCK_METHOD(void, seed, (const noise::Seed), (override));
+  MOCK_METHOD(void, seed, (const Seed), (override));
   MOCK_METHOD(float, next, (), (const, noexcept, override));
 };
 
-} // namespace pge::lattice
+} // namespace pge::terrain

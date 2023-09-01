@@ -5,7 +5,7 @@
 
 using namespace ::testing;
 
-namespace pge::lattice {
+namespace pge::terrain {
 class Unit_Lattice_ValueGenerator : public GeneratorPreparer<ValueGenerator, float>, public Test
 {
   protected:
@@ -36,4 +36,4 @@ TEST_F(Unit_Lattice_ValueGenerator, Test_GenerateFor)
   EXPECT_EQ(1.0f, actual);
 }
 
-} // namespace pge::lattice
+} // namespace pge::terrain

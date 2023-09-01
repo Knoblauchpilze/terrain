@@ -3,10 +3,10 @@
 
 #include <utility>
 
-namespace pge::lattice {
+namespace pge::terrain {
 
 using Range = std::pair<int, int>;
 
 auto surroundWithIntegers(const float val) -> Range;
 
-} // namespace pge::lattice
+} // namespace pge::terrain

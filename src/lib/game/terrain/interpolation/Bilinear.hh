@@ -3,7 +3,7 @@
 
 #include "IInterpolator.hh"
 
-namespace pge::interpolation {
+namespace pge::terrain {
 
 class Bilinear : public IInterpolator
 {
@@ -19,4 +19,4 @@ class Bilinear : public IInterpolator
                    const float py) const -> float override;
 };
 
-} // namespace pge::interpolation
+} // namespace pge::terrain

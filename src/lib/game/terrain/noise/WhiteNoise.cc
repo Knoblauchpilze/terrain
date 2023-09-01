@@ -2,7 +2,7 @@
 #include "WhiteNoise.hh"
 #include <chrono>
 
-namespace pge::noise {
+namespace pge::terrain {
 
 constexpr auto MIN_NOISE_VALUE = 0.0f;
 constexpr auto MAX_NOISE_VALUE = 1.0f;
@@ -28,4 +28,4 @@ auto WhiteNoise::next() const noexcept -> float
   return m_distribution(m_generator);
 }
 
-} // namespace pge::noise
+} // namespace pge::terrain
