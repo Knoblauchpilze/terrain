@@ -14,8 +14,8 @@ class ValueGenerator : public IValueGenerator<float>
   ValueGenerator(IHasher2dPtr hasher, INoisePtr noise);
   ~ValueGenerator() override = default;
 
-  auto at(const utils::Vector2i &latticePoint) const noexcept -> float override;
-  auto generateFor(const utils::Vector2i &latticePoint, const utils::Vector2f &point) const noexcept
+  auto at(const LatticePoint2d &latticePoint) const noexcept -> float override;
+  auto generateFor(const LatticePoint2d &latticePoint, const Point2d &point) const noexcept
     -> float override;
 
   private:

@@ -14,7 +14,7 @@ class AbstractPeriodicGradientGenerator : public AbstractGradientGenerator
   AbstractPeriodicGradientGenerator(const int period, const Seed seed);
   ~AbstractPeriodicGradientGenerator() override = default;
 
-  auto at(const utils::Vector2i &latticePoint) const noexcept -> utils::Vector2f override;
+  auto at(const LatticePoint2d &latticePoint) const noexcept -> utils::Vector2f override;
   virtual auto gradientAt(const int id) const noexcept -> utils::Vector2f = 0;
 
   private:

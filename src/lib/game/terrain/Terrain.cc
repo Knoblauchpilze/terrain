@@ -46,7 +46,7 @@ Terrain::Terrain(ILatticePtr lattice, const int scale) noexcept
 
 auto Terrain::height(const float x, const float y) const -> float
 {
-  return m_lattice->at(x / m_scale, y / m_scale);
+  return m_lattice->at(Point2d(x / m_scale, y / m_scale));
 }
 
 auto Terrain::at(const float x, const float y) const -> Type

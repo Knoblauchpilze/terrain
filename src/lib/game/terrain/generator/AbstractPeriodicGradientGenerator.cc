@@ -16,12 +16,12 @@ AbstractPeriodicGradientGenerator::AbstractPeriodicGradientGenerator(const int p
   generatePermutationsTable(seed);
 }
 
-auto AbstractPeriodicGradientGenerator::at(const utils::Vector2i &latticePoint) const noexcept
+auto AbstractPeriodicGradientGenerator::at(const LatticePoint2d &latticePoint) const noexcept
   -> utils::Vector2f
 {
   // https://stackoverflow.com/questions/3072665/bitwise-and-in-place-of-modulus-operator
-  const auto xMod = latticePoint.x() & m_modulusMask;
-  const auto yMod = latticePoint.y() & m_modulusMask;
+  const auto xMod = latticePoint(0) & m_modulusMask;
+  const auto yMod = latticePoint(1) & m_modulusMask;
 
   const auto id   = m_permutations[m_permutations[xMod] + yMod];
   const auto grad = gradientAt(id);

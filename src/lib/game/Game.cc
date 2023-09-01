@@ -184,13 +184,13 @@ auto Game::latticeAt(const int x, const int y) const -> std::vector<float>
   switch (m_latticeMode)
   {
     case LatticeMode::VALUE:
-      out.push_back(m_valueGenerator->at(utils::Vector2i(x / m_scale, y / m_scale)));
+      out.push_back(m_valueGenerator->at(terrain::LatticePoint2d(x / m_scale, y / m_scale)));
       break;
     case LatticeMode::GRADIENT:
     case LatticeMode::PERIODIC_GRADIENT:
     case LatticeMode::PERIODIC_PERLIN:
     {
-      const auto grad = m_gradientGenerator->at(utils::Vector2i(x / m_scale, y / m_scale));
+      const auto grad = m_gradientGenerator->at(terrain::LatticePoint2d(x / m_scale, y / m_scale));
       out.push_back(grad.x());
       out.push_back(grad.y());
     }

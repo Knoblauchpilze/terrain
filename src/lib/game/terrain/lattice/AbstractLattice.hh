@@ -16,7 +16,7 @@ class AbstractLattice : public ILattice
   public:
   ~AbstractLattice() override = default;
 
-  auto at(const float x, const float y) -> float override;
+  auto at(const Point2d &p) -> float override;
 
   protected:
   using NormalizationFunc = std::function<float(const float)>;

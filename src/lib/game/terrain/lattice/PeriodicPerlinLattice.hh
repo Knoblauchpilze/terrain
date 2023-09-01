@@ -3,6 +3,7 @@
 
 #include "AbstractLattice.hh"
 #include "Seed.hh"
+#include <maths_utils/Vector2.hh>
 
 namespace pge::terrain {
 
