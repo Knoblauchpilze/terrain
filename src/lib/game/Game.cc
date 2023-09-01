@@ -191,8 +191,7 @@ auto Game::latticeAt(const int x, const int y) const -> std::vector<float>
     case LatticeMode::PERIODIC_PERLIN:
     {
       const auto grad = m_gradientGenerator->at(terrain::LatticePoint2d(x / m_scale, y / m_scale));
-      out.push_back(grad(0));
-      out.push_back(grad(1));
+      out.insert(out.end(), grad.begin(), grad.end());
     }
     break;
     default:
