@@ -27,13 +27,13 @@ TEST(Unit_Terrain_PeriodicGradientGenerator, Test_PeriodicX)
 
   p             = LatticePoint2d(0 + DEFAULT_PERIOD, 1);
   const auto v2 = generator.at(p);
-  EXPECT_NEAR(v1.x(), v2.x(), REASONABLE_COMPARISON_THRESHOLD);
-  EXPECT_NEAR(v1.y(), v2.y(), REASONABLE_COMPARISON_THRESHOLD);
+  EXPECT_NEAR(v1(0), v2(0), REASONABLE_COMPARISON_THRESHOLD);
+  EXPECT_NEAR(v1(1), v2(1), REASONABLE_COMPARISON_THRESHOLD);
 
   p             = LatticePoint2d(0 - 5 * DEFAULT_PERIOD, 1);
   const auto v3 = generator.at(p);
-  EXPECT_NEAR(v1.x(), v3.x(), REASONABLE_COMPARISON_THRESHOLD);
-  EXPECT_NEAR(v1.y(), v3.y(), REASONABLE_COMPARISON_THRESHOLD);
+  EXPECT_NEAR(v1(0), v3(0), REASONABLE_COMPARISON_THRESHOLD);
+  EXPECT_NEAR(v1(1), v3(1), REASONABLE_COMPARISON_THRESHOLD);
 }
 
 TEST(Unit_Terrain_PeriodicGradientGenerator, Test_PeriodicY)
@@ -45,13 +45,13 @@ TEST(Unit_Terrain_PeriodicGradientGenerator, Test_PeriodicY)
 
   p             = LatticePoint2d(0, 1 + DEFAULT_PERIOD);
   const auto v2 = generator.at(p);
-  EXPECT_NEAR(v1.x(), v2.x(), REASONABLE_COMPARISON_THRESHOLD);
-  EXPECT_NEAR(v1.y(), v2.y(), REASONABLE_COMPARISON_THRESHOLD);
+  EXPECT_NEAR(v1(0), v2(0), REASONABLE_COMPARISON_THRESHOLD);
+  EXPECT_NEAR(v1(1), v2(1), REASONABLE_COMPARISON_THRESHOLD);
 
   p             = LatticePoint2d(0, 1 - 3 * DEFAULT_PERIOD);
   const auto v3 = generator.at(p);
-  EXPECT_NEAR(v1.x(), v3.x(), REASONABLE_COMPARISON_THRESHOLD);
-  EXPECT_NEAR(v1.y(), v3.y(), REASONABLE_COMPARISON_THRESHOLD);
+  EXPECT_NEAR(v1(0), v3.x(), REASONABLE_COMPARISON_THRESHOLD);
+  EXPECT_NEAR(v1(1), v3.y(), REASONABLE_COMPARISON_THRESHOLD);
 }
 
 namespace at {
@@ -59,7 +59,7 @@ struct TestCase
 {
   LatticePoint latticePoint;
 
-  utils::Vector2f expected;
+  Point expected;
 
   int period{DEFAULT_PERIOD};
   Seed seed{DEFAULT_SEED};
@@ -72,15 +72,15 @@ auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
 {
   std::string str;
 
-  str += std::to_string(info.param.latticePoint.x());
+  str += std::to_string(info.param.latticePoint(0));
   str += "x";
-  str += std::to_string(info.param.latticePoint.y());
+  str += std::to_string(info.param.latticePoint(1));
 
   str += "_";
 
-  str += std::to_string(info.param.expected.x());
+  str += std::to_string(info.param.expected(0));
   str += "x";
-  str += std::to_string(info.param.expected.y());
+  str += std::to_string(info.param.expected(1));
 
   std::replace(str.begin(), str.end(), '.', '_');
   std::replace(str.begin(), str.end(), '-', 'm');
@@ -93,15 +93,14 @@ TEST_P(AtTestSuite, Test_At)
   PeriodicGradientGenerator generator{param.period, param.seed};
 
   const auto actual = generator.at(param.latticePoint);
-  EXPECT_NEAR(actual.x(), param.expected.x(), param.threshold);
-  EXPECT_NEAR(actual.y(), param.expected.y(), param.threshold);
+  EXPECT_NEAR(actual(0), param.expected(0), param.threshold);
+  EXPECT_NEAR(actual(1), param.expected(1), param.threshold);
 }
 
 INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicGradientGenerator,
                          AtTestSuite,
-                         Values(TestCase{LatticePoint(0, 1),
-                                         utils::Vector2f(-0.842704f, -0.538378f)},
-                                TestCase{LatticePoint(1, 2), utils::Vector2f(0.456030f, 0.889964f)}),
+                         Values(TestCase{LatticePoint{0, 1}, Point{-0.842704f, -0.538378f}},
+                                TestCase{LatticePoint{1, 2}, Point{0.456030f, 0.889964f}}),
                          generateTestName);
 } // namespace at
 

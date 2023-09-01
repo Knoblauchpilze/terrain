@@ -17,7 +17,7 @@ AbstractPeriodicGradientGenerator::AbstractPeriodicGradientGenerator(const int p
 }
 
 auto AbstractPeriodicGradientGenerator::at(const LatticePoint2d &latticePoint) const noexcept
-  -> utils::Vector2f
+  -> Point2d
 {
   // https://stackoverflow.com/questions/3072665/bitwise-and-in-place-of-modulus-operator
   const auto xMod = latticePoint(0) & m_modulusMask;

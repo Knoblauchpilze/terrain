@@ -13,10 +13,10 @@ class PeriodicPerlinGenerator : public AbstractPeriodicGradientGenerator
   PeriodicPerlinGenerator(const int period, const Seed seed);
   ~PeriodicPerlinGenerator() override = default;
 
-  auto gradientAt(const int id) const noexcept -> utils::Vector2f override;
+  auto gradientAt(const int id) const noexcept -> Point2d override;
 
   private:
-  std::vector<utils::Vector2f> m_gradients{};
+  std::vector<Point2d> m_gradients{};
 
   void generate(const int period, const Seed seed);
 };
