@@ -10,7 +10,7 @@ namespace pge::terrain {
 class ValueLattice : public AbstractLattice<float>
 {
   public:
-  ValueLattice(IHasherPtr hasher, INoisePtr noise, IInterpolatorPtr interpolator);
+  ValueLattice(IHasher2dPtr hasher, INoisePtr noise, IInterpolatorPtr interpolator);
   ~ValueLattice() override = default;
 };
 

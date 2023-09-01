@@ -3,14 +3,14 @@
 
 namespace pge::terrain {
 
-ValueGenerator::ValueGenerator(IHasherPtr hasher, INoisePtr noise)
+ValueGenerator::ValueGenerator(IHasher2dPtr hasher, INoisePtr noise)
   : m_hasher(std::move(hasher))
   , m_noise(std::move(noise))
 {}
 
 auto ValueGenerator::at(const utils::Vector2i &latticePoint) const noexcept -> float
 {
-  m_noise->seed(m_hasher->hash(latticePoint.x(), latticePoint.y()));
+  m_noise->seed(m_hasher->hash(LatticePoint2d(latticePoint.x(), latticePoint.y())));
   return m_noise->next();
 }
 

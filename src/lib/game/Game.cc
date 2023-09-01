@@ -205,7 +205,7 @@ auto Game::latticeAt(const int x, const int y) const -> std::vector<float>
 void Game::generate()
 {
   const auto seed = m_nextSeed;
-  auto hasher     = std::make_unique<terrain::Hasher>(seed);
+  auto hasher     = std::make_unique<terrain::Hasher2d>(seed);
 
   terrain::INoisePtr noise;
   switch (m_latticeMode)
@@ -215,7 +215,7 @@ void Game::generate()
       noise = std::make_unique<terrain::WhiteNoise>(-1.0f, 1.0f);
 
       auto noiseCopy      = std::make_unique<terrain::WhiteNoise>();
-      auto hasherCopy     = std::make_unique<terrain::Hasher>(seed);
+      auto hasherCopy     = std::make_unique<terrain::Hasher2d>(seed);
       m_gradientGenerator = std::make_unique<terrain::GradientGenerator>(std::move(hasherCopy),
                                                                          std::move(noiseCopy));
     }
@@ -232,7 +232,7 @@ void Game::generate()
       noise = std::make_unique<terrain::WhiteNoise>();
 
       auto noiseCopy   = std::make_unique<terrain::WhiteNoise>();
-      auto hasherCopy  = std::make_unique<terrain::Hasher>(seed);
+      auto hasherCopy  = std::make_unique<terrain::Hasher2d>(seed);
       m_valueGenerator = std::make_unique<terrain::ValueGenerator>(std::move(hasherCopy),
                                                                    std::move(noiseCopy));
     }

@@ -12,14 +12,14 @@ template<typename Generator, typename LatticeValueType>
 class GeneratorPreparer
 {
   protected:
-  MockHasher *mockHasher{nullptr};
+  MockHasher2d *mockHasher{nullptr};
   MockNoise *mockNoise{nullptr};
 
   IValueGeneratorPtr<LatticeValueType> generator{};
 
   void prepareGenerator()
   {
-    auto hasher = std::make_unique<::testing::NiceMock<MockHasher>>();
+    auto hasher = std::make_unique<::testing::NiceMock<MockHasher2d>>();
     mockHasher  = hasher.get();
 
     auto noise = std::make_unique<::testing::NiceMock<MockNoise>>();

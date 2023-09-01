@@ -10,13 +10,13 @@ namespace pge::terrain {
 class GradientGenerator : public AbstractGradientGenerator
 {
   public:
-  GradientGenerator(IHasherPtr hasher, INoisePtr noise);
+  GradientGenerator(IHasher2dPtr hasher, INoisePtr noise);
   ~GradientGenerator() override = default;
 
   auto at(const utils::Vector2i &latticePoint) const noexcept -> utils::Vector2f override;
 
   private:
-  IHasherPtr m_hasher;
+  IHasher2dPtr m_hasher;
   INoisePtr m_noise;
 };
 

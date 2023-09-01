@@ -3,7 +3,7 @@
 
 namespace pge::terrain {
 
-GradientGenerator::GradientGenerator(IHasherPtr hasher, INoisePtr noise)
+GradientGenerator::GradientGenerator(IHasher2dPtr hasher, INoisePtr noise)
   : m_hasher(std::move(hasher))
   , m_noise(std::move(noise))
 {}
@@ -11,7 +11,7 @@ GradientGenerator::GradientGenerator(IHasherPtr hasher, INoisePtr noise)
 auto GradientGenerator::at(const utils::Vector2i &latticePoint) const noexcept -> utils::Vector2f
 {
   utils::Vector2f grad;
-  m_noise->seed(m_hasher->hash(latticePoint.x(), latticePoint.y()));
+  m_noise->seed(m_hasher->hash(LatticePoint2d(latticePoint.x(), latticePoint.y())));
   grad.x() = m_noise->next();
   grad.y() = m_noise->next();
 
