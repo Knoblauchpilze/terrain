@@ -2,6 +2,7 @@
 #pragma once
 
 #include "IValueGenerator.hh"
+#include <maths_utils/Vector2.hh>
 #include <memory>
 
 namespace pge::terrain {
@@ -12,7 +13,7 @@ class AbstractGradientGenerator : public IValueGenerator<utils::Vector2f>
   AbstractGradientGenerator()           = default;
   ~AbstractGradientGenerator() override = default;
 
-  auto generateFor(const utils::Vector2i &latticePoint, const utils::Vector2f &point) const noexcept
+  auto generateFor(const LatticePoint2d &latticePoint, const Point2d &point) const noexcept
     -> float override;
 };
 

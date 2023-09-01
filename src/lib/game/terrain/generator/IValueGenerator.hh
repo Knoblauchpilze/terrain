@@ -2,7 +2,8 @@
 #pragma once
 
 #include "IAreaGenerator.hh"
-#include <maths_utils/Vector2.hh>
+#include "ILatticePoint.hh"
+#include "IPoint.hh"
 #include <memory>
 
 namespace pge::terrain {
@@ -14,9 +15,9 @@ class IValueGenerator
   public:
   virtual ~IValueGenerator() = default;
 
-  virtual auto at(const utils::Vector2i &latticePoint) const noexcept -> ValueType = 0;
-  virtual auto generateFor(const utils::Vector2i &latticePoint,
-                           const utils::Vector2f &point) const noexcept -> float
+  virtual auto at(const LatticePoint2d &latticePoint) const noexcept -> ValueType = 0;
+  virtual auto generateFor(const LatticePoint2d &latticePoint, const Point2d &point) const noexcept
+    -> float
     = 0;
 };
 

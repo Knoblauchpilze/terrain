@@ -4,6 +4,7 @@
 #include "AbstractLattice.hh"
 #include "IHasher.hh"
 #include "INoise.hh"
+#include <maths_utils/Vector2.hh>
 
 namespace pge::terrain {
 

@@ -10,8 +10,8 @@ constexpr auto DEFAULT_SEED   = 2023;
 
 constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
 
-using Point        = utils::Vector2f;
-using LatticePoint = utils::Vector2i;
+using Point        = Point2d;
+using LatticePoint = LatticePoint2d;
 
 TEST(Unit_Terrain_PeriodicGradientGenerator, Test_PeriodOddThrowException)
 {
@@ -22,15 +22,15 @@ TEST(Unit_Terrain_PeriodicGradientGenerator, Test_PeriodicX)
 {
   PeriodicGradientGenerator generator{DEFAULT_PERIOD, DEFAULT_SEED};
 
-  auto p        = utils::Vector2i(0, 1);
+  auto p        = LatticePoint2d(0, 1);
   const auto v1 = generator.at(p);
 
-  p             = utils::Vector2i(0 + DEFAULT_PERIOD, 1);
+  p             = LatticePoint2d(0 + DEFAULT_PERIOD, 1);
   const auto v2 = generator.at(p);
   EXPECT_NEAR(v1.x(), v2.x(), REASONABLE_COMPARISON_THRESHOLD);
   EXPECT_NEAR(v1.y(), v2.y(), REASONABLE_COMPARISON_THRESHOLD);
 
-  p             = utils::Vector2i(0 - 5 * DEFAULT_PERIOD, 1);
+  p             = LatticePoint2d(0 - 5 * DEFAULT_PERIOD, 1);
   const auto v3 = generator.at(p);
   EXPECT_NEAR(v1.x(), v3.x(), REASONABLE_COMPARISON_THRESHOLD);
   EXPECT_NEAR(v1.y(), v3.y(), REASONABLE_COMPARISON_THRESHOLD);
@@ -40,15 +40,15 @@ TEST(Unit_Terrain_PeriodicGradientGenerator, Test_PeriodicY)
 {
   PeriodicGradientGenerator generator{DEFAULT_PERIOD, DEFAULT_SEED};
 
-  auto p        = utils::Vector2i(0, 1);
+  auto p        = LatticePoint2d(0, 1);
   const auto v1 = generator.at(p);
 
-  p             = utils::Vector2i(0, 1 + DEFAULT_PERIOD);
+  p             = LatticePoint2d(0, 1 + DEFAULT_PERIOD);
   const auto v2 = generator.at(p);
   EXPECT_NEAR(v1.x(), v2.x(), REASONABLE_COMPARISON_THRESHOLD);
   EXPECT_NEAR(v1.y(), v2.y(), REASONABLE_COMPARISON_THRESHOLD);
 
-  p             = utils::Vector2i(0, 1 - 3 * DEFAULT_PERIOD);
+  p             = LatticePoint2d(0, 1 - 3 * DEFAULT_PERIOD);
   const auto v3 = generator.at(p);
   EXPECT_NEAR(v1.x(), v3.x(), REASONABLE_COMPARISON_THRESHOLD);
   EXPECT_NEAR(v1.y(), v3.y(), REASONABLE_COMPARISON_THRESHOLD);

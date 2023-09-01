@@ -19,19 +19,19 @@ class Unit_Terrain_GradientGenerator : public GeneratorPreparer<GradientGenerato
 TEST_F(Unit_Terrain_GradientGenerator, Test_UseHasher)
 {
   EXPECT_CALL(*mockHasher, hash(_)).Times(1);
-  generator->generateFor(utils::Vector2i(), utils::Vector2f());
+  generator->generateFor({}, {});
 }
 
 TEST_F(Unit_Terrain_GradientGenerator, Test_UseNoise)
 {
   EXPECT_CALL(*mockNoise, seed(_)).Times(1);
   EXPECT_CALL(*mockNoise, next()).Times(2);
-  generator->generateFor(utils::Vector2i(), utils::Vector2f());
+  generator->generateFor({}, {});
 }
 
 namespace {
-using Point        = utils::Vector2f;
-using LatticePoint = utils::Vector2i;
+using Point        = Point2d;
+using LatticePoint = LatticePoint2d;
 using NoiseValues  = std::vector<float>;
 
 constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
