@@ -54,7 +54,7 @@ We decided to separate the concerns of generating the values for the lattice fro
 In general:
 * [INoise](src/lib/game/terrain/noise/INoise.hh) represents the interface to generate some noise. It is used as a wrapper around some abstract way to produce 1D noise.
 * [IHasher](src/lib/game/terrain/hasher/IHasher.hh) is used to generate a single value from multiple coordinates. This is useful to seed the noise generator.
-* [IValueGenerator](src/lib/game/terrain/lattice/generator/IValueGenerator.hh) is used to generate the value at a specific lattice point based on a noise and use the `IHasher` interface to consistently produce the same values for the same coordinates.
+* [IValueGenerator](src/lib/game/terrain/generator/IValueGenerator.hh) is used to generate the value at a specific lattice point based on a noise and use the `IHasher` interface to consistently produce the same values for the same coordinates.
 * [ILattice](src/lib/game/terrain/lattice/ILattice.hh) allows to generate the noise value at a specific point based on the values at the lattice point surrounding it. It reuses a certain value generator and combines these value using some interpolation mechanism and a normalization function to produce noise within a certain range.
 
 The [Terrain](src/lib/game/terrain/Terrain.hh) class is using a lattice to combine it into a consistent value. It uses layered noise and various frequencies to generate coherent values (TODO).
