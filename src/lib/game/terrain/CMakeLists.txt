@@ -12,9 +12,26 @@ add_subdirectory (
 	)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/point
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/hasher
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/area
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/generator
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/lattice
 	)
 
 target_sources (terrain_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Terrain.cc
 	)
+	
