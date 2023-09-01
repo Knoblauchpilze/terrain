@@ -26,7 +26,7 @@ class AbstractLattice : public ILattice
                   std::optional<NormalizationFunc> normalization) noexcept;
 
   private:
-  IAreaGeneratorPtr m_areaGenerator;
+  IArea2dGeneratorPtr m_areaGenerator;
   IValueGeneratorPtr<ValueType> m_valueGenerator;
   IInterpolatorPtr m_interpolator;
   std::optional<NormalizationFunc> m_normalization;

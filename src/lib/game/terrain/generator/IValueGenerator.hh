@@ -2,6 +2,7 @@
 #pragma once
 
 #include "IAreaGenerator.hh"
+#include <maths_utils/Vector2.hh>
 #include <memory>
 
 namespace pge::terrain {

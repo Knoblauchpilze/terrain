@@ -1,27 +1,26 @@
 
 #pragma once
 
-#include <maths_utils/Vector2.hh>
+#include "Area.hh"
+#include "ILatticePoint.hh"
+#include "IPoint.hh"
 #include <memory>
 
 namespace pge::terrain {
 
-struct Area
-{
-  utils::Vector2i topLeft;
-  utils::Vector2i topRight;
-  utils::Vector2i bottomRight;
-  utils::Vector2i bottomLeft;
-};
-
+template<int Dimension>
 class IAreaGenerator
 {
   public:
   virtual ~IAreaGenerator() = default;
 
-  virtual auto areaSurrounding(const float x, const float y) const noexcept -> Area = 0;
+  virtual auto areaSurrounding(const IPoint<Dimension> &p) const noexcept -> Area<Dimension> = 0;
 };
 
-using IAreaGeneratorPtr = std::unique_ptr<IAreaGenerator>;
+template<int Dimension>
+using IAreaGeneratorPtr = std::unique_ptr<IAreaGenerator<Dimension>>;
+
+using IArea2dGeneratorPtr = IAreaGeneratorPtr<2>;
+using IArea3dGeneratorPtr = IAreaGeneratorPtr<3>;
 
 } // namespace pge::terrain
