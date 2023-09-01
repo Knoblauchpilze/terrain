@@ -23,6 +23,7 @@ class AbstractPeriodicGradientGenerator : public AbstractGradientGenerator
   std::vector<int> m_permutations{};
 
   void generatePermutationsTable(const Seed seed);
+  auto hash(const LatticePoint2d &latticePoint) const -> int;
 };
 
 } // namespace pge::terrain

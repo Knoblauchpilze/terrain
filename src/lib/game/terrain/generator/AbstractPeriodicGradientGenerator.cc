@@ -19,11 +19,7 @@ AbstractPeriodicGradientGenerator::AbstractPeriodicGradientGenerator(const int p
 auto AbstractPeriodicGradientGenerator::at(const LatticePoint2d &latticePoint) const noexcept
   -> Point2d
 {
-  // https://stackoverflow.com/questions/3072665/bitwise-and-in-place-of-modulus-operator
-  const auto xMod = latticePoint(0) & m_modulusMask;
-  const auto yMod = latticePoint(1) & m_modulusMask;
-
-  const auto id   = m_permutations[m_permutations[xMod] + yMod];
+  const auto id   = hash(latticePoint);
   const auto grad = gradientAt(id);
 
   return grad;
@@ -44,6 +40,20 @@ void AbstractPeriodicGradientGenerator::generatePermutationsTable(const Seed see
     std::swap(m_permutations[i], m_permutations[k]);
     m_permutations[i + m_period] = m_permutations[i];
   }
+}
+
+auto AbstractPeriodicGradientGenerator::hash(const LatticePoint2d &latticePoint) const -> int
+{
+  // https://stackoverflow.com/questions/3072665/bitwise-and-in-place-of-modulus-operator
+  int seed = latticePoint(0) & m_modulusMask;
+
+  for (int i = 1; i < latticePoint.size(); ++i)
+  {
+    const auto mod = latticePoint(i) & m_modulusMask;
+    seed           = m_permutations[seed] + mod;
+  }
+
+  return m_permutations[seed];
 }
 
 } // namespace pge::terrain
