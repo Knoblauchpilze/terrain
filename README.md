@@ -59,6 +59,40 @@ In general:
 
 The [Terrain](src/lib/game/terrain/Terrain.hh) class is using a lattice to combine it into a consistent value. It uses layered noise and various frequencies to generate coherent values (TODO).
 
+## Generation
+
+We explored multiple ways to generate the noise. The main strategies are listed below:
+
+### Value noise
+
+The value noise is probably the simplest idea. For each lattice point we create a single value attached to it. The value between the lattice points is then interpolated from the surrounding area.
+
+This is relatively simple to understand but it is known to suffer from a few drawbacks. One of them is that if the influence of the value at a lattice point is dependent on the values at the surrounding lattice points.
+
+Picture the following area:
+
+![value_noise_flat](resources/value_noise_flat.png)
+
+In this example all four lattice points have very similar values, meaning that the whole area will be relatively flat. This is usually not a desired feature as  it will make the terrain look flat and boring (even if this can be compensated by adding octaves of noise).
+
+### Gradient noise
+
+The idea behind the gradient noise is to generate a vector of values at each lattice point:
+
+![gradient_noise](resources/gradient_noise.png)
+
+For a point within this lattice area, we then compute the vectors from the point to the lattice point. The influence of each lattice point's gradient vector is determined by the dot product between the gradient vector and the previously computed vector.
+
+This makes it harder to have a flat surface as when the point moves within the lattice area it will change its dot product with the surrounding gradients. Our understanding is that it's also harder to obtain the same value for the gradient vectors as they are multi-dimensional.
+
+![point_to_lattice](resources/point_to_lattice.png)
+
+The images were taken from [here](https://adrianb.io/2014/08/09/perlinnoise.html).
+
+### Perlin noise
+
+The infamous Perlin noise is then a special case of gradient noise. In our implementation we changed the gradient vector to not be random but correspond to the values described in [this](https://mrl.cs.nyu.edu/~perlin/paper445.pdf) article: they point to the corners of a unit cube and are supposed to help with the distribution of the vectors.
+
 ## Further ideas
 
 This [article](https://www.codeproject.com/Articles/785084/A-generic-lattice-noise-algorithm-an-evolution-of) about generalizing the use of a lattice to create noise seems pretty interesting.
