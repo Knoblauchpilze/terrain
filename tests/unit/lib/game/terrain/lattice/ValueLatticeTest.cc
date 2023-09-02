@@ -46,8 +46,8 @@ struct TestCaseForInterpolate
   float py;
 };
 
-class ValueInterpolateTestSuite : public LatticePreparer<ValueLattice>,
-                                  public TestWithParam<TestCaseForInterpolate>
+class ValueLatticeInterpolateTestSuite : public LatticePreparer<ValueLattice>,
+                                         public TestWithParam<TestCaseForInterpolate>
 {
   protected:
   void SetUp() override
@@ -65,7 +65,7 @@ auto generateTestName(const TestParamInfo<TestCaseForInterpolate> &info) -> std:
 }
 } // namespace
 
-TEST_P(ValueInterpolateTestSuite, Test_Interpolate)
+TEST_P(ValueLatticeInterpolateTestSuite, Test_Interpolate)
 {
   const auto param = GetParam();
 
@@ -74,7 +74,7 @@ TEST_P(ValueInterpolateTestSuite, Test_Interpolate)
 }
 
 INSTANTIATE_TEST_SUITE_P(Unit_Terrain_ValueLattice,
-                         ValueInterpolateTestSuite,
+                         ValueLatticeInterpolateTestSuite,
                          Values(TestCaseForInterpolate{Point2d{0.0f, 0.0f}, 0.0f, 0.0f},
                                 TestCaseForInterpolate{Point2d{0.5f, 0.0f}, 0.5f, 0.0f},
                                 TestCaseForInterpolate{Point2d{0.0f, 0.5f}, 0.0f, 0.5f},
@@ -97,7 +97,7 @@ struct TestCaseValue
   float threshold{REASONABLE_COMPARISON_THRESHOLD};
 };
 
-using ValueAtTestSuite = TestWithParam<TestCaseValue>;
+using ValueLatticeAtTestSuite = TestWithParam<TestCaseValue>;
 
 namespace {
 auto generateTestName(const TestParamInfo<TestCaseValue> &info) -> std::string
@@ -108,7 +108,7 @@ auto generateTestName(const TestParamInfo<TestCaseValue> &info) -> std::string
 }
 } // namespace
 
-TEST_P(ValueAtTestSuite, Test_At)
+TEST_P(ValueLatticeAtTestSuite, Test_At)
 {
   const auto param = GetParam();
 
@@ -125,7 +125,7 @@ TEST_P(ValueAtTestSuite, Test_At)
 }
 
 INSTANTIATE_TEST_SUITE_P(Unit_Terrain_ValueLattice,
-                         ValueAtTestSuite,
+                         ValueLatticeAtTestSuite,
                          Values(TestCaseValue{Point2d{0.0f, 0.0f}, 0.1004222f},
                                 TestCaseValue{Point2d{0.0f, 1.0f}, 0.6273638f},
                                 TestCaseValue{Point2d{0.5f, 0.5f}, 0.4484194f},
