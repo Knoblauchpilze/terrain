@@ -1,14 +1,13 @@
 
 #pragma once
 
-#include "AbstractLattice.hh"
+#include "AbstractGradientLattice.hh"
 #include "IHasher.hh"
 #include "INoise.hh"
-#include <maths_utils/Vector2.hh>
 
 namespace pge::terrain {
 
-class GradientLattice : public AbstractLattice<Point3d>
+class GradientLattice : public AbstractGradientLattice
 {
   public:
   GradientLattice(IHasher2dPtr hasher, INoisePtr noise, IInterpolatorPtr interpolator);
