@@ -37,7 +37,7 @@ TEST_F(Unit_Terrain_GradientLattice, Test_UseInterpolate)
   lattice->at({});
 }
 
-namespace {
+namespace interpolate {
 struct TestCaseInterpolate
 {
   Point2d p;
@@ -46,7 +46,7 @@ struct TestCaseInterpolate
   float interpolatedY;
 };
 
-class InterpolateGradientTestSuite : public LatticePreparer<GradientLattice>,
+class GradientInterpolateTestSuite : public LatticePreparer<GradientLattice>,
                                      public TestWithParam<TestCaseInterpolate>
 {
   protected:
@@ -56,14 +56,16 @@ class InterpolateGradientTestSuite : public LatticePreparer<GradientLattice>,
   }
 };
 
-auto generateTestNameForInterpolate(const TestParamInfo<TestCaseInterpolate> &info) -> std::string
+namespace {
+auto generateTestName(const TestParamInfo<TestCaseInterpolate> &info) -> std::string
 {
   auto str = std::to_string(info.param.p(0)) + "x" + std::to_string(info.param.p(1));
   std::replace(str.begin(), str.end(), '.', '_');
   return str;
 }
+} // namespace
 
-TEST_P(InterpolateGradientTestSuite, Test_Interpolate)
+TEST_P(GradientInterpolateTestSuite, Test_Interpolate)
 {
   const auto param = GetParam();
 
@@ -71,10 +73,9 @@ TEST_P(InterpolateGradientTestSuite, Test_Interpolate)
     .Times(1);
   lattice->at(param.p);
 }
-} // namespace
 
 INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice,
-                         InterpolateGradientTestSuite,
+                         GradientInterpolateTestSuite,
                          Values(TestCaseInterpolate{Point2d{0.0f, 0.0f}, 0.0f, 0.0f},
                                 TestCaseInterpolate{Point2d{0.5f, 0.0f}, 0.5f, 0.0f},
                                 TestCaseInterpolate{Point2d{0.0f, 0.5f}, 0.0f, 0.5f},
@@ -82,9 +83,11 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice,
                                 TestCaseInterpolate{Point2d{0.7f, 0.1f}, 0.7f, 0.1f},
                                 TestCaseInterpolate{Point2d{0.9f, 0.51f}, 0.9f, 0.51f},
                                 TestCaseInterpolate{Point2d{0.02f, 0.98f}, 0.02f, 0.98f}),
-                         generateTestNameForInterpolate);
+                         generateTestName);
 
-namespace {
+} // namespace interpolate
+
+namespace at {
 constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
 
 struct TestCaseValue
@@ -95,16 +98,18 @@ struct TestCaseValue
   float threshold{REASONABLE_COMPARISON_THRESHOLD};
 };
 
-using GradientTestSuite = TestWithParam<TestCaseValue>;
+using GradientAtTestSuite = TestWithParam<TestCaseValue>;
 
-auto generateTestNameForValue(const TestParamInfo<TestCaseValue> &info) -> std::string
+namespace {
+auto generateTestName(const TestParamInfo<TestCaseValue> &info) -> std::string
 {
   auto str = std::to_string(info.param.p(0)) + "x" + std::to_string(info.param.p(1));
   std::replace(str.begin(), str.end(), '.', '_');
   return str;
 }
+} // namespace
 
-TEST_P(GradientTestSuite, Test_Value)
+TEST_P(GradientAtTestSuite, Test_At)
 {
   const auto param = GetParam();
 
@@ -119,10 +124,9 @@ TEST_P(GradientTestSuite, Test_Value)
   const auto actual = lattice->at(param.p);
   EXPECT_NEAR(actual, param.expected, param.threshold);
 }
-} // namespace
 
 INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice,
-                         GradientTestSuite,
+                         GradientAtTestSuite,
                          Values(TestCaseValue{Point2d{0.0f, 0.0f}, 0.5f},
                                 TestCaseValue{Point2d{0.0f, 1.0f}, 0.5f},
                                 TestCaseValue{Point2d{0.5f, 0.5f}, 0.483331f},
@@ -130,6 +134,8 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice,
                                 TestCaseValue{Point2d{0.49f, 0.98f}, 0.504369f},
                                 TestCaseValue{Point2d{0.67f, 0.51f}, 0.570583f},
                                 TestCaseValue{Point2d{0.01f, 0.79f}, 0.352243f}),
-                         generateTestNameForValue);
+                         generateTestName);
+
+} // namespace at
 
 } // namespace pge::terrain

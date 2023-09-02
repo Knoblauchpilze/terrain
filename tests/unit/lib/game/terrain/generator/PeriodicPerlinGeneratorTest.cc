@@ -1,5 +1,5 @@
 
-#include "PeriodicGradientGenerator.hh"
+#include "PeriodicPerlinGenerator.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
@@ -10,14 +10,14 @@ constexpr auto DEFAULT_SEED   = 2023;
 
 constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
 
-TEST(Unit_Terrain_PeriodicGradientGenerator, Test_PeriodOddThrowException)
+TEST(Unit_Terrain_PeriodicPerlinGenerator, Test_PeriodOddThrowException)
 {
-  EXPECT_THROW(PeriodicGradientGenerator(3, DEFAULT_SEED), std::invalid_argument);
+  EXPECT_THROW(PeriodicPerlinGenerator(3, DEFAULT_SEED), std::invalid_argument);
 }
 
-TEST(Unit_Terrain_PeriodicGradientGenerator, Test_PeriodicX)
+TEST(Unit_Terrain_PeriodicPerlinGenerator, Test_PeriodicX)
 {
-  PeriodicGradientGenerator generator{DEFAULT_PERIOD, DEFAULT_SEED};
+  PeriodicPerlinGenerator generator{DEFAULT_PERIOD, DEFAULT_SEED};
 
   auto p        = LatticePoint2d(0, 1);
   const auto v1 = generator.at(p);
@@ -35,9 +35,9 @@ TEST(Unit_Terrain_PeriodicGradientGenerator, Test_PeriodicX)
   EXPECT_NEAR(v1(2), v3(2), REASONABLE_COMPARISON_THRESHOLD);
 }
 
-TEST(Unit_Terrain_PeriodicGradientGenerator, Test_PeriodicY)
+TEST(Unit_Terrain_PeriodicPerlinGenerator, Test_PeriodicY)
 {
-  PeriodicGradientGenerator generator{DEFAULT_PERIOD, DEFAULT_SEED};
+  PeriodicPerlinGenerator generator{DEFAULT_PERIOD, DEFAULT_SEED};
 
   auto p        = LatticePoint2d(0, 1);
   const auto v1 = generator.at(p);
@@ -67,7 +67,7 @@ struct TestCase
   float threshold{REASONABLE_COMPARISON_THRESHOLD};
 };
 
-using PeriodicGradientAtTestSuite = TestWithParam<TestCase>;
+using PeriodicPerlinAtTestSuite = TestWithParam<TestCase>;
 
 namespace {
 auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
@@ -92,10 +92,10 @@ auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
 }
 } // namespace
 
-TEST_P(PeriodicGradientAtTestSuite, Test_At)
+TEST_P(PeriodicPerlinAtTestSuite, Test_At)
 {
   const auto param = GetParam();
-  PeriodicGradientGenerator generator{param.period, param.seed};
+  PeriodicPerlinGenerator generator{param.period, param.seed};
 
   const auto actual = generator.at(param.latticePoint);
   EXPECT_NEAR(actual(0), param.expected(0), param.threshold);
@@ -103,12 +103,11 @@ TEST_P(PeriodicGradientAtTestSuite, Test_At)
   EXPECT_NEAR(actual(2), param.expected(2), param.threshold);
 }
 
-INSTANTIATE_TEST_SUITE_P(
-  Unit_Terrain_PeriodicGradientGenerator,
-  PeriodicGradientAtTestSuite,
-  Values(TestCase{LatticePoint2d{0, 1}, Point3d{0.261125f, 0.931419f, -0.253521f}},
-         TestCase{LatticePoint2d{1, 2}, Point3d{-0.403105f, 0.236356f, 0.884105f}}),
-  generateTestName);
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicPerlinGenerator,
+                         PeriodicPerlinAtTestSuite,
+                         Values(TestCase{LatticePoint2d{0, 1}, Point3d{1.0f, 0.0f, -1.0f}},
+                                TestCase{LatticePoint2d{1, 2}, Point3d{1.0f, 1.0f, 0.0f}}),
+                         generateTestName);
 } // namespace at
 
 namespace generate_for {
@@ -124,7 +123,7 @@ struct TestCase
   float threshold{REASONABLE_COMPARISON_THRESHOLD};
 };
 
-using PeriodicGradientGenerateForTestSuite = TestWithParam<TestCase>;
+using PeriodicPerlinGenerateForTestSuite = TestWithParam<TestCase>;
 
 namespace {
 auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
@@ -150,22 +149,22 @@ auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
 }
 } // namespace
 
-TEST_P(PeriodicGradientGenerateForTestSuite, Test_GenerateFor)
+TEST_P(PeriodicPerlinGenerateForTestSuite, Test_GenerateFor)
 {
   const auto param = GetParam();
-  PeriodicGradientGenerator generator{param.period, param.seed};
+  PeriodicPerlinGenerator generator{param.period, param.seed};
 
   const auto actual = generator.generateFor(param.latticePoint, param.point);
   EXPECT_NEAR(actual, param.expected, param.threshold);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicGradientGenerator,
-                         PeriodicGradientGenerateForTestSuite,
-                         Values(TestCase{Point2d{0.2f, 0.3f}, LatticePoint2d{0, 1}, -0.599768f},
-                                TestCase{Point2d{1.2f, 2.3f}, LatticePoint2d{1, 2}, -0.009714f},
-                                TestCase{Point2d{-0.2f, 1.45f}, LatticePoint2d{-1, 2}, -0.478953f},
-                                TestCase{Point2d{-0.89f, -0.37f}, LatticePoint2d{-1, 0}, -0.10899f},
-                                TestCase{Point2d{0.78f, -0.37f}, LatticePoint2d{1, -1}, 0.006288f}),
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicPerlinGenerator,
+                         PeriodicPerlinGenerateForTestSuite,
+                         Values(TestCase{Point2d{0.2f, 0.3f}, LatticePoint2d{0, 1}, 0.2f},
+                                TestCase{Point2d{1.2f, 2.3f}, LatticePoint2d{1, 2}, 0.5f},
+                                TestCase{Point2d{-0.2f, 1.45f}, LatticePoint2d{-1, 2}, -1.35f},
+                                TestCase{Point2d{-0.89f, -0.37f}, LatticePoint2d{-1, 0}, -0.11f},
+                                TestCase{Point2d{0.78f, -0.37f}, LatticePoint2d{1, -1}, 0.22f}),
                          generateTestName);
 } // namespace generate_for
 } // namespace pge::terrain

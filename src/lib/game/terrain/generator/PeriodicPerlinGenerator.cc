@@ -1,20 +1,11 @@
 
 #include "PeriodicPerlinGenerator.hh"
-#include <iostream>
-#include <random>
 
 namespace pge::terrain {
 
 PeriodicPerlinGenerator::PeriodicPerlinGenerator(const int period, const Seed seed)
   : AbstractPeriodicGradientGenerator(period, seed)
-{
-  generate(period, seed);
-}
-
-auto PeriodicPerlinGenerator::gradientAt(const int id) const noexcept -> Point3d
-{
-  return m_gradients[id];
-}
+{}
 
 namespace {
 /// https://mrl.cs.nyu.edu/~perlin/paper445.pdf
@@ -29,34 +20,17 @@ const std::vector<Point3d> DEFAULT_GRADIENTS = {Point3d(1.0f, 1.0f, 0.0f),
                                                 Point3d(0.0f, 1.0f, 1.0f),
                                                 Point3d(0.0f, -1.0f, 1.0f),
                                                 Point3d(0.0f, 1.0f, -1.0f),
+                                                Point3d(0.0f, -1.0f, -1.0f),
+                                                // Additional padding
+                                                Point3d(1.0f, 1.0f, 0.0f),
+                                                Point3d(-1.0f, 1.0f, 0.0f),
+                                                Point3d(0.0f, -1.0f, 1.0f),
                                                 Point3d(0.0f, -1.0f, -1.0f)};
 } // namespace
 
-void PeriodicPerlinGenerator::generate(const int period, const Seed seed)
+auto PeriodicPerlinGenerator::gradientAt(const int id) const noexcept -> Point3d
 {
-  std::mt19937 generator(seed);
-  /// TODO: The gradient should not be completely random, see here:
-  /// https://mrl.cs.nyu.edu/~perlin/paper445.pdf
-  std::uniform_int_distribution<int> distribution(0, 11);
-
-  std::vector<int> rnd;
-
-  m_gradients.resize(period);
-  /// https://www.scratchapixel.com/lessons/procedural-generation-virtual-worlds/perlin-noise-part-2/perlin-noise.html
-  for (auto &grad : m_gradients)
-  {
-    rnd.push_back(distribution(generator));
-    grad = DEFAULT_GRADIENTS[rnd.back()];
-  }
-
-  auto id = 0;
-  std::cout << "seed: " << seed << ", period: " << period << std::endl;
-  for (const auto &v : m_gradients)
-  {
-    std::cout << "perlin[" << id << "]: " << v(0) << "x" << v(1) << "x" << v(2) << " (" << rnd[id]
-              << ")" << std::endl;
-    ++id;
-  }
+  return DEFAULT_GRADIENTS[id % DEFAULT_GRADIENTS.size()];
 }
 
 } // namespace pge::terrain
