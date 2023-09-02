@@ -4,7 +4,7 @@
 
 namespace pge::terrain {
 
-// https://en.cppreference.com/w/cpp/numeric/constants
+/// https://en.cppreference.com/w/cpp/numeric/constants
 constexpr auto MAGNITUDE_GRADIENT_NOISE = std::numbers::sqrt2_v<float> / 2.0f;
 
 AbstractGradientLattice::AbstractGradientLattice(IValueGeneratorPtr<Point3d> valueGenerator,

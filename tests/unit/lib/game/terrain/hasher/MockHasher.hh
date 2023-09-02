@@ -6,7 +6,7 @@
 
 namespace pge::terrain {
 
-// http://google.github.io/googletest/gmock_for_dummies.html#writing-the-mock-class
+/// http://google.github.io/googletest/gmock_for_dummies.html#writing-the-mock-class
 template<int Dimension>
 class MockHasher : public IHasher<Dimension>
 {
