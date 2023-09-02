@@ -46,8 +46,8 @@ struct TestCaseInterpolate
   float interpolatedY;
 };
 
-class GradientInterpolateTestSuite : public LatticePreparer<GradientLattice>,
-                                     public TestWithParam<TestCaseInterpolate>
+class GradientLatticeInterpolateTestSuite : public LatticePreparer<GradientLattice>,
+                                            public TestWithParam<TestCaseInterpolate>
 {
   protected:
   void SetUp() override
@@ -65,7 +65,7 @@ auto generateTestName(const TestParamInfo<TestCaseInterpolate> &info) -> std::st
 }
 } // namespace
 
-TEST_P(GradientInterpolateTestSuite, Test_Interpolate)
+TEST_P(GradientLatticeInterpolateTestSuite, Test_Interpolate)
 {
   const auto param = GetParam();
 
@@ -75,7 +75,7 @@ TEST_P(GradientInterpolateTestSuite, Test_Interpolate)
 }
 
 INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice,
-                         GradientInterpolateTestSuite,
+                         GradientLatticeInterpolateTestSuite,
                          Values(TestCaseInterpolate{Point2d{0.0f, 0.0f}, 0.0f, 0.0f},
                                 TestCaseInterpolate{Point2d{0.5f, 0.0f}, 0.5f, 0.0f},
                                 TestCaseInterpolate{Point2d{0.0f, 0.5f}, 0.0f, 0.5f},
@@ -86,6 +86,29 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice,
                          generateTestName);
 
 } // namespace interpolate
+
+namespace {
+auto createGradientLattice() -> ILatticePtr
+{
+  constexpr auto SEED = 1993;
+  auto hasher         = std::make_unique<Hasher2d>(SEED);
+  auto noise          = std::make_unique<WhiteNoise>(-1.0f, 1.0f);
+  auto interpolator   = std::make_unique<Bilinear>();
+  return std::make_unique<GradientLattice>(std::move(hasher),
+                                           std::move(noise),
+                                           std::move(interpolator));
+}
+
+auto createGradientLatticeWithMockedNoise(INoisePtr mockNoise) -> ILatticePtr
+{
+  constexpr auto SEED = 1993;
+  auto hasher         = std::make_unique<Hasher2d>(SEED);
+  auto interpolator   = std::make_unique<Bilinear>();
+  return std::make_unique<GradientLattice>(std::move(hasher),
+                                           std::move(mockNoise),
+                                           std::move(interpolator));
+}
+} // namespace
 
 namespace at {
 constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
@@ -98,7 +121,7 @@ struct TestCaseValue
   float threshold{REASONABLE_COMPARISON_THRESHOLD};
 };
 
-using GradientAtTestSuite = TestWithParam<TestCaseValue>;
+using GradientLatticeAtTestSuite = TestWithParam<TestCaseValue>;
 
 namespace {
 auto generateTestName(const TestParamInfo<TestCaseValue> &info) -> std::string
@@ -109,24 +132,17 @@ auto generateTestName(const TestParamInfo<TestCaseValue> &info) -> std::string
 }
 } // namespace
 
-TEST_P(GradientAtTestSuite, Test_At)
+TEST_P(GradientLatticeAtTestSuite, Test_At)
 {
   const auto param = GetParam();
 
-  constexpr auto SEED = 1993;
-  auto hasher         = std::make_unique<Hasher2d>(SEED);
-  auto noise          = std::make_unique<WhiteNoise>(-1.0f, 1.0f);
-  auto interpolator   = std::make_unique<Bilinear>();
-  auto lattice        = std::make_unique<GradientLattice>(std::move(hasher),
-                                                   std::move(noise),
-                                                   std::move(interpolator));
-
+  auto lattice      = createGradientLattice();
   const auto actual = lattice->at(param.p);
   EXPECT_NEAR(actual, param.expected, param.threshold);
 }
 
 INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice,
-                         GradientAtTestSuite,
+                         GradientLatticeAtTestSuite,
                          Values(TestCaseValue{Point2d{0.0f, 0.0f}, 0.5f},
                                 TestCaseValue{Point2d{0.0f, 1.0f}, 0.5f},
                                 TestCaseValue{Point2d{0.5f, 0.5f}, 0.483331f},
@@ -137,5 +153,79 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice,
                          generateTestName);
 
 } // namespace at
+
+TEST_F(Unit_Terrain_GradientLattice, Test_MinValue)
+{
+  auto noise     = std::make_unique<NiceMock<MockNoise>>();
+  auto mockNoise = noise.get();
+
+  EXPECT_CALL(*mockNoise, next()).Times(12);
+  ON_CALL(*mockNoise, next()).WillByDefault(Invoke([]() {
+    static const std::vector<float> VECTORS_FOR_MIN_VALUE = {// top left
+                                                             -1.0f,
+                                                             1.0f,
+                                                             0.0f,
+                                                             // top right
+                                                             1.0f,
+                                                             1.0f,
+                                                             0.0f,
+                                                             // bottom right
+                                                             1.0f,
+                                                             -1.0f,
+                                                             0.0f,
+                                                             // bottom left
+                                                             -1.0f,
+                                                             -1.0f,
+                                                             0.0f};
+
+    static auto counter = 0;
+    const auto out      = VECTORS_FOR_MIN_VALUE[counter % VECTORS_FOR_MIN_VALUE.size()];
+    ++counter;
+
+    return out;
+  }));
+
+  auto lattice = createGradientLatticeWithMockedNoise(std::move(noise));
+  const auto v = lattice->at({0.5f, 0.5f});
+
+  EXPECT_EQ(0.0f, v);
+}
+
+TEST_F(Unit_Terrain_GradientLattice, Test_MaxValue)
+{
+  auto noise     = std::make_unique<NiceMock<MockNoise>>();
+  auto mockNoise = noise.get();
+
+  EXPECT_CALL(*mockNoise, next()).Times(12);
+  ON_CALL(*mockNoise, next()).WillByDefault(Invoke([]() {
+    static const std::vector<float> VECTORS_FOR_MAX_VALUE = {// top left
+                                                             1.0f,
+                                                             -1.0f,
+                                                             0.0f,
+                                                             // top right
+                                                             -1.0f,
+                                                             -1.0f,
+                                                             0.0f,
+                                                             // bottom right
+                                                             -1.0f,
+                                                             1.0f,
+                                                             0.0f,
+                                                             // bottom left
+                                                             1.0f,
+                                                             1.0f,
+                                                             0.0f};
+
+    static auto counter = 0;
+    const auto out      = VECTORS_FOR_MAX_VALUE[counter % VECTORS_FOR_MAX_VALUE.size()];
+    ++counter;
+
+    return out;
+  }));
+
+  auto lattice = createGradientLatticeWithMockedNoise(std::move(noise));
+  const auto v = lattice->at({0.5f, 0.5f});
+
+  EXPECT_EQ(1.0f, v);
+}
 
 } // namespace pge::terrain
