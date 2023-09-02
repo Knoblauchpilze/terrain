@@ -1,13 +1,12 @@
 
 #pragma once
 
-#include "AbstractLattice.hh"
+#include "AbstractGradientLattice.hh"
 #include "Seed.hh"
-#include <maths_utils/Vector2.hh>
 
 namespace pge::terrain {
 
-class PeriodicGradientLattice : public AbstractLattice<Point3d>
+class PeriodicGradientLattice : public AbstractGradientLattice
 {
   public:
   PeriodicGradientLattice(const int period, const Seed seed, IInterpolatorPtr interpolator);
