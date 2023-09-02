@@ -34,4 +34,3 @@ add_subdirectory (
 target_sources (terrain_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Terrain.cc
 	)
-	
