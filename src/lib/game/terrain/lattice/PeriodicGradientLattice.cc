@@ -14,6 +14,7 @@ PeriodicGradientLattice::PeriodicGradientLattice(const int period,
   : AbstractLattice(std::make_unique<PeriodicGradientGenerator>(period, seed),
                     std::move(interpolator),
                     {[](const float value) -> float {
+                      // https://digitalfreepen.com/2017/06/20/range-perlin-noise.html
                       return (MAGNITUDE_GRADIENT_NOISE + value) / (2.0f * MAGNITUDE_GRADIENT_NOISE);
                     }})
 {}
