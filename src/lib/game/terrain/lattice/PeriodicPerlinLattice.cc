@@ -5,8 +5,10 @@
 
 namespace pge::terrain {
 
-// https://en.cppreference.com/w/cpp/numeric/constants
-constexpr auto MAGNITUDE_PERLIN_NOISE = std::numbers::sqrt2_v<float> / 2.0f;
+// https://digitalfreepen.com/2017/06/20/range-perlin-noise.html
+// But vectors are not normalized here, so a similar argument is
+// giving the range `[-1; 1]`.
+constexpr auto MAGNITUDE_PERLIN_NOISE = 1.0f;
 
 PeriodicPerlinLattice::PeriodicPerlinLattice(const int period,
                                              const Seed seed,
@@ -14,7 +16,6 @@ PeriodicPerlinLattice::PeriodicPerlinLattice(const int period,
   : AbstractLattice(std::make_unique<PeriodicPerlinGenerator>(period, seed),
                     std::move(interpolator),
                     {[](const float value) -> float {
-                      // https://digitalfreepen.com/2017/06/20/range-perlin-noise.html
                       return (MAGNITUDE_PERLIN_NOISE + value) / (2.0f * MAGNITUDE_PERLIN_NOISE);
                     }})
 {}
