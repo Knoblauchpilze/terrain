@@ -8,7 +8,7 @@
 
 namespace pge::terrain {
 
-// https://stackoverflow.com/questions/7968023/c-virtual-template-method
+/// https://stackoverflow.com/questions/7968023/c-virtual-template-method
 template<typename ValueType>
 class IValueGenerator
 {

@@ -5,9 +5,9 @@
 
 namespace pge::terrain {
 
-// https://digitalfreepen.com/2017/06/20/range-perlin-noise.html
-// But vectors are not normalized here, so a similar argument is
-// giving the range `[-1; 1]`.
+/// https://digitalfreepen.com/2017/06/20/range-perlin-noise.html
+/// But vectors are not normalized here, so a similar argument is
+/// giving the range `[-1; 1]`.
 constexpr auto MAGNITUDE_PERLIN_NOISE = 1.0f;
 
 PeriodicPerlinLattice::PeriodicPerlinLattice(const int period,
