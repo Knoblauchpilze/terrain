@@ -7,7 +7,7 @@ using namespace ::testing;
 namespace pge::terrain {
 constexpr auto DEFAULT_SEED = 10;
 
-TEST(Unit_Noise_WhiteNoise, Test_ReturnSameValueWithSameSeed)
+TEST(Unit_Terrain_WhiteNoise, Test_ReturnSameValueWithSameSeed)
 {
   auto n = std::make_unique<WhiteNoise>();
 
@@ -61,7 +61,7 @@ TEST_P(WhiteNoiseTestSuite, Test_Next)
   EXPECT_NEAR(param.expected, n->next(), param.threshold);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Noise_WhiteNoise,
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_WhiteNoise,
                          WhiteNoiseTestSuite,
                          Values(TestCase{0, 0.548814f},
                                 TestCase{1, 0.417022f},

@@ -109,7 +109,7 @@ void App::onInputs(const controls::State &c, const CoordinateFrame &cf)
     }
     if (c.keys[controls::keys::G])
     {
-      m_game->generate();
+      m_game->toggleNextSeed();
     }
     if (c.keys[controls::keys::M])
     {
@@ -355,7 +355,7 @@ inline void App::renderTerrain(const CoordinateFrame &cf)
 
 inline void App::renderLattice(const CoordinateFrame &cf)
 {
-  const auto scale = m_game->scale();
+  const auto scale = m_game->terrain().scale();
 
   const auto vp     = cf.tilesViewport();
   const auto center = vp.center();
