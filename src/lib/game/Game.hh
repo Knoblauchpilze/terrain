@@ -2,8 +2,6 @@
 #pragma once
 
 #include "AbstractGradientGenerator.hh"
-#include "IHasher.hh"
-#include "Seed.hh"
 #include "Terrain.hh"
 #include "ValueGenerator.hh"
 #include <core_utils/CoreObject.hh>
@@ -84,8 +82,8 @@ class Game : public utils::CoreObject
   void toggleLatticeMode();
   void toggleDisplayMode();
   auto displayMode() const noexcept -> DisplayMode;
+  void toggleNextSeed();
   void toggleTerrainScale();
-  auto scale() const noexcept -> int;
   void toggleNoisePeriod();
   auto latticeAt(const int x, const int y) const -> std::vector<float>;
 
@@ -170,22 +168,11 @@ class Game : public utils::CoreObject
   /// simulation.
   Menus m_menus{};
 
-  terrain::Seed m_nextSeed{1993};
-  int m_period{16};
-  terrain::TerrainPtr m_terrain{nullptr};
-  int m_scale{8};
+  terrain::Terrain m_terrain{};
 
   terrain::ValueGeneratorPtr m_valueGenerator{nullptr};
   terrain::AbstractGradientGeneratorPtr m_gradientGenerator{nullptr};
 
-  enum class LatticeMode
-  {
-    VALUE,
-    GRADIENT,
-    PERIODIC_GRADIENT,
-    PERIODIC_PERLIN,
-  };
-  LatticeMode m_latticeMode{LatticeMode::PERIODIC_PERLIN};
   DisplayMode m_displayMode{DisplayMode::HEIGHT};
 };
 

@@ -2,6 +2,9 @@
 #pragma once
 
 #include "ILattice.hh"
+#include "LatticeType.hh"
+#include "PositiveCyclicInteger.hh"
+#include "Seed.hh"
 #include "Type.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
@@ -12,7 +15,7 @@ namespace pge::terrain {
 class Terrain : public utils::CoreObject
 {
   public:
-  Terrain(ILatticePtr lattice, const int scale) noexcept;
+  Terrain() noexcept;
 
   auto height(const float x, const float y) const -> float;
   auto at(const float x, const float y) const -> Type;
@@ -20,9 +23,36 @@ class Terrain : public utils::CoreObject
   void load(const std::string &fileName);
   void save(const std::string &fileName) const;
 
+  auto seed() const noexcept -> Seed;
+  auto lattice() const noexcept -> LatticeType;
+  auto scale() const noexcept -> int;
+  auto period() const noexcept -> int;
+  void nextLattice();
+  void nextScale();
+  void nextPeriod();
+  void nextSeed();
+
   private:
-  ILatticePtr m_lattice{};
-  int m_scale;
+  static constexpr auto MIN_NOISE_PERIOD  = 4;
+  static constexpr auto MAX_NOISE_PERIOD  = 1024;
+  static constexpr auto MIN_TERRAIN_SCALE = 2;
+  static constexpr auto MAX_TERRAIN_SCALE = 64;
+
+  static constexpr auto CYCLIC_VALUES_STEP = 2;
+
+  Seed m_seed{1993};
+  PositiveCyclicInteger m_period{MIN_NOISE_PERIOD, 16, MAX_NOISE_PERIOD, CYCLIC_VALUES_STEP};
+  PositiveCyclicInteger m_scale{MIN_TERRAIN_SCALE, 8, MAX_TERRAIN_SCALE, CYCLIC_VALUES_STEP};
+  LatticeType m_latticeType{LatticeType::PERIODIC_PERLIN};
+
+  ILatticePtr m_lattice{nullptr};
+
+  void generate();
+
+  auto generateValueLattice() const -> ILatticePtr;
+  auto generateGradientLattice() const -> ILatticePtr;
+  auto generatePeriodicGradientLattice() const -> ILatticePtr;
+  auto generatePeriodicPerlinLattice() const -> ILatticePtr;
 };
 
 using TerrainPtr = std::unique_ptr<Terrain>;

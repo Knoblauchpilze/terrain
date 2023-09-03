@@ -1,27 +1,16 @@
 
 #include "Game.hh"
-#include "Bilinear.hh"
 #include "GradientGenerator.hh"
-#include "GradientLattice.hh"
 #include "Hasher.hh"
 #include "Menu.hh"
 #include "PeriodicGradientGenerator.hh"
-#include "PeriodicGradientLattice.hh"
 #include "PeriodicPerlinGenerator.hh"
-#include "PeriodicPerlinLattice.hh"
 #include "ValueGenerator.hh"
-#include "ValueLattice.hh"
 #include "WhiteNoise.hh"
 
 namespace pge {
 
 constexpr auto DEFAULT_MENU_HEIGHT = 50;
-
-constexpr auto MIN_NOISE_PERIOD = 4;
-constexpr auto MAX_NOISE_PERIOD = 1024;
-
-constexpr auto MIN_TERRAIN_SCALE = 2;
-constexpr auto MAX_TERRAIN_SCALE = 64;
 
 namespace {
 auto generateMenu(const olc::vi2d &pos,
@@ -110,32 +99,17 @@ void Game::togglePause()
 
 void Game::load(const std::string &fileName)
 {
-  m_terrain->load(fileName);
+  m_terrain.load(fileName);
 }
 
 void Game::save(const std::string &fileName) const
 {
-  m_terrain->save(fileName);
+  m_terrain.save(fileName);
 }
 
 void Game::toggleLatticeMode()
 {
-  switch (m_latticeMode)
-  {
-    case LatticeMode::VALUE:
-      m_latticeMode = LatticeMode::GRADIENT;
-      break;
-    case LatticeMode::GRADIENT:
-      m_latticeMode = LatticeMode::PERIODIC_GRADIENT;
-      break;
-    case LatticeMode::PERIODIC_GRADIENT:
-      m_latticeMode = LatticeMode::PERIODIC_PERLIN;
-      break;
-    default:
-      m_latticeMode = LatticeMode::PERIODIC_GRADIENT;
-      break;
-  }
-
+  m_terrain.nextLattice();
   generate();
 }
 
@@ -150,30 +124,21 @@ auto Game::displayMode() const noexcept -> DisplayMode
   return m_displayMode;
 }
 
-void Game::toggleTerrainScale()
+void Game::toggleNextSeed()
 {
-  m_scale *= 2;
-  if (m_scale > MAX_TERRAIN_SCALE)
-  {
-    m_scale = MIN_TERRAIN_SCALE;
-  }
-
+  m_terrain.nextSeed();
   generate();
 }
 
-auto Game::scale() const noexcept -> int
+void Game::toggleTerrainScale()
 {
-  return m_scale;
+  m_terrain.nextScale();
+  generate();
 }
 
 void Game::toggleNoisePeriod()
 {
-  m_period *= 2;
-  if (m_period > MAX_NOISE_PERIOD)
-  {
-    m_period = MIN_NOISE_PERIOD;
-  }
-
+  m_terrain.nextPeriod();
   generate();
 }
 
@@ -181,21 +146,16 @@ auto Game::latticeAt(const int x, const int y) const -> std::vector<float>
 {
   std::vector<float> out;
 
-  switch (m_latticeMode)
+  const terrain::LatticePoint2d p(x / m_terrain.scale(), y / m_terrain.scale());
+
+  if (m_valueGenerator != nullptr)
   {
-    case LatticeMode::VALUE:
-      out.push_back(m_valueGenerator->at(terrain::LatticePoint2d(x / m_scale, y / m_scale)));
-      break;
-    case LatticeMode::GRADIENT:
-    case LatticeMode::PERIODIC_GRADIENT:
-    case LatticeMode::PERIODIC_PERLIN:
-    {
-      const auto grad = m_gradientGenerator->at(terrain::LatticePoint2d(x / m_scale, y / m_scale));
-      out.insert(out.end(), grad.begin(), grad.end());
-    }
-    break;
-    default:
-      break;
+    out.push_back(m_valueGenerator->at(p));
+  }
+  else if (m_gradientGenerator != nullptr)
+  {
+    const auto grad = m_gradientGenerator->at(p);
+    out.insert(out.end(), grad.begin(), grad.end());
   }
 
   return out;
@@ -203,76 +163,39 @@ auto Game::latticeAt(const int x, const int y) const -> std::vector<float>
 
 void Game::generate()
 {
-  const auto seed = m_nextSeed;
-  auto hasher     = std::make_unique<terrain::Hasher2d>(seed);
-
-  terrain::INoisePtr noise;
-  switch (m_latticeMode)
+  switch (m_terrain.lattice())
   {
-    case LatticeMode::GRADIENT:
+    case terrain::LatticeType::GRADIENT:
     {
-      noise = std::make_unique<terrain::WhiteNoise>(-1.0f, 1.0f);
-
-      auto noiseCopy      = std::make_unique<terrain::WhiteNoise>();
-      auto hasherCopy     = std::make_unique<terrain::Hasher2d>(seed);
-      m_gradientGenerator = std::make_unique<terrain::GradientGenerator>(std::move(hasherCopy),
-                                                                         std::move(noiseCopy));
+      auto noise          = std::make_unique<terrain::WhiteNoise>(-1.0f, 1.0f);
+      auto hasher         = std::make_unique<terrain::Hasher2d>(m_terrain.seed());
+      m_gradientGenerator = std::make_unique<terrain::GradientGenerator>(std::move(hasher),
+                                                                         std::move(noise));
     }
     break;
-    case LatticeMode::PERIODIC_GRADIENT:
-      m_gradientGenerator = std::make_unique<terrain::PeriodicGradientGenerator>(m_period, seed);
+    case terrain::LatticeType::PERIODIC_GRADIENT:
+      m_gradientGenerator = std::make_unique<terrain::PeriodicGradientGenerator>(m_terrain.period(),
+                                                                                 m_terrain.seed());
       break;
-    case LatticeMode::PERIODIC_PERLIN:
-      m_gradientGenerator = std::make_unique<terrain::PeriodicPerlinGenerator>(m_period, seed);
+    case terrain::LatticeType::PERIODIC_PERLIN:
+      m_gradientGenerator = std::make_unique<terrain::PeriodicPerlinGenerator>(m_terrain.period(),
+                                                                               m_terrain.seed());
       break;
-    case LatticeMode::VALUE:
+    case terrain::LatticeType::VALUE:
     default:
     {
-      noise = std::make_unique<terrain::WhiteNoise>();
-
-      auto noiseCopy   = std::make_unique<terrain::WhiteNoise>();
-      auto hasherCopy  = std::make_unique<terrain::Hasher2d>(seed);
-      m_valueGenerator = std::make_unique<terrain::ValueGenerator>(std::move(hasherCopy),
-                                                                   std::move(noiseCopy));
+      auto noise       = std::make_unique<terrain::WhiteNoise>();
+      auto hasher      = std::make_unique<terrain::Hasher2d>(m_terrain.seed());
+      m_valueGenerator = std::make_unique<terrain::ValueGenerator>(std::move(hasher),
+                                                                   std::move(noise));
     }
     break;
   }
-
-  auto interpolator = std::make_unique<terrain::Bilinear>();
-
-  terrain::ILatticePtr lattice;
-  switch (m_latticeMode)
-  {
-    case LatticeMode::GRADIENT:
-      lattice = std::make_unique<terrain::GradientLattice>(std::move(hasher),
-                                                           std::move(noise),
-                                                           std::move(interpolator));
-      break;
-    case LatticeMode::PERIODIC_GRADIENT:
-      lattice = std::make_unique<terrain::PeriodicGradientLattice>(m_period,
-                                                                   seed,
-                                                                   std::move(interpolator));
-      break;
-    case LatticeMode::PERIODIC_PERLIN:
-      lattice = std::make_unique<terrain::PeriodicPerlinLattice>(m_period,
-                                                                 seed,
-                                                                 std::move(interpolator));
-      break;
-    case LatticeMode::VALUE:
-    default:
-      lattice = std::make_unique<terrain::ValueLattice>(std::move(hasher),
-                                                        std::move(noise),
-                                                        std::move(interpolator));
-      break;
-  }
-
-  m_terrain = std::make_unique<terrain::Terrain>(std::move(lattice), m_scale);
-  ++m_nextSeed;
 }
 
 auto Game::terrain() const noexcept -> const terrain::Terrain &
 {
-  return *m_terrain;
+  return m_terrain;
 }
 
 void Game::enable(bool enable)
@@ -291,15 +214,11 @@ void Game::enable(bool enable)
 
 void Game::updateUI()
 {
-  auto text = "Scale: " + std::to_string(m_scale);
+  auto text = "Scale: " + std::to_string(m_terrain.scale());
   m_menus.scale->setText(text);
 
   text = "Lattice: ";
-  text += (m_latticeMode == LatticeMode::GRADIENT
-             ? "gradient"
-             : (m_latticeMode == LatticeMode::PERIODIC_GRADIENT
-                  ? "periodic gradient"
-                  : (m_latticeMode == LatticeMode::PERIODIC_PERLIN ? "periodic perlin" : "value")));
+  text += str(m_terrain.lattice());
   m_menus.lattice->setText(text);
 
   text = "Display: ";
@@ -307,7 +226,7 @@ void Game::updateUI()
   m_menus.display->setText(text);
 
   text = "Period: ";
-  text += std::to_string(m_period);
+  text += std::to_string(m_terrain.period());
   m_menus.period->setText(text);
 }
 
@@ -342,7 +261,7 @@ auto Game::generateStatusMenus(int width, int /*height*/) -> std::vector<MenuShP
   status->addMenu(m_menus.display);
   m_menus.period = generateMenu(olc::vi2d{0, 0},
                                 olc::vi2d{10, DEFAULT_MENU_HEIGHT},
-                                "Period: " + std::to_string(m_period),
+                                "Period: N/A",
                                 "period",
                                 true);
   m_menus.period->setSimpleAction([](Game &g) { g.toggleNoisePeriod(); });

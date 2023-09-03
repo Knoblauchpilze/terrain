@@ -27,3 +27,6 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/lattice
 	)
 
+target_sources(terrain-tests PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}/PositiveCyclicIntegerTest.cc
+	)
