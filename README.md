@@ -167,8 +167,8 @@ The letters represent respectively:
 * `P` represent the time to either find the gradient value among the periodic values or to generate a gradient using the noise (for the non periodic case).
 * `Gr` represent the time to actually compute the gradient once the lattice point value has been found.
 
-For `M`, `P` and `Gr`, each value is just the average for a single lattice point, so the time `G` includes 4 times this value.
+For `M`, `P` and `Gr`, each value is just the average for a single lattice point, so the time `G` includes 4 times each value.
 
 The periodic case is more or less equal in terms of what takes the most time per lattice point while the non periodic case is clearly very biased in generating the noise values.
 
-It's not clear how to propperly optimize the periodic case as it seems we're already relatively bottlneck-ing a bit everywhere.
+It's not clear how to propperly optimize the periodic case as it seems we're already relatively bottleneck-ing a bit everywhere.
