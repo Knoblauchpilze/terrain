@@ -22,13 +22,13 @@ class AbstractLattice : public ILattice
   using NormalizationFunc = std::function<float(const float)>;
 
   AbstractLattice(IValueGeneratorPtr<ValueType> valueGenerator,
-                  IInterpolatorPtr interpolator,
+                  IInterpolator2dPtr interpolator,
                   std::optional<NormalizationFunc> normalization) noexcept;
 
   private:
   IArea2dGeneratorPtr m_areaGenerator;
   IValueGeneratorPtr<ValueType> m_valueGenerator;
-  IInterpolatorPtr m_interpolator;
+  IInterpolator2dPtr m_interpolator;
   std::optional<NormalizationFunc> m_normalization;
 };
 

@@ -1,6 +1,6 @@
 
 #include "PeriodicGradientLattice.hh"
-#include "Bilinear.hh"
+#include "Bilinear2d.hh"
 #include "IPeriodicLatticePreparer.hh"
 #include "IPoint.hh"
 #include <gtest/gtest.h>
@@ -24,14 +24,14 @@ class Unit_Terrain_PeriodicGradientLattice
 
 TEST_F(Unit_Terrain_PeriodicGradientLattice, Test_UseInterpolate)
 {
-  EXPECT_CALL(*mockInterpolator, interpolate(_, _, _, _, _, _)).Times(1);
-  lattice->at({});
+  EXPECT_CALL(*mockInterpolator, interpolate(_)).Times(1);
+  lattice->at(Point2d::Zero());
 }
 
 namespace {
 auto createLattice() -> ILatticePtr
 {
-  auto interpolator = std::make_unique<Bilinear>();
+  auto interpolator = std::make_unique<Bilinear2d>();
   return std::make_unique<PeriodicGradientLattice>(PERIOD, SEED, std::move(interpolator));
 }
 } // namespace
@@ -103,9 +103,11 @@ TEST_P(PeriodicGradientLatticeInterpolateTestSuite, Test_Interpolate)
 {
   const auto param = GetParam();
 
-  EXPECT_CALL(*mockInterpolator, interpolate(_, _, _, _, param.interpolatedX, param.interpolatedY))
-    .Times(1);
+  EXPECT_CALL(*mockInterpolator, interpolate(_)).Times(1);
   lattice->at(param.p);
+  EXPECT_EQ(param.interpolatedX, mockInterpolator->data.axes[0].delta());
+  EXPECT_EQ(param.interpolatedX, mockInterpolator->data.axes[1].delta());
+  EXPECT_EQ(param.interpolatedY, mockInterpolator->data.deltas[0]);
 }
 
 INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicGradientLattice,
@@ -147,7 +149,7 @@ TEST_P(PeriodicGradientLatticeAtTestSuite, Test_At)
 {
   const auto param = GetParam();
 
-  auto interpolator = std::make_unique<Bilinear>();
+  auto interpolator = std::make_unique<Bilinear2d>();
   auto lattice = std::make_unique<PeriodicGradientLattice>(PERIOD, SEED, std::move(interpolator));
 
   const auto actual = lattice->at(param.p);

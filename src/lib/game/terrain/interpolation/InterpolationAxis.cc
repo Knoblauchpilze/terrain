@@ -16,6 +16,11 @@ InterpolationAxis::InterpolationAxis(const float low, const float high, const fl
   }
 }
 
+auto InterpolationAxis::delta() const noexcept -> float
+{
+  return m_perc;
+}
+
 auto InterpolationAxis::evaluate() const noexcept -> float
 {
   return (1.0f - m_perc) * m_low + m_perc * m_high;

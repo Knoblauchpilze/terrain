@@ -1,6 +1,6 @@
 
 #include "GradientLattice.hh"
-#include "Bilinear.hh"
+#include "Bilinear2d.hh"
 #include "Hasher.hh"
 #include "ILatticePreparer.hh"
 #include "IPoint.hh"
@@ -22,19 +22,19 @@ class Unit_Terrain_GradientLattice : public LatticePreparer<GradientLattice>, pu
 TEST_F(Unit_Terrain_GradientLattice, Test_UseHasher)
 {
   EXPECT_CALL(*mockHasher, hash(_)).Times(4);
-  lattice->at({});
+  lattice->at(Point2d::Zero());
 }
 
 TEST_F(Unit_Terrain_GradientLattice, Test_UseNoise)
 {
   EXPECT_CALL(*mockNoise, next()).Times(12);
-  lattice->at({});
+  lattice->at(Point2d::Zero());
 }
 
 TEST_F(Unit_Terrain_GradientLattice, Test_UseInterpolate)
 {
-  EXPECT_CALL(*mockInterpolator, interpolate(_, _, _, _, _, _)).Times(1);
-  lattice->at({});
+  EXPECT_CALL(*mockInterpolator, interpolate(_)).Times(1);
+  lattice->at(Point2d::Zero());
 }
 
 namespace interpolate {
@@ -69,9 +69,11 @@ TEST_P(GradientLatticeInterpolateTestSuite, Test_Interpolate)
 {
   const auto param = GetParam();
 
-  EXPECT_CALL(*mockInterpolator, interpolate(_, _, _, _, param.interpolatedX, param.interpolatedY))
-    .Times(1);
+  EXPECT_CALL(*mockInterpolator, interpolate(_)).Times(1);
   lattice->at(param.p);
+  EXPECT_EQ(param.interpolatedX, mockInterpolator->data.axes[0].delta());
+  EXPECT_EQ(param.interpolatedX, mockInterpolator->data.axes[1].delta());
+  EXPECT_EQ(param.interpolatedY, mockInterpolator->data.deltas[0]);
 }
 
 INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice,
@@ -93,7 +95,7 @@ auto createGradientLattice() -> ILatticePtr
   constexpr auto SEED = 1993;
   auto hasher         = std::make_unique<Hasher2d>(SEED);
   auto noise          = std::make_unique<WhiteNoise>(-1.0f, 1.0f);
-  auto interpolator   = std::make_unique<Bilinear>();
+  auto interpolator   = std::make_unique<Bilinear2d>();
   return std::make_unique<GradientLattice>(std::move(hasher),
                                            std::move(noise),
                                            std::move(interpolator));
@@ -103,7 +105,7 @@ auto createGradientLatticeWithMockedNoise(INoisePtr mockNoise) -> ILatticePtr
 {
   constexpr auto SEED = 1993;
   auto hasher         = std::make_unique<Hasher2d>(SEED);
-  auto interpolator   = std::make_unique<Bilinear>();
+  auto interpolator   = std::make_unique<Bilinear2d>();
   return std::make_unique<GradientLattice>(std::move(hasher),
                                            std::move(mockNoise),
                                            std::move(interpolator));

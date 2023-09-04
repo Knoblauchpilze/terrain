@@ -8,7 +8,7 @@ namespace pge::terrain {
 constexpr auto MAGNITUDE_GRADIENT_NOISE = std::numbers::sqrt2_v<float> / 2.0f;
 
 AbstractGradientLattice::AbstractGradientLattice(IValueGeneratorPtr<Point3d> valueGenerator,
-                                                 IInterpolatorPtr interpolator)
+                                                 IInterpolator2dPtr interpolator)
   : AbstractLattice(std::move(valueGenerator),
                     std::move(interpolator),
                     {[](const float value) -> float {
