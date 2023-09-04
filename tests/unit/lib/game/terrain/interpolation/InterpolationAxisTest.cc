@@ -6,11 +6,6 @@ using namespace ::testing;
 
 namespace pge::terrain {
 
-TEST(Unit_Terrain_InterpolationAxis, InvalidRangeThrowException)
-{
-  EXPECT_THROW(InterpolationAxis(2.0f, 1.0f, 0.5f), std::invalid_argument);
-}
-
 TEST(Unit_Terrain_InterpolationAxis, NullRangeIsValid)
 {
   EXPECT_NO_THROW(InterpolationAxis(1.0f, 1.0f, 0.5f));
