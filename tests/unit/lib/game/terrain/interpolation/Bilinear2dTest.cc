@@ -13,9 +13,9 @@ constexpr auto BOTTOM_RIGHT = 3.0f;
 auto generateInterpolationData(const float dx, const float dy) -> InterpolationData2d
 {
   InterpolationData2d data;
-  data.axes[0]   = InterpolationAxis(BOTTOM_LEFT, BOTTOM_RIGHT, dx);
-  data.axes[1]   = InterpolationAxis(TOP_LEFT, TOP_RIGHT, dx);
-  data.deltas[0] = dy;
+  data.axes[Bilinear2d::BOTTOM] = InterpolationAxis(BOTTOM_LEFT, BOTTOM_RIGHT, dx);
+  data.axes[Bilinear2d::TOP]    = InterpolationAxis(TOP_LEFT, TOP_RIGHT, dx);
+  data.deltas[Bilinear2d::Y]    = dy;
   return data;
 }
 } // namespace
