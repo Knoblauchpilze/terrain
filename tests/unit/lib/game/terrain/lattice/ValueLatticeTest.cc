@@ -1,6 +1,6 @@
 
 #include "ValueLattice.hh"
-#include "Bilinear.hh"
+#include "Bilinear2d.hh"
 #include "Hasher.hh"
 #include "ILatticePreparer.hh"
 #include "IPoint.hh"
@@ -22,19 +22,19 @@ class Unit_Terrain_ValueLattice : public LatticePreparer<ValueLattice>, public T
 TEST_F(Unit_Terrain_ValueLattice, Test_UseHasher)
 {
   EXPECT_CALL(*mockHasher, hash(_)).Times(4);
-  lattice->at({});
+  lattice->at(Point2d::Zero());
 }
 
 TEST_F(Unit_Terrain_ValueLattice, Test_UseNoise)
 {
   EXPECT_CALL(*mockNoise, next()).Times(4);
-  lattice->at({});
+  lattice->at(Point2d::Zero());
 }
 
 TEST_F(Unit_Terrain_ValueLattice, Test_UseInterpolate)
 {
-  EXPECT_CALL(*mockInterpolator, interpolate(_, _, _, _, _, _)).Times(1);
-  lattice->at({});
+  EXPECT_CALL(*mockInterpolator, interpolate(_)).Times(1);
+  lattice->at(Point2d::Zero());
 }
 
 namespace interpolate {
@@ -42,8 +42,8 @@ struct TestCaseForInterpolate
 {
   Point2d p;
 
-  float px;
-  float py;
+  float interpolatedX;
+  float interpolatedY;
 };
 
 class ValueLatticeInterpolateTestSuite : public LatticePreparer<ValueLattice>,
@@ -69,8 +69,11 @@ TEST_P(ValueLatticeInterpolateTestSuite, Test_Interpolate)
 {
   const auto param = GetParam();
 
-  EXPECT_CALL(*mockInterpolator, interpolate(_, _, _, _, param.px, param.py)).Times(1);
+  EXPECT_CALL(*mockInterpolator, interpolate(_)).Times(1);
   lattice->at(param.p);
+  EXPECT_EQ(param.interpolatedX, mockInterpolator->data.axes[0].delta());
+  EXPECT_EQ(param.interpolatedX, mockInterpolator->data.axes[1].delta());
+  EXPECT_EQ(param.interpolatedY, mockInterpolator->data.deltas[0]);
 }
 
 INSTANTIATE_TEST_SUITE_P(Unit_Terrain_ValueLattice,
@@ -115,7 +118,7 @@ TEST_P(ValueLatticeAtTestSuite, Test_At)
   constexpr auto SEED = 1993;
   auto hasher         = std::make_unique<Hasher2d>(SEED);
   auto noise          = std::make_unique<WhiteNoise>();
-  auto interpolator   = std::make_unique<Bilinear>();
+  auto interpolator   = std::make_unique<Bilinear2d>();
   auto lattice        = std::make_unique<ValueLattice>(std::move(hasher),
                                                 std::move(noise),
                                                 std::move(interpolator));

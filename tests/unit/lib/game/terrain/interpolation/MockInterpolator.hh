@@ -6,13 +6,14 @@
 
 namespace pge::terrain {
 
-class MockInterpolator : public IInterpolator
+class MockInterpolator : public IInterpolator<2>
 {
   public:
-  MOCK_METHOD(float,
-              interpolate,
-              (const float, const float, const float, const float, const float, const float),
-              (const, override));
+  MockInterpolator();
+
+  MOCK_METHOD(float, interpolate, (const InterpolationData<2> &), (const, override));
+
+  InterpolationData<2> data{};
 };
 
 } // namespace pge::terrain

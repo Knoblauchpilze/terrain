@@ -9,6 +9,7 @@ class InterpolationAxis
   InterpolationAxis() = default;
   InterpolationAxis(const float low, const float high, const float perc);
 
+  auto delta() const noexcept -> float;
   auto evaluate() const noexcept -> float;
 
   private:

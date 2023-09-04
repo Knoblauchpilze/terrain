@@ -9,7 +9,7 @@ namespace pge::terrain {
 class PeriodicGradientLattice : public AbstractGradientLattice
 {
   public:
-  PeriodicGradientLattice(const int period, const Seed seed, IInterpolatorPtr interpolator);
+  PeriodicGradientLattice(const int period, const Seed seed, IInterpolator2dPtr interpolator);
   ~PeriodicGradientLattice() override = default;
 };
 
