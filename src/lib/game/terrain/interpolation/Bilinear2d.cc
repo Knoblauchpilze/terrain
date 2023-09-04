@@ -5,10 +5,10 @@ namespace pge::terrain {
 
 auto Bilinear2d::interpolate(const InterpolationData2d &data) const -> float
 {
-  const auto bottom = data.axes[0].evaluate();
-  const auto top    = data.axes[1].evaluate();
+  const auto bottom = data.axes[BOTTOM].evaluate();
+  const auto top    = data.axes[TOP].evaluate();
 
-  InterpolationAxis out(bottom, top, data.deltas[0]);
+  InterpolationAxis out(bottom, top, data.deltas[Y]);
   return out.evaluate();
 }
 
