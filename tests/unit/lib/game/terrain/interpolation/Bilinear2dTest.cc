@@ -5,8 +5,6 @@
 using namespace ::testing;
 
 namespace pge::terrain {
-using InterpolationData2d = Bilinear2d::InterpolationData2d;
-
 namespace {
 constexpr auto TOP_LEFT     = 0.0f;
 constexpr auto TOP_RIGHT    = 1.0f;

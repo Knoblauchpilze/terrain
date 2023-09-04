@@ -5,8 +5,6 @@
 #include "Area2dGenerator.hh"
 #include <cmath>
 
-#include <iostream>
-
 namespace pge::terrain {
 
 template<typename ValueType>
@@ -40,19 +38,10 @@ auto AbstractLattice<ValueType>::at(const Point2d &p) -> float
   const auto px     = (p(0) - bottomLeft(0)) / xRange;
   const auto py     = (p(1) - bottomLeft(1)) / yRange;
 
-  std::cout << "p: " << p << std::endl;
-  std::cout << "tl: " << topLeft << std::endl;
-  std::cout << "tr: " << topRight << std::endl;
-  std::cout << "bl: " << bottomRight << std::endl;
-  std::cout << "br: " << bottomLeft << std::endl;
-  std::cout << "range = " << xRange << ", range = " << yRange << std::endl;
-  std::cout << "px = " << px << ", py = " << py << std::endl;
   InterpolationData<2> data{};
   data.axes[0]   = InterpolationAxis(bl, br, px);
   data.axes[1]   = InterpolationAxis(tl, tr, px);
   data.deltas[0] = py;
-
-  std::cout << "2 px = " << px << ", py = " << py << std::endl;
 
   const auto val = m_interpolator->interpolate(data);
   if (!m_normalization)
