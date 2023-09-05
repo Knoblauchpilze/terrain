@@ -1,16 +1,17 @@
 
 #pragma once
 
-#include "AbstractLattice.hh"
+#include "AbstractLattice2d.hh"
 #include "Area2dGenerator.hh"
 #include <cmath>
 
 namespace pge::terrain {
 
 template<typename ValueType>
-AbstractLattice<ValueType>::AbstractLattice(IValueGeneratorPtr<2, ValueType> valueGenerator,
-                                            IInterpolator2dPtr interpolator,
-                                            std::optional<NormalizationFunc> normalization) noexcept
+AbstractLattice2d<ValueType>::AbstractLattice2d(
+  IValueGenerator2dPtr<ValueType> valueGenerator,
+  IInterpolator2dPtr interpolator,
+  std::optional<NormalizationFunc> normalization) noexcept
   : m_areaGenerator(std::make_unique<Area2dGenerator>())
   , m_valueGenerator(std::move(valueGenerator))
   , m_interpolator(std::move(interpolator))
@@ -18,7 +19,7 @@ AbstractLattice<ValueType>::AbstractLattice(IValueGeneratorPtr<2, ValueType> val
 {}
 
 template<typename ValueType>
-auto AbstractLattice<ValueType>::at(const Point2d &p) -> float
+auto AbstractLattice2d<ValueType>::at(const Point2d &p) -> float
 {
   // https://www.scratchapixel.com/lessons/procedural-generation-virtual-worlds/procedural-patterns-noise-part-1/creating-simple-1D-noise.html
   const auto area = m_areaGenerator->areaSurrounding(p);

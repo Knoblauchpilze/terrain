@@ -21,7 +21,10 @@ class IValueGenerator
     = 0;
 };
 
-template<int Dimension, typename ValueType>
-using IValueGeneratorPtr = std::unique_ptr<IValueGenerator<Dimension, ValueType>>;
+template<typename ValueType>
+using IValueGenerator2dPtr = std::unique_ptr<IValueGenerator<2, ValueType>>;
+
+template<typename ValueType>
+using IValueGenerator3dPtr = std::unique_ptr<IValueGenerator<3, ValueType>>;
 
 } // namespace pge::terrain
