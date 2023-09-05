@@ -13,11 +13,11 @@ constexpr auto MAGNITUDE_PERLIN_NOISE = 1.0f;
 PeriodicPerlinLattice::PeriodicPerlinLattice(const int period,
                                              const Seed seed,
                                              IInterpolator2dPtr interpolator)
-  : AbstractLattice(std::make_unique<PeriodicPerlinGenerator>(period, seed),
-                    std::move(interpolator),
-                    {[](const float value) -> float {
-                      return (MAGNITUDE_PERLIN_NOISE + value) / (2.0f * MAGNITUDE_PERLIN_NOISE);
-                    }})
+  : AbstractLattice2d(std::make_unique<PeriodicPerlinGenerator>(period, seed),
+                      std::move(interpolator),
+                      {[](const float value) -> float {
+                        return (MAGNITUDE_PERLIN_NOISE + value) / (2.0f * MAGNITUDE_PERLIN_NOISE);
+                      }})
 {}
 
 } // namespace pge::terrain

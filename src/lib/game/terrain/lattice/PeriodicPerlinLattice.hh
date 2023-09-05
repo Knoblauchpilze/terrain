@@ -1,12 +1,12 @@
 
 #pragma once
 
-#include "AbstractLattice.hh"
+#include "AbstractLattice2d.hh"
 #include "Seed.hh"
 
 namespace pge::terrain {
 
-class PeriodicPerlinLattice : public AbstractLattice<Point3d>
+class PeriodicPerlinLattice : public AbstractLattice2d<Point3d>
 {
   public:
   PeriodicPerlinLattice(const int period, const Seed seed, IInterpolator2dPtr interpolator);

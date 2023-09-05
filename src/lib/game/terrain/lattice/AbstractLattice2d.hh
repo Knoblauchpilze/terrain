@@ -11,27 +11,27 @@
 namespace pge::terrain {
 
 template<typename ValueType>
-class AbstractLattice : public ILattice2d
+class AbstractLattice2d : public ILattice2d
 {
   public:
-  ~AbstractLattice() override = default;
+  ~AbstractLattice2d() override = default;
 
   auto at(const Point2d &p) -> float override;
 
   protected:
   using NormalizationFunc = std::function<float(const float)>;
 
-  AbstractLattice(IValueGeneratorPtr<2, ValueType> valueGenerator,
-                  IInterpolator2dPtr interpolator,
-                  std::optional<NormalizationFunc> normalization) noexcept;
+  AbstractLattice2d(IValueGenerator2dPtr<ValueType> valueGenerator,
+                    IInterpolator2dPtr interpolator,
+                    std::optional<NormalizationFunc> normalization) noexcept;
 
   private:
   IArea2dGeneratorPtr m_areaGenerator;
-  IValueGeneratorPtr<2, ValueType> m_valueGenerator;
+  IValueGenerator2dPtr<ValueType> m_valueGenerator;
   IInterpolator2dPtr m_interpolator;
   std::optional<NormalizationFunc> m_normalization;
 };
 
 } // namespace pge::terrain
 
-#include "AbstractLattice.hxx"
+#include "AbstractLattice2d.hxx"

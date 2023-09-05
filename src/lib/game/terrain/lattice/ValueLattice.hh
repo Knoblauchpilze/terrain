@@ -1,13 +1,13 @@
 
 #pragma once
 
-#include "AbstractLattice.hh"
+#include "AbstractLattice2d.hh"
 #include "IHasher.hh"
 #include "INoise.hh"
 
 namespace pge::terrain {
 
-class ValueLattice : public AbstractLattice<float>
+class ValueLattice : public AbstractLattice2d<float>
 {
   public:
   ValueLattice(IHasher2dPtr hasher, INoisePtr noise, IInterpolator2dPtr interpolator);

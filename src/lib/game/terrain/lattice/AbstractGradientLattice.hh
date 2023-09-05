@@ -1,15 +1,15 @@
 
 #pragma once
 
-#include "AbstractLattice.hh"
+#include "AbstractLattice2d.hh"
 #include "IValueGenerator.hh"
 
 namespace pge::terrain {
 
-class AbstractGradientLattice : public AbstractLattice<Point3d>
+class AbstractGradientLattice : public AbstractLattice2d<Point3d>
 {
   public:
-  AbstractGradientLattice(IValueGeneratorPtr<2, Point3d> valueGenerator,
+  AbstractGradientLattice(IValueGenerator2dPtr<Point3d> valueGenerator,
                           IInterpolator2dPtr interpolator);
   ~AbstractGradientLattice() override = default;
 };

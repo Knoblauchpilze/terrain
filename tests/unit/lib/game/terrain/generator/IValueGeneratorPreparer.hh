@@ -15,7 +15,7 @@ class GeneratorPreparer
   MockHasher2d *mockHasher{nullptr};
   MockNoise *mockNoise{nullptr};
 
-  IValueGeneratorPtr<2, LatticeValueType> generator{};
+  std::unique_ptr<Generator> generator{};
 
   void prepareGenerator()
   {
