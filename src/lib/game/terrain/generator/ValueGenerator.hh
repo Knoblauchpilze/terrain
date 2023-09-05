@@ -8,7 +8,7 @@
 
 namespace pge::terrain {
 
-class ValueGenerator : public IValueGenerator<float>
+class ValueGenerator : public IValueGenerator<2, float>
 {
   public:
   ValueGenerator(IHasher2dPtr hasher, INoisePtr noise);

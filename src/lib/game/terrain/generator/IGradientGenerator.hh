@@ -7,7 +7,7 @@
 namespace pge::terrain {
 
 template<int Dimension>
-class IGradientGenerator : public IValueGenerator<IPoint<Dimension>>
+class IGradientGenerator : public IValueGenerator<2, IPoint<Dimension>>
 {
   public:
   virtual ~IGradientGenerator() = default;
@@ -17,8 +17,5 @@ class IGradientGenerator : public IValueGenerator<IPoint<Dimension>>
     -> float
     = 0;
 };
-
-template<typename ValueType>
-using IValueGeneratorPtr = std::unique_ptr<IValueGenerator<ValueType>>;
 
 } // namespace pge::terrain

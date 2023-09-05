@@ -10,10 +10,8 @@ auto AbstractGradientGenerator::generateFor(const LatticePoint2d &latticePoint,
   const auto grad = at(latticePoint);
 
   // https://en.wikipedia.org/wiki/Perlin_noise#Implementation
-  const auto distX = point(0) - latticePoint(0);
-  const auto distY = point(1) - latticePoint(1);
-
-  const auto dot = grad(0) * distX + grad(1) * distY;
+  const auto dist = point - latticePoint.cast<float>();
+  const auto dot  = grad.head(2).dot(dist);
 
   return dot;
 }
