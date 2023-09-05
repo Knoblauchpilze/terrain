@@ -17,7 +17,7 @@ class LatticePreparer
   MockNoise *mockNoise{nullptr};
   MockInterpolator *mockInterpolator{nullptr};
 
-  ILatticePtr lattice{};
+  ILattice2dPtr lattice{};
 
   void prepareLattice()
   {

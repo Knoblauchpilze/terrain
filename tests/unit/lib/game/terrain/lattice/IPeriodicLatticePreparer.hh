@@ -13,7 +13,7 @@ class PeriodicLatticePreparer
   protected:
   MockInterpolator *mockInterpolator{nullptr};
 
-  ILatticePtr lattice{};
+  ILattice2dPtr lattice{};
 
   void prepareLattice(const int period, const Seed seed)
   {

@@ -90,7 +90,7 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice,
 } // namespace interpolate
 
 namespace {
-auto createGradientLattice() -> ILatticePtr
+auto createGradientLattice() -> ILattice2dPtr
 {
   constexpr auto SEED = 1993;
   auto hasher         = std::make_unique<Hasher2d>(SEED);
@@ -101,7 +101,7 @@ auto createGradientLattice() -> ILatticePtr
                                            std::move(interpolator));
 }
 
-auto createGradientLatticeWithMockedNoise(INoisePtr mockNoise) -> ILatticePtr
+auto createGradientLatticeWithMockedNoise(INoisePtr mockNoise) -> ILattice2dPtr
 {
   constexpr auto SEED = 1993;
   auto hasher         = std::make_unique<Hasher2d>(SEED);

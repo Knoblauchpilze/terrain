@@ -138,7 +138,7 @@ void Terrain::generate()
   }
 }
 
-auto Terrain::generateValueLattice() const -> ILatticePtr
+auto Terrain::generateValueLattice() const -> ILattice2dPtr
 {
   auto hasher       = std::make_unique<Hasher2d>(m_seed);
   auto noise        = std::make_unique<WhiteNoise>();
@@ -149,7 +149,7 @@ auto Terrain::generateValueLattice() const -> ILatticePtr
                                         std::move(interpolator));
 }
 
-auto Terrain::generateGradientLattice() const -> ILatticePtr
+auto Terrain::generateGradientLattice() const -> ILattice2dPtr
 {
   auto hasher       = std::make_unique<Hasher2d>(m_seed);
   auto noise        = std::make_unique<WhiteNoise>(-1.0f, 1.0f);
@@ -160,7 +160,7 @@ auto Terrain::generateGradientLattice() const -> ILatticePtr
                                            std::move(interpolator));
 }
 
-auto Terrain::generatePeriodicGradientLattice() const -> ILatticePtr
+auto Terrain::generatePeriodicGradientLattice() const -> ILattice2dPtr
 {
   auto interpolator = std::make_unique<Bilinear2d>();
 
@@ -169,7 +169,7 @@ auto Terrain::generatePeriodicGradientLattice() const -> ILatticePtr
                                                    std::move(interpolator));
 }
 
-auto Terrain::generatePeriodicPerlinLattice() const -> ILatticePtr
+auto Terrain::generatePeriodicPerlinLattice() const -> ILattice2dPtr
 {
   auto interpolator = std::make_unique<Bilinear2d>();
 

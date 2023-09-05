@@ -28,7 +28,7 @@ TEST_F(Unit_Terrain_PeriodicPerlinLattice, Test_UseInterpolate)
 }
 
 namespace {
-auto createLattice() -> ILatticePtr
+auto createLattice() -> ILattice2dPtr
 {
   auto interpolator = std::make_unique<Bilinear2d>();
   return std::make_unique<PeriodicPerlinLattice>(PERIOD, SEED, std::move(interpolator));

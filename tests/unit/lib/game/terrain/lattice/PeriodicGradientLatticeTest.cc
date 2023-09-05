@@ -29,7 +29,7 @@ TEST_F(Unit_Terrain_PeriodicGradientLattice, Test_UseInterpolate)
 }
 
 namespace {
-auto createLattice() -> ILatticePtr
+auto createLattice() -> ILattice2dPtr
 {
   auto interpolator = std::make_unique<Bilinear2d>();
   return std::make_unique<PeriodicGradientLattice>(PERIOD, SEED, std::move(interpolator));

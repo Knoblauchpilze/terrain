@@ -11,7 +11,7 @@
 namespace pge::terrain {
 
 template<typename ValueType>
-class AbstractLattice : public ILattice
+class AbstractLattice : public ILattice2d
 {
   public:
   ~AbstractLattice() override = default;
