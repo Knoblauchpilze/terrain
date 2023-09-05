@@ -6,14 +6,14 @@
 
 namespace pge::terrain {
 
-template<int Dimension>
+template<int AxisCount, int DeltaCount>
 struct InterpolationData
 {
-  std::array<InterpolationAxis, Dimension> axes{};
-  std::array<float, Dimension - 1> deltas{};
+  std::array<InterpolationAxis, AxisCount> axes{};
+  std::array<float, DeltaCount> deltas{};
 };
 
-using InterpolationData2d = InterpolationData<2>;
-using InterpolationData3d = InterpolationData<3>;
+using InterpolationData2d = InterpolationData<2, 1>;
+using InterpolationData3d = InterpolationData<4, 2>;
 
 } // namespace pge::terrain
