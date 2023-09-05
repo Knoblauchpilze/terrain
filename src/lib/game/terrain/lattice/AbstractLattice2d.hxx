@@ -3,6 +3,7 @@
 
 #include "AbstractLattice2d.hh"
 #include "Area2dGenerator.hh"
+#include "Bilinear2d.hh"
 #include <cmath>
 
 namespace pge::terrain {
@@ -40,9 +41,9 @@ auto AbstractLattice2d<ValueType>::at(const Point2d &p) -> float
   const auto py     = (p(1) - bottomLeft(1)) / yRange;
 
   InterpolationData2d data{};
-  data.axes[0]   = InterpolationAxis(bl, br, px);
-  data.axes[1]   = InterpolationAxis(tl, tr, px);
-  data.deltas[0] = py;
+  data.axes[Bilinear2d::BOTTOM] = InterpolationAxis(bl, br, px);
+  data.axes[Bilinear2d::TOP]    = InterpolationAxis(tl, tr, px);
+  data.deltas[Bilinear2d::Y]    = py;
 
   const auto val = m_interpolator->interpolate(data);
   if (!m_normalization)
