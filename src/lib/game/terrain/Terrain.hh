@@ -45,14 +45,14 @@ class Terrain : public utils::CoreObject
   PositiveCyclicInteger m_scale{MIN_TERRAIN_SCALE, 8, MAX_TERRAIN_SCALE, CYCLIC_VALUES_STEP};
   LatticeType m_latticeType{LatticeType::PERIODIC_PERLIN};
 
-  ILatticePtr m_lattice{nullptr};
+  ILattice2dPtr m_lattice{nullptr};
 
   void generate();
 
-  auto generateValueLattice() const -> ILatticePtr;
-  auto generateGradientLattice() const -> ILatticePtr;
-  auto generatePeriodicGradientLattice() const -> ILatticePtr;
-  auto generatePeriodicPerlinLattice() const -> ILatticePtr;
+  auto generateValueLattice() const -> ILattice2dPtr;
+  auto generateGradientLattice() const -> ILattice2dPtr;
+  auto generatePeriodicGradientLattice() const -> ILattice2dPtr;
+  auto generatePeriodicPerlinLattice() const -> ILattice2dPtr;
 };
 
 using TerrainPtr = std::unique_ptr<Terrain>;
