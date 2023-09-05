@@ -20,25 +20,40 @@ auto generateInterpolationData(const float dx, const float dy) -> InterpolationD
 }
 } // namespace
 
-TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_LatticePoints)
+TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Bottom_Left)
 {
-  auto interpolator = Bilinear2d();
+  const auto interpolator = Bilinear2d();
 
-  auto data = generateInterpolationData(0.0f, 0.0f);
-  auto out  = interpolator.interpolate(data);
+  const auto data = generateInterpolationData(0.0f, 0.0f);
+  const auto out  = interpolator.interpolate(data);
   EXPECT_EQ(BOTTOM_LEFT, out);
+}
 
-  data = generateInterpolationData(1.0f, 0.0f);
-  out  = interpolator.interpolate(data);
+TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Bottom_Right)
+{
+  const auto interpolator = Bilinear2d();
+
+  const auto data = generateInterpolationData(1.0f, 0.0f);
+  const auto out  = interpolator.interpolate(data);
   EXPECT_EQ(BOTTOM_RIGHT, out);
+}
 
-  data = generateInterpolationData(1.0f, 1.0f);
-  out  = interpolator.interpolate(data);
-  EXPECT_EQ(TOP_RIGHT, out);
+TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Top_Left)
+{
+  const auto interpolator = Bilinear2d();
 
-  data = generateInterpolationData(0.0f, 1.0f);
-  out  = interpolator.interpolate(data);
+  const auto data = generateInterpolationData(0.0f, 1.0f);
+  const auto out  = interpolator.interpolate(data);
   EXPECT_EQ(TOP_LEFT, out);
+}
+
+TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Top_Right)
+{
+  const auto interpolator = Bilinear2d();
+
+  const auto data = generateInterpolationData(1.0f, 1.0f);
+  const auto out  = interpolator.interpolate(data);
+  EXPECT_EQ(TOP_RIGHT, out);
 }
 
 TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_X_Edges)
