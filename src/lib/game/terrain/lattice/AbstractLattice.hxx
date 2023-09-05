@@ -38,7 +38,7 @@ auto AbstractLattice<ValueType>::at(const Point2d &p) -> float
   const auto px     = (p(0) - bottomLeft(0)) / xRange;
   const auto py     = (p(1) - bottomLeft(1)) / yRange;
 
-  InterpolationData<2> data{};
+  InterpolationData2d data{};
   data.axes[0]   = InterpolationAxis(bl, br, px);
   data.axes[1]   = InterpolationAxis(tl, tr, px);
   data.deltas[0] = py;

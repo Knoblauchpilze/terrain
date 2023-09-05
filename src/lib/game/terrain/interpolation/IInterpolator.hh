@@ -7,19 +7,19 @@
 
 namespace pge::terrain {
 
-template<int Dimension>
+template<int AxisCount, int DeltaCount>
 class IInterpolator
 {
   public:
   virtual ~IInterpolator() = default;
 
-  virtual auto interpolate(const InterpolationData<Dimension> &data) const -> float = 0;
+  virtual auto interpolate(const InterpolationData<AxisCount, DeltaCount> &data) const -> float = 0;
 };
 
-template<int Dimension>
-using IInterpolatorPtr = std::unique_ptr<IInterpolator<Dimension>>;
+using IInterpolator2d = IInterpolator<2, 1>;
+using IInterpolator3d = IInterpolator<4, 2>;
 
-using IInterpolator2dPtr = IInterpolatorPtr<2>;
-using IInterpolator3dPtr = IInterpolatorPtr<3>;
+using IInterpolator2dPtr = std::unique_ptr<IInterpolator2d>;
+using IInterpolator3dPtr = std::unique_ptr<IInterpolator3d>;
 
 } // namespace pge::terrain
