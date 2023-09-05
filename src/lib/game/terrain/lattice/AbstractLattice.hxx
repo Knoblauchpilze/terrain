@@ -8,7 +8,7 @@
 namespace pge::terrain {
 
 template<typename ValueType>
-AbstractLattice<ValueType>::AbstractLattice(IValueGeneratorPtr<ValueType> valueGenerator,
+AbstractLattice<ValueType>::AbstractLattice(IValueGeneratorPtr<2, ValueType> valueGenerator,
                                             IInterpolator2dPtr interpolator,
                                             std::optional<NormalizationFunc> normalization) noexcept
   : m_areaGenerator(std::make_unique<Area2dGenerator>())
