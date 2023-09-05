@@ -56,57 +56,82 @@ TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Top_Right)
   EXPECT_EQ(TOP_RIGHT, out);
 }
 
-TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_X_Edges)
+TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Bottom_Edge)
 {
-  auto interpolator = Bilinear2d();
+  const auto interpolator = Bilinear2d();
 
-  auto data     = generateInterpolationData(0.5f, 0.0f);
-  auto out      = interpolator.interpolate(data);
-  auto expected = (BOTTOM_LEFT + BOTTOM_RIGHT) / 2.0f;
-  EXPECT_EQ(expected, out);
-
-  data     = generateInterpolationData(0.5f, 1.0f);
-  out      = interpolator.interpolate(data);
-  expected = (TOP_LEFT + TOP_RIGHT) / 2.0f;
+  const auto data     = generateInterpolationData(0.5f, 0.0f);
+  const auto out      = interpolator.interpolate(data);
+  const auto expected = (BOTTOM_LEFT + BOTTOM_RIGHT) / 2.0f;
   EXPECT_EQ(expected, out);
 }
 
-TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Y_Edges)
+TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Top_Edge)
 {
-  auto interpolator = Bilinear2d();
+  const auto interpolator = Bilinear2d();
 
-  auto data     = generateInterpolationData(0.0f, 0.5f);
-  auto out      = interpolator.interpolate(data);
-  auto expected = (TOP_LEFT + BOTTOM_LEFT) / 2.0f;
+  const auto data     = generateInterpolationData(0.5f, 1.0f);
+  const auto out      = interpolator.interpolate(data);
+  const auto expected = (TOP_LEFT + TOP_RIGHT) / 2.0f;
   EXPECT_EQ(expected, out);
+}
 
-  data     = generateInterpolationData(1.0f, 0.5f);
-  out      = interpolator.interpolate(data);
-  expected = (BOTTOM_RIGHT + TOP_RIGHT) / 2.0f;
+TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Left_Edge)
+{
+  const auto interpolator = Bilinear2d();
+
+  const auto data     = generateInterpolationData(0.0f, 0.5f);
+  const auto out      = interpolator.interpolate(data);
+  const auto expected = (TOP_LEFT + BOTTOM_LEFT) / 2.0f;
+  EXPECT_EQ(expected, out);
+}
+
+TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Right_Edge)
+{
+  const auto interpolator = Bilinear2d();
+
+  const auto data     = generateInterpolationData(1.0f, 0.5f);
+  const auto out      = interpolator.interpolate(data);
+  const auto expected = (BOTTOM_RIGHT + TOP_RIGHT) / 2.0f;
   EXPECT_EQ(expected, out);
 }
 
 constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
 
-TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Quadrants)
+TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Bottom_Left_Quadrant)
 {
-  auto interpolator = Bilinear2d();
+  const auto interpolator = Bilinear2d();
 
-  auto data = generateInterpolationData(0.2f, 0.2f);
-  auto out  = interpolator.interpolate(data);
+  const auto data = generateInterpolationData(0.2f, 0.2f);
+  const auto out  = interpolator.interpolate(data);
   EXPECT_NEAR(1.8f, out, REASONABLE_COMPARISON_THRESHOLD);
+}
 
-  data = generateInterpolationData(0.6f, 0.2f);
-  out  = interpolator.interpolate(data);
+TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Bottom_Right_Quadrant)
+{
+  const auto interpolator = Bilinear2d();
+
+  const auto data = generateInterpolationData(0.6f, 0.2f);
+  const auto out  = interpolator.interpolate(data);
   EXPECT_NEAR(2.2f, out, REASONABLE_COMPARISON_THRESHOLD);
+}
 
-  data = generateInterpolationData(0.85f, 0.7f);
-  out  = interpolator.interpolate(data);
-  EXPECT_NEAR(1.45f, out, REASONABLE_COMPARISON_THRESHOLD);
+TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Top_Left_Quadrant)
+{
+  const auto interpolator = Bilinear2d();
 
-  data = generateInterpolationData(0.1f, 0.9f);
-  out  = interpolator.interpolate(data);
+  const auto data = generateInterpolationData(0.1f, 0.9f);
+  const auto out  = interpolator.interpolate(data);
   EXPECT_NEAR(0.3f, out, REASONABLE_COMPARISON_THRESHOLD);
+}
+
+TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Top_Right_Quadrant)
+{
+  const auto interpolator = Bilinear2d();
+
+  const auto data = generateInterpolationData(0.85f, 0.7f);
+  const auto out  = interpolator.interpolate(data);
+  EXPECT_NEAR(1.45f, out, REASONABLE_COMPARISON_THRESHOLD);
 }
 
 } // namespace pge::terrain
