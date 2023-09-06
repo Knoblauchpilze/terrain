@@ -52,7 +52,18 @@ Terrain::Terrain() noexcept
 
 auto Terrain::height(const float x, const float y) const -> float
 {
-  return m_lattice->at(Point2d(x / m_scale.current(), y / m_scale.current()));
+  if (m_lattice2d)
+  {
+    return m_lattice2d->at(Point2d(x / m_scale.current(), y / m_scale.current()));
+  }
+  else if (m_lattice3d)
+  {
+    return m_lattice3d->at(Point3d(x / m_scale.current(), y / m_scale.current(), 0.0f));
+  }
+  else
+  {
+    return 0.0f;
+  }
 }
 
 auto Terrain::at(const float x, const float y) const -> Type
@@ -123,17 +134,17 @@ void Terrain::generate()
   switch (m_latticeType)
   {
     case LatticeType::GRADIENT:
-      m_lattice = generateGradientLattice();
+      m_lattice2d = generateGradientLattice();
       break;
     case LatticeType::PERIODIC_GRADIENT:
-      m_lattice = generatePeriodicGradientLattice();
+      m_lattice2d = generatePeriodicGradientLattice();
       break;
     case LatticeType::PERIODIC_PERLIN:
-      m_lattice = generatePeriodicPerlinLattice();
+      m_lattice2d = generatePeriodicPerlinLattice();
       break;
     case LatticeType::VALUE:
     default:
-      m_lattice = generateValueLattice();
+      m_lattice2d = generateValueLattice();
       break;
   }
 }

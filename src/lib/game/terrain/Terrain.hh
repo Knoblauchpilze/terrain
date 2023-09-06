@@ -45,7 +45,8 @@ class Terrain : public utils::CoreObject
   PositiveCyclicInteger m_scale{MIN_TERRAIN_SCALE, 8, MAX_TERRAIN_SCALE, CYCLIC_VALUES_STEP};
   LatticeType m_latticeType{LatticeType::PERIODIC_PERLIN};
 
-  ILattice2dPtr m_lattice{nullptr};
+  ILattice2dPtr m_lattice2d{nullptr};
+  ILattice3dPtr m_lattice3d{nullptr};
 
   void generate();
 
