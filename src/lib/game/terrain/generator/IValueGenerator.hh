@@ -22,9 +22,15 @@ class IValueGenerator
 };
 
 template<typename ValueType>
-using IValueGenerator2dPtr = std::unique_ptr<IValueGenerator<2, ValueType>>;
+using IValueGenerator2d = IValueGenerator<2, ValueType>;
 
 template<typename ValueType>
-using IValueGenerator3dPtr = std::unique_ptr<IValueGenerator<3, ValueType>>;
+using IValueGenerator3d = IValueGenerator<3, ValueType>;
+
+template<typename ValueType>
+using IValueGenerator2dPtr = std::unique_ptr<IValueGenerator2d<ValueType>>;
+
+template<typename ValueType>
+using IValueGenerator3dPtr = std::unique_ptr<IValueGenerator3d<ValueType>>;
 
 } // namespace pge::terrain

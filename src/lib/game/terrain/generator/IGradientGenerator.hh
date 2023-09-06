@@ -7,7 +7,7 @@
 namespace pge::terrain {
 
 template<int Dimension>
-class IGradientGenerator : public IValueGenerator<2, IPoint<Dimension>>
+class IGradientGenerator : public IValueGenerator2d<IPoint<Dimension>>
 {
   public:
   virtual ~IGradientGenerator() = default;

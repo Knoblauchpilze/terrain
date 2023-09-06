@@ -4,8 +4,8 @@
 
 namespace pge::terrain {
 
-ValueLattice::ValueLattice(IHasher2dPtr hasher, INoisePtr noise, IInterpolator2dPtr interpolator)
-  : AbstractLattice2d(std::make_unique<ValueGenerator>(std::move(hasher), std::move(noise)),
+ValueLattice::ValueLattice(IHasher3dPtr hasher, INoisePtr noise, IInterpolator3dPtr interpolator)
+  : AbstractLattice3d(std::make_unique<ValueGenerator>(std::move(hasher), std::move(noise)),
                       std::move(interpolator),
                       {})
 {}

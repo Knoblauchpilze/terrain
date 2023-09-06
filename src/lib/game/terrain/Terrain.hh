@@ -50,7 +50,7 @@ class Terrain : public utils::CoreObject
 
   void generate();
 
-  auto generateValueLattice() const -> ILattice2dPtr;
+  auto generateValueLattice() const -> ILattice3dPtr;
   auto generateGradientLattice() const -> ILattice2dPtr;
   auto generatePeriodicGradientLattice() const -> ILattice2dPtr;
   auto generatePeriodicPerlinLattice() const -> ILattice2dPtr;
