@@ -13,27 +13,28 @@ AbstractLattice2d<ValueType>::AbstractLattice2d(
   IValueGenerator2dPtr<ValueType> valueGenerator,
   IInterpolator2dPtr interpolator,
   std::optional<NormalizationFunc> normalization) noexcept
-  : m_areaGenerator(std::make_unique<Area2dGenerator>())
-  , m_valueGenerator(std::move(valueGenerator))
-  , m_interpolator(std::move(interpolator))
-  , m_normalization(std::move(normalization))
+  : AbstractLattice<2, ValueType>(std::make_unique<Area2dGenerator>(),
+                                  std::move(valueGenerator),
+                                  std::move(interpolator),
+                                  std::move(normalization))
 {}
 
 template<typename ValueType>
 auto AbstractLattice2d<ValueType>::at(const Point2d &p) -> float
 {
+  // https://stackoverflow.com/questions/1120833/derived-template-class-access-to-base-class-member-data
   // https://www.scratchapixel.com/lessons/procedural-generation-virtual-worlds/procedural-patterns-noise-part-1/creating-simple-1D-noise.html
-  const auto area = m_areaGenerator->areaSurrounding(p);
+  const auto area = this->m_areaGenerator->areaSurrounding(p);
 
   const auto &topLeft     = area.points[Area2dGenerator::TOP_LEFT];
   const auto &topRight    = area.points[Area2dGenerator::TOP_RIGHT];
   const auto &bottomRight = area.points[Area2dGenerator::BOTTOM_RIGHT];
   const auto &bottomLeft  = area.points[Area2dGenerator::BOTTOM_LEFT];
 
-  const auto tl = m_valueGenerator->generateFor(topLeft, p);
-  const auto tr = m_valueGenerator->generateFor(topRight, p);
-  const auto br = m_valueGenerator->generateFor(bottomRight, p);
-  const auto bl = m_valueGenerator->generateFor(bottomLeft, p);
+  const auto tl = this->m_valueGenerator->generateFor(topLeft, p);
+  const auto tr = this->m_valueGenerator->generateFor(topRight, p);
+  const auto br = this->m_valueGenerator->generateFor(bottomRight, p);
+  const auto bl = this->m_valueGenerator->generateFor(bottomLeft, p);
 
   const auto xRange = topRight(0) - topLeft(0);
   const auto yRange = topLeft(1) - bottomLeft(1);
@@ -45,13 +46,13 @@ auto AbstractLattice2d<ValueType>::at(const Point2d &p) -> float
   data.axes[Bilinear2d::TOP]    = InterpolationAxis(tl, tr, px);
   data.deltas[Bilinear2d::Y]    = py;
 
-  const auto val = m_interpolator->interpolate(data);
-  if (!m_normalization)
+  const auto val = this->m_interpolator->interpolate(data);
+  if (!this->m_normalization)
   {
     return val;
   }
 
-  return (*m_normalization)(val);
+  return (*this->m_normalization)(val);
 }
 
 } // namespace pge::terrain
