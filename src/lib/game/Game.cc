@@ -186,8 +186,8 @@ void Game::generate()
     {
       auto noise       = std::make_unique<terrain::WhiteNoise>();
       auto hasher      = std::make_unique<terrain::Hasher2d>(m_terrain.seed());
-      m_valueGenerator = std::make_unique<terrain::ValueGenerator>(std::move(hasher),
-                                                                   std::move(noise));
+      m_valueGenerator = std::make_unique<terrain::ValueGenerator2d>(std::move(hasher),
+                                                                     std::move(noise));
     }
     break;
   }

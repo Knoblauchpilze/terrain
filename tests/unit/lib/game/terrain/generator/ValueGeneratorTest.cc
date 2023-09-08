@@ -6,7 +6,7 @@
 using namespace ::testing;
 
 namespace pge::terrain {
-class Unit_Terrain_ValueGenerator : public GeneratorPreparer<ValueGenerator, float>, public Test
+class Unit_Terrain_ValueGenerator : public GeneratorPreparer<ValueGenerator2d, float>, public Test
 {
   protected:
   void SetUp() override
