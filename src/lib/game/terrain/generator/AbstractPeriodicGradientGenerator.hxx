@@ -1,11 +1,15 @@
 
+#pragma once
+
 #include "AbstractPeriodicGradientGenerator.hh"
 #include <random>
 
 namespace pge::terrain {
 
-AbstractPeriodicGradientGenerator::AbstractPeriodicGradientGenerator(const int period,
-                                                                     const Seed seed)
+template<int Dimension>
+inline AbstractPeriodicGradientGenerator<Dimension>::AbstractPeriodicGradientGenerator(
+  const int period,
+  const Seed seed)
   : m_period(period)
   , m_modulusMask(m_period - 1)
 {
@@ -16,8 +20,9 @@ AbstractPeriodicGradientGenerator::AbstractPeriodicGradientGenerator(const int p
   generatePermutationsTable(seed);
 }
 
-auto AbstractPeriodicGradientGenerator::at(const LatticePoint2d &latticePoint) const noexcept
-  -> Point3d
+template<int Dimension>
+inline auto AbstractPeriodicGradientGenerator<Dimension>::at(
+  const ILatticePoint<Dimension> &latticePoint) const noexcept -> Point3d
 {
   const auto id   = hash(latticePoint);
   const auto grad = gradientAt(id);
@@ -25,7 +30,8 @@ auto AbstractPeriodicGradientGenerator::at(const LatticePoint2d &latticePoint) c
   return grad;
 }
 
-void AbstractPeriodicGradientGenerator::generatePermutationsTable(const Seed seed)
+template<int Dimension>
+inline void AbstractPeriodicGradientGenerator<Dimension>::generatePermutationsTable(const Seed seed)
 {
   std::mt19937 generator(seed);
   std::uniform_int_distribution<int> distribution(0, m_period - 1);
@@ -46,7 +52,9 @@ void AbstractPeriodicGradientGenerator::generatePermutationsTable(const Seed see
   }
 }
 
-auto AbstractPeriodicGradientGenerator::hash(const LatticePoint2d &latticePoint) const -> int
+template<int Dimension>
+inline auto AbstractPeriodicGradientGenerator<Dimension>::hash(
+  const ILatticePoint<Dimension> &latticePoint) const -> int
 {
   // https://stackoverflow.com/questions/3072665/bitwise-and-in-place-of-modulus-operator
   int seed = latticePoint(0) & m_modulusMask;

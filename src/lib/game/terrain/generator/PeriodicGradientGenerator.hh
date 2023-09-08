@@ -7,7 +7,7 @@
 
 namespace pge::terrain {
 
-class PeriodicGradientGenerator : public AbstractPeriodicGradientGenerator
+class PeriodicGradientGenerator : public AbstractPeriodicGradientGenerator<2>
 {
   public:
   PeriodicGradientGenerator(const int period, const Seed seed);

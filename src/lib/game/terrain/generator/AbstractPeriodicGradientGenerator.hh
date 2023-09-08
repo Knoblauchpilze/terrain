@@ -8,13 +8,14 @@
 
 namespace pge::terrain {
 
-class AbstractPeriodicGradientGenerator : public AbstractGradientGenerator<2>
+template<int Dimension>
+class AbstractPeriodicGradientGenerator : public AbstractGradientGenerator<Dimension>
 {
   public:
   AbstractPeriodicGradientGenerator(const int period, const Seed seed);
   ~AbstractPeriodicGradientGenerator() override = default;
 
-  auto at(const LatticePoint2d &latticePoint) const noexcept -> Point3d override;
+  auto at(const ILatticePoint<Dimension> &latticePoint) const noexcept -> Point3d override;
   virtual auto gradientAt(const int id) const noexcept -> Point3d = 0;
 
   private:
@@ -23,7 +24,9 @@ class AbstractPeriodicGradientGenerator : public AbstractGradientGenerator<2>
   std::vector<int> m_permutations{};
 
   void generatePermutationsTable(const Seed seed);
-  auto hash(const LatticePoint2d &latticePoint) const -> int;
+  auto hash(const ILatticePoint<Dimension> &latticePoint) const -> int;
 };
 
 } // namespace pge::terrain
+
+#include "AbstractPeriodicGradientGenerator.hxx"
