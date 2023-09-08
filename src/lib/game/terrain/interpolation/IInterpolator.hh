@@ -19,7 +19,10 @@ class IInterpolator
 using IInterpolator2d = IInterpolator<2>;
 using IInterpolator3d = IInterpolator<3>;
 
-using IInterpolator2dPtr = std::unique_ptr<IInterpolator2d>;
-using IInterpolator3dPtr = std::unique_ptr<IInterpolator3d>;
+template<int Dimension>
+using IInterpolatorPtr = std::unique_ptr<IInterpolator<Dimension>>;
+
+using IInterpolator2dPtr = IInterpolatorPtr<2>;
+using IInterpolator3dPtr = IInterpolatorPtr<3>;
 
 } // namespace pge::terrain
