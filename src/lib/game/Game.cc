@@ -146,15 +146,16 @@ auto Game::latticeAt(const int x, const int y) const -> std::vector<float>
 {
   std::vector<float> out;
 
-  const terrain::LatticePoint2d p(x / m_terrain.scale(), y / m_terrain.scale());
+  const terrain::LatticePoint2d p2d(x / m_terrain.scale(), y / m_terrain.scale());
+  const terrain::LatticePoint3d p3d(x / m_terrain.scale(), y / m_terrain.scale(), 0.0f);
 
   if (m_valueGenerator != nullptr)
   {
-    out.push_back(m_valueGenerator->at(p));
+    out.push_back(m_valueGenerator->at(p3d));
   }
   else if (m_gradientGenerator != nullptr)
   {
-    const auto grad = m_gradientGenerator->at(p);
+    const auto grad = m_gradientGenerator->at(p2d);
     out.insert(out.end(), grad.begin(), grad.end());
   }
 
@@ -185,7 +186,7 @@ void Game::generate()
     default:
     {
       auto noise       = std::make_unique<terrain::WhiteNoise>();
-      auto hasher      = std::make_unique<terrain::Hasher2d>(m_terrain.seed());
+      auto hasher      = std::make_unique<terrain::Hasher3d>(m_terrain.seed());
       m_valueGenerator = std::make_unique<terrain::ValueGenerator>(std::move(hasher),
                                                                    std::move(noise));
     }

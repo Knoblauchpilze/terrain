@@ -1,6 +1,7 @@
 
 #include "Terrain.hh"
 #include "Bilinear2d.hh"
+#include "Bilinear3d.hh"
 #include "GradientLattice.hh"
 #include "Hasher.hh"
 #include "PeriodicGradientLattice.hh"
@@ -131,6 +132,9 @@ void Terrain::generate()
        + " lattice = " + str(m_latticeType) + " period = " + std::to_string(m_period.current())
        + " scale = " + std::to_string(m_period.current()));
 
+  m_lattice2d.reset();
+  m_lattice3d.reset();
+
   switch (m_latticeType)
   {
     case LatticeType::GRADIENT:
@@ -144,16 +148,16 @@ void Terrain::generate()
       break;
     case LatticeType::VALUE:
     default:
-      m_lattice2d = generateValueLattice();
+      m_lattice3d = generateValueLattice();
       break;
   }
 }
 
-auto Terrain::generateValueLattice() const -> ILattice2dPtr
+auto Terrain::generateValueLattice() const -> ILattice3dPtr
 {
-  auto hasher       = std::make_unique<Hasher2d>(m_seed);
+  auto hasher       = std::make_unique<Hasher3d>(m_seed);
   auto noise        = std::make_unique<WhiteNoise>();
-  auto interpolator = std::make_unique<Bilinear2d>();
+  auto interpolator = std::make_unique<Bilinear3d>();
 
   return std::make_unique<ValueLattice>(std::move(hasher),
                                         std::move(noise),
