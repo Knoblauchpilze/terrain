@@ -7,7 +7,7 @@
 
 namespace pge::terrain {
 
-class PeriodicPerlinGenerator : public AbstractPeriodicGradientGenerator
+class PeriodicPerlinGenerator : public AbstractPeriodicGradientGenerator<2>
 {
   public:
   PeriodicPerlinGenerator(const int period, const Seed seed);
