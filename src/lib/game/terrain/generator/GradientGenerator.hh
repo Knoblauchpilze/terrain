@@ -7,17 +7,22 @@
 
 namespace pge::terrain {
 
-class GradientGenerator : public AbstractGradientGenerator<2>
+template<int Dimension>
+class GradientGenerator : public AbstractGradientGenerator<Dimension>
 {
   public:
-  GradientGenerator(IHasher2dPtr hasher, INoisePtr noise);
+  GradientGenerator(IHasherPtr<Dimension> hasher, INoisePtr noise);
   ~GradientGenerator() override = default;
 
-  auto at(const LatticePoint2d &latticePoint) const noexcept -> Point3d override;
+  auto at(const ILatticePoint<Dimension> &latticePoint) const noexcept -> Point3d override;
 
   private:
-  IHasher2dPtr m_hasher;
+  IHasherPtr<Dimension> m_hasher;
   INoisePtr m_noise;
 };
 
+using GradientGenerator2d = GradientGenerator<2>;
+
 } // namespace pge::terrain
+
+#include "GradientGenerator.hxx"

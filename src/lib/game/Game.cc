@@ -163,14 +163,17 @@ auto Game::latticeAt(const int x, const int y) const -> std::vector<float>
 
 void Game::generate()
 {
+  m_valueGenerator.reset();
+  m_gradientGenerator.reset();
+
   switch (m_terrain.lattice())
   {
     case terrain::LatticeType::GRADIENT:
     {
       auto noise          = std::make_unique<terrain::WhiteNoise>(-1.0f, 1.0f);
       auto hasher         = std::make_unique<terrain::Hasher2d>(m_terrain.seed());
-      m_gradientGenerator = std::make_unique<terrain::GradientGenerator>(std::move(hasher),
-                                                                         std::move(noise));
+      m_gradientGenerator = std::make_unique<terrain::GradientGenerator2d>(std::move(hasher),
+                                                                           std::move(noise));
     }
     break;
     case terrain::LatticeType::PERIODIC_GRADIENT:

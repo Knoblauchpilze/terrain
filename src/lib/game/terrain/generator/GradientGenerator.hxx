@@ -1,14 +1,19 @@
 
+#pragma once
+
 #include "GradientGenerator.hh"
 
 namespace pge::terrain {
 
-GradientGenerator::GradientGenerator(IHasher2dPtr hasher, INoisePtr noise)
+template<int Dimension>
+inline GradientGenerator<Dimension>::GradientGenerator(IHasherPtr<Dimension> hasher, INoisePtr noise)
   : m_hasher(std::move(hasher))
   , m_noise(std::move(noise))
 {}
 
-auto GradientGenerator::at(const LatticePoint2d &latticePoint) const noexcept -> Point3d
+template<int Dimension>
+inline auto GradientGenerator<Dimension>::at(
+  const ILatticePoint<Dimension> &latticePoint) const noexcept -> Point3d
 {
   m_noise->seed(m_hasher->hash(latticePoint));
 

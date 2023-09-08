@@ -6,7 +6,7 @@
 using namespace ::testing;
 
 namespace pge::terrain {
-class Unit_Terrain_GradientGenerator : public GeneratorPreparer<GradientGenerator, Point3d>,
+class Unit_Terrain_GradientGenerator : public GeneratorPreparer<GradientGenerator2d, Point3d>,
                                        public Test
 {
   protected:
@@ -45,7 +45,7 @@ struct TestCase
   float threshold{REASONABLE_COMPARISON_THRESHOLD};
 };
 
-class GenerateForTestSuite : public GeneratorPreparer<GradientGenerator, Point3d>,
+class GenerateForTestSuite : public GeneratorPreparer<GradientGenerator2d, Point3d>,
                              public TestWithParam<TestCase>
 {
   protected:
