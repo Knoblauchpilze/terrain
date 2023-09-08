@@ -7,7 +7,7 @@
 
 namespace pge::terrain {
 
-class GradientGenerator : public AbstractGradientGenerator
+class GradientGenerator : public AbstractGradientGenerator<2>
 {
   public:
   GradientGenerator(IHasher2dPtr hasher, INoisePtr noise);

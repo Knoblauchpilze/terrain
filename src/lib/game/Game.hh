@@ -171,7 +171,7 @@ class Game : public utils::CoreObject
   terrain::Terrain m_terrain{};
 
   terrain::ValueGenerator2dPtr m_valueGenerator{nullptr};
-  terrain::AbstractGradientGeneratorPtr m_gradientGenerator{nullptr};
+  terrain::AbstractGradientGeneratorPtr<2> m_gradientGenerator{nullptr};
 
   DisplayMode m_displayMode{DisplayMode::HEIGHT};
 };

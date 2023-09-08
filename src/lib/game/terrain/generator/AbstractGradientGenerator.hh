@@ -6,16 +6,20 @@
 
 namespace pge::terrain {
 
-class AbstractGradientGenerator : public IGradientGenerator<2, 3>
+template<int Dimension>
+class AbstractGradientGenerator : public IGradientGenerator<Dimension, 3>
 {
   public:
   AbstractGradientGenerator()           = default;
   ~AbstractGradientGenerator() override = default;
 
-  auto generateFor(const LatticePoint2d &latticePoint, const Point2d &point) const noexcept
-    -> float override;
+  auto generateFor(const ILatticePoint<Dimension> &latticePoint,
+                   const IPoint<Dimension> &point) const noexcept -> float override;
 };
 
-using AbstractGradientGeneratorPtr = std::unique_ptr<AbstractGradientGenerator>;
+template<int Dimension>
+using AbstractGradientGeneratorPtr = std::unique_ptr<AbstractGradientGenerator<Dimension>>;
 
 } // namespace pge::terrain
+
+#include "AbstractGradientGenerator.hxx"
