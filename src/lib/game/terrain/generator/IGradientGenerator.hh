@@ -6,15 +6,16 @@
 
 namespace pge::terrain {
 
-template<int Dimension>
-class IGradientGenerator : public IValueGenerator<2, IPoint<Dimension>>
+template<int PointDimension, int GradientDimension>
+class IGradientGenerator : public IValueGenerator<PointDimension, IPoint<GradientDimension>>
 {
   public:
   virtual ~IGradientGenerator() = default;
 
-  virtual auto at(const LatticePoint2d &latticePoint) const noexcept -> IPoint<Dimension> = 0;
-  virtual auto generateFor(const LatticePoint2d &latticePoint, const Point2d &point) const noexcept
-    -> float
+  virtual auto at(const ILatticePoint<PointDimension> &latticePoint) const noexcept
+    -> IPoint<GradientDimension> = 0;
+  virtual auto generateFor(const ILatticePoint<PointDimension> &latticePoint,
+                           const IPoint<PointDimension> &point) const noexcept -> float
     = 0;
 };
 
