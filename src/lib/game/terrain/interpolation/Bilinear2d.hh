@@ -5,7 +5,7 @@
 
 namespace pge::terrain {
 
-class Bilinear2d : public IInterpolator<2, 1>
+class Bilinear2d : public IInterpolator<2>
 {
   public:
   Bilinear2d() noexcept  = default;
