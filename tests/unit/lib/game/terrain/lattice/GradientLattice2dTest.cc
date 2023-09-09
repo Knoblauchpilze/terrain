@@ -4,6 +4,7 @@
 #include "Hasher.hh"
 #include "IPoint.hh"
 #include "LatticePreparer.hh"
+#include "TestName.hh"
 #include "WhiteNoise.hh"
 #include <gtest/gtest.h>
 
@@ -40,7 +41,7 @@ TEST_F(Unit_Terrain_GradientLattice2d, Test_UseInterpolate)
 namespace interpolate {
 struct TestCaseInterpolate
 {
-  Point2d p;
+  Point2d in;
 
   float interpolatedX;
   float interpolatedY;
@@ -56,21 +57,12 @@ class GradientLatticeInterpolateTestSuite : public LatticePreparer<GradientLatti
   }
 };
 
-namespace {
-auto generateTestName(const TestParamInfo<TestCaseInterpolate> &info) -> std::string
-{
-  auto str = std::to_string(info.param.p(0)) + "x" + std::to_string(info.param.p(1));
-  std::replace(str.begin(), str.end(), '.', '_');
-  return str;
-}
-} // namespace
-
 TEST_P(GradientLatticeInterpolateTestSuite, Test_Interpolate)
 {
   const auto param = GetParam();
 
   EXPECT_CALL(*mockInterpolator, interpolate(_)).Times(1);
-  lattice->at(param.p);
+  lattice->at(param.in);
   EXPECT_EQ(param.interpolatedX, mockInterpolator->data.axes[0].delta());
   EXPECT_EQ(param.interpolatedX, mockInterpolator->data.axes[1].delta());
   EXPECT_EQ(param.interpolatedY, mockInterpolator->data.deltas[0]);
@@ -85,7 +77,7 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice2d,
                                 TestCaseInterpolate{Point2d{0.7f, 0.1f}, 0.7f, 0.1f},
                                 TestCaseInterpolate{Point2d{0.9f, 0.51f}, 0.9f, 0.51f},
                                 TestCaseInterpolate{Point2d{0.02f, 0.98f}, 0.02f, 0.98f}),
-                         generateTestName);
+                         testNameForSingleInputPoint<TestCaseInterpolate>);
 
 } // namespace interpolate
 
@@ -117,7 +109,7 @@ constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
 
 struct TestCaseValue
 {
-  Point2d p;
+  Point2d in;
 
   float expected;
   float threshold{REASONABLE_COMPARISON_THRESHOLD};
@@ -125,21 +117,12 @@ struct TestCaseValue
 
 using GradientLatticeAtTestSuite = TestWithParam<TestCaseValue>;
 
-namespace {
-auto generateTestName(const TestParamInfo<TestCaseValue> &info) -> std::string
-{
-  auto str = std::to_string(info.param.p(0)) + "x" + std::to_string(info.param.p(1));
-  std::replace(str.begin(), str.end(), '.', '_');
-  return str;
-}
-} // namespace
-
 TEST_P(GradientLatticeAtTestSuite, Test_At)
 {
   const auto param = GetParam();
 
   auto lattice      = createGradientLattice();
-  const auto actual = lattice->at(param.p);
+  const auto actual = lattice->at(param.in);
   EXPECT_NEAR(actual, param.expected, param.threshold);
 }
 
@@ -152,7 +135,7 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice2d,
                                 TestCaseValue{Point2d{0.49f, 0.98f}, 0.504369f},
                                 TestCaseValue{Point2d{0.67f, 0.51f}, 0.570583f},
                                 TestCaseValue{Point2d{0.01f, 0.79f}, 0.352243f}),
-                         generateTestName);
+                         testNameForSingleInputPoint<TestCaseValue>);
 
 } // namespace at
 
