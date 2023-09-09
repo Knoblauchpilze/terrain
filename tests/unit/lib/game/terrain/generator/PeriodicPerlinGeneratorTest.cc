@@ -12,12 +12,12 @@ constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
 
 TEST(Unit_Terrain_PeriodicPerlinGenerator, Test_PeriodOddThrowException)
 {
-  EXPECT_THROW(PeriodicPerlinGenerator(3, DEFAULT_SEED), std::invalid_argument);
+  EXPECT_THROW(PeriodicPerlinGenerator2d(3, DEFAULT_SEED), std::invalid_argument);
 }
 
 TEST(Unit_Terrain_PeriodicPerlinGenerator, Test_PeriodicX)
 {
-  PeriodicPerlinGenerator generator{DEFAULT_PERIOD, DEFAULT_SEED};
+  PeriodicPerlinGenerator2d generator{DEFAULT_PERIOD, DEFAULT_SEED};
 
   auto p        = LatticePoint2d(0, 1);
   const auto v1 = generator.at(p);
@@ -37,7 +37,7 @@ TEST(Unit_Terrain_PeriodicPerlinGenerator, Test_PeriodicX)
 
 TEST(Unit_Terrain_PeriodicPerlinGenerator, Test_PeriodicY)
 {
-  PeriodicPerlinGenerator generator{DEFAULT_PERIOD, DEFAULT_SEED};
+  PeriodicPerlinGenerator2d generator{DEFAULT_PERIOD, DEFAULT_SEED};
 
   auto p        = LatticePoint2d(0, 1);
   const auto v1 = generator.at(p);
@@ -95,7 +95,7 @@ auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
 TEST_P(PeriodicPerlinAtTestSuite, Test_At)
 {
   const auto param = GetParam();
-  PeriodicPerlinGenerator generator{param.period, param.seed};
+  PeriodicPerlinGenerator2d generator{param.period, param.seed};
 
   const auto actual = generator.at(param.latticePoint);
   EXPECT_NEAR(actual(0), param.expected(0), param.threshold);
@@ -152,7 +152,7 @@ auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
 TEST_P(PeriodicPerlinGenerateForTestSuite, Test_GenerateFor)
 {
   const auto param = GetParam();
-  PeriodicPerlinGenerator generator{param.period, param.seed};
+  PeriodicPerlinGenerator2d generator{param.period, param.seed};
 
   const auto actual = generator.generateFor(param.latticePoint, param.point);
   EXPECT_NEAR(actual, param.expected, param.threshold);

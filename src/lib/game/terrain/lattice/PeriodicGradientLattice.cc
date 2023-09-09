@@ -8,7 +8,7 @@ namespace pge::terrain {
 PeriodicGradientLattice::PeriodicGradientLattice(const int period,
                                                  const Seed seed,
                                                  IInterpolator2dPtr interpolator)
-  : AbstractGradientLattice(std::make_unique<PeriodicGradientGenerator<2>>(period, seed),
+  : AbstractGradientLattice(std::make_unique<PeriodicGradientGenerator2d>(period, seed),
                             std::move(interpolator))
 {}
 
