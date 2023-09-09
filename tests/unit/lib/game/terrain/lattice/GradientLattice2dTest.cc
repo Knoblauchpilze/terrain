@@ -1,6 +1,6 @@
 
-#include "GradientLattice.hh"
 #include "Bilinear2d.hh"
+#include "GradientLattice.hh"
 #include "Hasher.hh"
 #include "IPoint.hh"
 #include "LatticePreparer.hh"
@@ -10,7 +10,7 @@
 using namespace ::testing;
 
 namespace pge::terrain {
-class Unit_Terrain_GradientLattice : public LatticePreparer<GradientLattice, 2>, public Test
+class Unit_Terrain_GradientLattice2d : public LatticePreparer<GradientLattice, 2>, public Test
 {
   protected:
   void SetUp() override
@@ -19,19 +19,19 @@ class Unit_Terrain_GradientLattice : public LatticePreparer<GradientLattice, 2>,
   }
 };
 
-TEST_F(Unit_Terrain_GradientLattice, Test_UseHasher)
+TEST_F(Unit_Terrain_GradientLattice2d, Test_UseHasher)
 {
   EXPECT_CALL(*mockHasher, hash(_)).Times(4);
   lattice->at(Point2d::Zero());
 }
 
-TEST_F(Unit_Terrain_GradientLattice, Test_UseNoise)
+TEST_F(Unit_Terrain_GradientLattice2d, Test_UseNoise)
 {
   EXPECT_CALL(*mockNoise, next()).Times(12);
   lattice->at(Point2d::Zero());
 }
 
-TEST_F(Unit_Terrain_GradientLattice, Test_UseInterpolate)
+TEST_F(Unit_Terrain_GradientLattice2d, Test_UseInterpolate)
 {
   EXPECT_CALL(*mockInterpolator, interpolate(_)).Times(1);
   lattice->at(Point2d::Zero());
@@ -76,7 +76,7 @@ TEST_P(GradientLatticeInterpolateTestSuite, Test_Interpolate)
   EXPECT_EQ(param.interpolatedY, mockInterpolator->data.deltas[0]);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice,
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice2d,
                          GradientLatticeInterpolateTestSuite,
                          Values(TestCaseInterpolate{Point2d{0.0f, 0.0f}, 0.0f, 0.0f},
                                 TestCaseInterpolate{Point2d{0.5f, 0.0f}, 0.5f, 0.0f},
@@ -143,7 +143,7 @@ TEST_P(GradientLatticeAtTestSuite, Test_At)
   EXPECT_NEAR(actual, param.expected, param.threshold);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice,
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice2d,
                          GradientLatticeAtTestSuite,
                          Values(TestCaseValue{Point2d{0.0f, 0.0f}, 0.5f},
                                 TestCaseValue{Point2d{0.0f, 1.0f}, 0.5f},
@@ -156,7 +156,7 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice,
 
 } // namespace at
 
-TEST_F(Unit_Terrain_GradientLattice, Test_MinValue)
+TEST_F(Unit_Terrain_GradientLattice2d, Test_MinValue)
 {
   auto noise     = std::make_unique<NiceMock<MockNoise>>();
   auto mockNoise = noise.get();
@@ -193,7 +193,7 @@ TEST_F(Unit_Terrain_GradientLattice, Test_MinValue)
   EXPECT_EQ(0.0f, v);
 }
 
-TEST_F(Unit_Terrain_GradientLattice, Test_MaxValue)
+TEST_F(Unit_Terrain_GradientLattice2d, Test_MaxValue)
 {
   auto noise     = std::make_unique<NiceMock<MockNoise>>();
   auto mockNoise = noise.get();

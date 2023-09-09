@@ -1,16 +1,16 @@
 
-#include "ValueLattice.hh"
 #include "Bilinear2d.hh"
 #include "Hasher.hh"
 #include "IPoint.hh"
 #include "LatticePreparer.hh"
+#include "ValueLattice.hh"
 #include "WhiteNoise.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
 
 namespace pge::terrain {
-class Unit_Terrain_ValueLattice : public LatticePreparer<ValueLattice, 2>, public Test
+class Unit_Terrain_ValueLattice2d : public LatticePreparer<ValueLattice, 2>, public Test
 {
   protected:
   void SetUp() override
@@ -19,19 +19,19 @@ class Unit_Terrain_ValueLattice : public LatticePreparer<ValueLattice, 2>, publi
   }
 };
 
-TEST_F(Unit_Terrain_ValueLattice, Test_UseHasher)
+TEST_F(Unit_Terrain_ValueLattice2d, Test_UseHasher)
 {
   EXPECT_CALL(*mockHasher, hash(_)).Times(4);
   lattice->at(Point2d::Zero());
 }
 
-TEST_F(Unit_Terrain_ValueLattice, Test_UseNoise)
+TEST_F(Unit_Terrain_ValueLattice2d, Test_UseNoise)
 {
   EXPECT_CALL(*mockNoise, next()).Times(4);
   lattice->at(Point2d::Zero());
 }
 
-TEST_F(Unit_Terrain_ValueLattice, Test_UseInterpolate)
+TEST_F(Unit_Terrain_ValueLattice2d, Test_UseInterpolate)
 {
   EXPECT_CALL(*mockInterpolator, interpolate(_)).Times(1);
   lattice->at(Point2d::Zero());
@@ -76,7 +76,7 @@ TEST_P(ValueLatticeInterpolateTestSuite, Test_Interpolate)
   EXPECT_EQ(param.interpolatedY, mockInterpolator->data.deltas[0]);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Terrain_ValueLattice,
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_ValueLattice2d,
                          ValueLatticeInterpolateTestSuite,
                          Values(TestCaseForInterpolate{Point2d{0.0f, 0.0f}, 0.0f, 0.0f},
                                 TestCaseForInterpolate{Point2d{0.5f, 0.0f}, 0.5f, 0.0f},
@@ -127,7 +127,7 @@ TEST_P(ValueLatticeAtTestSuite, Test_At)
   EXPECT_NEAR(actual, param.expected, param.threshold);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Terrain_ValueLattice,
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_ValueLattice2d,
                          ValueLatticeAtTestSuite,
                          Values(TestCaseValue{Point2d{0.0f, 0.0f}, 0.1004222f},
                                 TestCaseValue{Point2d{0.0f, 1.0f}, 0.6273638f},

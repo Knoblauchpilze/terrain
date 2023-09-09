@@ -1,7 +1,7 @@
 
-#include "PeriodicPerlinLattice.hh"
 #include "Bilinear2d.hh"
 #include "IPoint.hh"
+#include "PeriodicGradientLattice.hh"
 #include "PeriodicLatticePreparer.hh"
 #include <gtest/gtest.h>
 
@@ -11,8 +11,9 @@ namespace pge::terrain {
 constexpr auto PERIOD = 8;
 constexpr auto SEED   = 1993;
 
-class Unit_Terrain_PeriodicPerlinLattice : public PeriodicLatticePreparer<PeriodicPerlinLattice, 2>,
-                                           public Test
+class Unit_Terrain_PeriodicGradientLattice2d
+  : public PeriodicLatticePreparer<PeriodicGradientLattice, 2>,
+    public Test
 {
   protected:
   void SetUp() override
@@ -21,7 +22,7 @@ class Unit_Terrain_PeriodicPerlinLattice : public PeriodicLatticePreparer<Period
   }
 };
 
-TEST_F(Unit_Terrain_PeriodicPerlinLattice, Test_UseInterpolate)
+TEST_F(Unit_Terrain_PeriodicGradientLattice2d, Test_UseInterpolate)
 {
   EXPECT_CALL(*mockInterpolator, interpolate(_)).Times(1);
   lattice->at(Point2d::Zero());
@@ -31,11 +32,11 @@ namespace {
 auto createLattice() -> ILattice2dPtr
 {
   auto interpolator = std::make_unique<Bilinear2d>();
-  return std::make_unique<PeriodicPerlinLattice>(PERIOD, SEED, std::move(interpolator));
+  return std::make_unique<PeriodicGradientLattice>(PERIOD, SEED, std::move(interpolator));
 }
 } // namespace
 
-TEST_F(Unit_Terrain_PeriodicPerlinLattice, Test_PeriodicX)
+TEST_F(Unit_Terrain_PeriodicGradientLattice2d, Test_PeriodicX)
 {
   auto lattice = createLattice();
 
@@ -52,7 +53,7 @@ TEST_F(Unit_Terrain_PeriodicPerlinLattice, Test_PeriodicX)
   EXPECT_EQ(v1, v3);
 }
 
-TEST_F(Unit_Terrain_PeriodicPerlinLattice, Test_PeriodicY)
+TEST_F(Unit_Terrain_PeriodicGradientLattice2d, Test_PeriodicY)
 {
   auto lattice = createLattice();
 
@@ -78,8 +79,8 @@ struct TestCaseInterpolate
   float interpolatedY;
 };
 
-class PeriodicPerlinLatticeInterpolateTestSuite
-  : public PeriodicLatticePreparer<PeriodicPerlinLattice, 2>,
+class PeriodicGradientLatticeInterpolateTestSuite
+  : public PeriodicLatticePreparer<PeriodicGradientLattice, 2>,
     public TestWithParam<TestCaseInterpolate>
 {
   protected:
@@ -98,11 +99,10 @@ auto generateTestName(const TestParamInfo<TestCaseInterpolate> &info) -> std::st
 }
 } // namespace
 
-TEST_P(PeriodicPerlinLatticeInterpolateTestSuite, Test_Interpolate)
+TEST_P(PeriodicGradientLatticeInterpolateTestSuite, Test_Interpolate)
 {
   const auto param = GetParam();
 
-  lattice->at(param.p);
   EXPECT_CALL(*mockInterpolator, interpolate(_)).Times(1);
   lattice->at(param.p);
   EXPECT_EQ(param.interpolatedX, mockInterpolator->data.axes[0].delta());
@@ -110,8 +110,8 @@ TEST_P(PeriodicPerlinLatticeInterpolateTestSuite, Test_Interpolate)
   EXPECT_EQ(param.interpolatedY, mockInterpolator->data.deltas[0]);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicPerlinLattice,
-                         PeriodicPerlinLatticeInterpolateTestSuite,
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicGradientLattice2d,
+                         PeriodicGradientLatticeInterpolateTestSuite,
                          Values(TestCaseInterpolate{Point2d{0.0f, 0.0f}, 0.0f, 0.0f},
                                 TestCaseInterpolate{Point2d{0.5f, 0.0f}, 0.5f, 0.0f},
                                 TestCaseInterpolate{Point2d{0.0f, 0.5f}, 0.0f, 0.5f},
@@ -134,7 +134,7 @@ struct TestCaseValue
   float threshold{REASONABLE_COMPARISON_THRESHOLD};
 };
 
-using PeriodicPerlinLatticeAtTestSuite = TestWithParam<TestCaseValue>;
+using PeriodicGradientLatticeAtTestSuite = TestWithParam<TestCaseValue>;
 
 namespace {
 auto generateTestName(const TestParamInfo<TestCaseValue> &info) -> std::string
@@ -145,26 +145,27 @@ auto generateTestName(const TestParamInfo<TestCaseValue> &info) -> std::string
 }
 } // namespace
 
-TEST_P(PeriodicPerlinLatticeAtTestSuite, Test_At)
+TEST_P(PeriodicGradientLatticeAtTestSuite, Test_At)
 {
   const auto param = GetParam();
 
   auto interpolator = std::make_unique<Bilinear2d>();
-  auto lattice = std::make_unique<PeriodicPerlinLattice>(PERIOD, SEED, std::move(interpolator));
+  auto lattice = std::make_unique<PeriodicGradientLattice>(PERIOD, SEED, std::move(interpolator));
 
   const auto actual = lattice->at(param.p);
   EXPECT_NEAR(actual, param.expected, param.threshold);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicPerlinLattice,
-                         PeriodicPerlinLatticeAtTestSuite,
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicGradientLattice2d,
+                         PeriodicGradientLatticeAtTestSuite,
                          Values(TestCaseValue{Point2d{0.0f, 0.0f}, 0.5f},
                                 TestCaseValue{Point2d{0.0f, 1.0f}, 0.5f},
-                                TestCaseValue{Point2d{0.5f, 0.5f}, 0.375f},
-                                TestCaseValue{Point2d{0.1f, 0.32f}, 0.297120f},
-                                TestCaseValue{Point2d{0.49f, 0.98f}, 0.254706f},
-                                TestCaseValue{Point2d{0.67f, 0.51f}, 0.472205f},
-                                TestCaseValue{Point2d{0.01f, 0.79f}, 0.329597f}),
+                                TestCaseValue{Point2d{0.5f, 0.5f}, 0.602046f},
+                                TestCaseValue{Point2d{0.1f, 0.32f}, 0.383933f},
+                                TestCaseValue{Point2d{0.49f, 0.98f}, 0.656713f},
+                                TestCaseValue{Point2d{0.67f, 0.51f}, 0.671274f},
+                                TestCaseValue{Point2d{0.01f, 0.79f}, 0.37766f}),
                          generateTestName);
+
 } // namespace at
 } // namespace pge::terrain
