@@ -1,5 +1,6 @@
 
 #include "PeriodicGradientGenerator.hh"
+#include "TestName.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
@@ -69,29 +70,6 @@ struct TestCase
 
 using PeriodicGradientAtTestSuite = TestWithParam<TestCase>;
 
-namespace {
-auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
-{
-  std::string str;
-
-  str += std::to_string(info.param.latticePoint(0));
-  str += "x";
-  str += std::to_string(info.param.latticePoint(1));
-
-  str += "_";
-
-  str += std::to_string(info.param.expected(0));
-  str += "x";
-  str += std::to_string(info.param.expected(1));
-  str += "x";
-  str += std::to_string(info.param.expected(2));
-
-  std::replace(str.begin(), str.end(), '.', '_');
-  std::replace(str.begin(), str.end(), '-', 'm');
-  return str;
-}
-} // namespace
-
 TEST_P(PeriodicGradientAtTestSuite, Test_At)
 {
   const auto param = GetParam();
@@ -108,13 +86,13 @@ INSTANTIATE_TEST_SUITE_P(
   PeriodicGradientAtTestSuite,
   Values(TestCase{LatticePoint2d{0, 1}, Point3d{0.261125f, 0.931419f, -0.253521f}},
          TestCase{LatticePoint2d{1, 2}, Point3d{-0.403105f, 0.236356f, 0.884105f}}),
-  generateTestName);
+  testNameFromLatticePointAndExpected<TestCase>);
 } // namespace at
 
 namespace generate_for {
 struct TestCase
 {
-  Point2d point;
+  Point2d inPoint;
   LatticePoint2d latticePoint;
 
   float expected;
@@ -126,36 +104,12 @@ struct TestCase
 
 using PeriodicGradientGenerateForTestSuite = TestWithParam<TestCase>;
 
-namespace {
-auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
-{
-  std::string str;
-  str += std::to_string(info.param.point(0));
-  str += "x";
-  str += std::to_string(info.param.point(1));
-
-  str += "_";
-
-  str += std::to_string(info.param.latticePoint(0));
-  str += "x";
-  str += std::to_string(info.param.latticePoint(1));
-
-  str += "_";
-
-  str += std::to_string(info.param.expected);
-
-  std::replace(str.begin(), str.end(), '.', '_');
-  std::replace(str.begin(), str.end(), '-', 'm');
-  return str;
-}
-} // namespace
-
 TEST_P(PeriodicGradientGenerateForTestSuite, Test_GenerateFor)
 {
   const auto param = GetParam();
   PeriodicGradientGenerator2d generator{param.period, param.seed};
 
-  const auto actual = generator.generateFor(param.latticePoint, param.point);
+  const auto actual = generator.generateFor(param.latticePoint, param.inPoint);
   EXPECT_NEAR(actual, param.expected, param.threshold);
 }
 
@@ -166,6 +120,6 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicGradientGenerator2d,
                                 TestCase{Point2d{-0.2f, 1.45f}, LatticePoint2d{-1, 2}, -0.478953f},
                                 TestCase{Point2d{-0.89f, -0.37f}, LatticePoint2d{-1, 0}, -0.10899f},
                                 TestCase{Point2d{0.78f, -0.37f}, LatticePoint2d{1, -1}, 0.006288f}),
-                         generateTestName);
+                         testNameFromPointLatticePointAndExpected<TestCase>);
 } // namespace generate_for
 } // namespace pge::terrain

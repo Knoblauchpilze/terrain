@@ -1,5 +1,6 @@
 
 #include "PeriodicPerlinGenerator.hh"
+#include "TestName.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
@@ -69,29 +70,6 @@ struct TestCase
 
 using PeriodicPerlinAtTestSuite = TestWithParam<TestCase>;
 
-namespace {
-auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
-{
-  std::string str;
-
-  str += std::to_string(info.param.latticePoint(0));
-  str += "x";
-  str += std::to_string(info.param.latticePoint(1));
-
-  str += "_";
-
-  str += std::to_string(info.param.expected(0));
-  str += "x";
-  str += std::to_string(info.param.expected(1));
-  str += "x";
-  str += std::to_string(info.param.expected(2));
-
-  std::replace(str.begin(), str.end(), '.', '_');
-  std::replace(str.begin(), str.end(), '-', 'm');
-  return str;
-}
-} // namespace
-
 TEST_P(PeriodicPerlinAtTestSuite, Test_At)
 {
   const auto param = GetParam();
@@ -107,13 +85,13 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicPerlinGenerator2d,
                          PeriodicPerlinAtTestSuite,
                          Values(TestCase{LatticePoint2d{0, 1}, Point3d{1.0f, 0.0f, -1.0f}},
                                 TestCase{LatticePoint2d{1, 2}, Point3d{1.0f, 1.0f, 0.0f}}),
-                         generateTestName);
+                         testNameFromLatticePointAndExpected<TestCase>);
 } // namespace at
 
 namespace generate_for {
 struct TestCase
 {
-  Point2d point;
+  Point2d inPoint;
   LatticePoint2d latticePoint;
 
   float expected;
@@ -125,36 +103,12 @@ struct TestCase
 
 using PeriodicPerlinGenerateForTestSuite = TestWithParam<TestCase>;
 
-namespace {
-auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
-{
-  std::string str;
-  str += std::to_string(info.param.point(0));
-  str += "x";
-  str += std::to_string(info.param.point(1));
-
-  str += "_";
-
-  str += std::to_string(info.param.latticePoint(0));
-  str += "x";
-  str += std::to_string(info.param.latticePoint(1));
-
-  str += "_";
-
-  str += std::to_string(info.param.expected);
-
-  std::replace(str.begin(), str.end(), '.', '_');
-  std::replace(str.begin(), str.end(), '-', 'm');
-  return str;
-}
-} // namespace
-
 TEST_P(PeriodicPerlinGenerateForTestSuite, Test_GenerateFor)
 {
   const auto param = GetParam();
   PeriodicPerlinGenerator2d generator{param.period, param.seed};
 
-  const auto actual = generator.generateFor(param.latticePoint, param.point);
+  const auto actual = generator.generateFor(param.latticePoint, param.inPoint);
   EXPECT_NEAR(actual, param.expected, param.threshold);
 }
 
@@ -165,6 +119,6 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicPerlinGenerator2d,
                                 TestCase{Point2d{-0.2f, 1.45f}, LatticePoint2d{-1, 2}, -1.35f},
                                 TestCase{Point2d{-0.89f, -0.37f}, LatticePoint2d{-1, 0}, -0.11f},
                                 TestCase{Point2d{0.78f, -0.37f}, LatticePoint2d{1, -1}, 0.22f}),
-                         generateTestName);
+                         testNameFromPointLatticePointAndExpected<TestCase>);
 } // namespace generate_for
 } // namespace pge::terrain

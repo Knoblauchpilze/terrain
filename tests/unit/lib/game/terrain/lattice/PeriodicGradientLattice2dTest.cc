@@ -111,7 +111,7 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicGradientLattice2d,
                                 TestCaseInterpolate{Point2d{0.7f, 0.1f}, 0.7f, 0.1f},
                                 TestCaseInterpolate{Point2d{0.9f, 0.51f}, 0.9f, 0.51f},
                                 TestCaseInterpolate{Point2d{0.02f, 0.98f}, 0.02f, 0.98f}),
-                         testNameForSingleInputPoint<TestCaseInterpolate>);
+                         testNameFromSingleInputPoint<TestCaseInterpolate>);
 
 } // namespace interpolate
 
@@ -148,7 +148,7 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicGradientLattice2d,
                                 TestCaseValue{Point2d{0.49f, 0.98f}, 0.656713f},
                                 TestCaseValue{Point2d{0.67f, 0.51f}, 0.671274f},
                                 TestCaseValue{Point2d{0.01f, 0.79f}, 0.37766f}),
-                         testNameForSingleInputPoint<TestCaseValue>);
+                         testNameFromSingleInputPoint<TestCaseValue>);
 
 } // namespace at
 } // namespace pge::terrain

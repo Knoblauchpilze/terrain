@@ -1,6 +1,7 @@
 
 #include "GradientGenerator.hh"
 #include "IValueGeneratorPreparer.hh"
+#include "TestName.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
@@ -36,7 +37,7 @@ constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
 
 struct TestCase
 {
-  Point2d point;
+  Point2d inPoint;
   LatticePoint2d latticePoint;
 
   NoiseValues noise;
@@ -55,28 +56,6 @@ class GenerateForTestSuite : public GeneratorPreparer<GradientGenerator2d, 2, Po
   }
 };
 
-auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
-{
-  std::string str;
-  str += std::to_string(info.param.point(0));
-  str += "x";
-  str += std::to_string(info.param.point(1));
-
-  str += "_";
-
-  str += std::to_string(info.param.latticePoint(0));
-  str += "x";
-  str += std::to_string(info.param.latticePoint(1));
-
-  str += "_";
-
-  str += std::to_string(info.param.expected);
-
-  std::replace(str.begin(), str.end(), '.', '_');
-  std::replace(str.begin(), str.end(), '-', 'm');
-  return str;
-}
-
 TEST_P(GenerateForTestSuite, Test_GenerateFor)
 {
   const auto param = GetParam();
@@ -92,7 +71,7 @@ TEST_P(GenerateForTestSuite, Test_GenerateFor)
     return out;
   }));
 
-  const auto actual = generator->generateFor(param.latticePoint, param.point);
+  const auto actual = generator->generateFor(param.latticePoint, param.inPoint);
   EXPECT_NEAR(param.expected, actual, param.threshold);
 }
 } // namespace
@@ -108,6 +87,6 @@ INSTANTIATE_TEST_SUITE_P(
     // This test is a bit strange as it showcases that the 3d vector is used but not in full
     // to compute the dot product with the 2d point.
     TestCase{Point2d{-0.7f, 1.2f}, LatticePoint2d{0, 1}, NoiseValues{0.4f, -0.5f, 0.2f}, -0.56647f}),
-  generateTestName);
+  testNameFromPointLatticePointAndExpected<TestCase>);
 
 } // namespace pge::terrain

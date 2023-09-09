@@ -1,5 +1,6 @@
 
 #include "WhiteNoise.hh"
+#include "SanitizeTestName.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
@@ -37,19 +38,17 @@ using WhiteNoiseTestSuite = TestWithParam<TestCase>;
 
 auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
 {
-  std::string str;
+  std::string out;
 
-  str += std::to_string(info.param.min);
-  str += "_";
-  str += std::to_string(info.param.max);
+  out += std::to_string(info.param.min);
+  out += "_";
+  out += std::to_string(info.param.max);
 
-  str += "_";
+  out += "_";
 
-  str += std::to_string(info.param.seed);
+  out += std::to_string(info.param.seed);
 
-  std::replace(str.begin(), str.end(), '.', '_');
-  std::replace(str.begin(), str.end(), '-', 'm');
-  return str;
+  return sanitizeTestName(out);
 }
 
 TEST_P(WhiteNoiseTestSuite, Test_Next)
