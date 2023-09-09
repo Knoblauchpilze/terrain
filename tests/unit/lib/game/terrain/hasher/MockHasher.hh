@@ -15,5 +15,6 @@ class MockHasher : public IHasher<Dimension>
 };
 
 using MockHasher2d = MockHasher<2>;
+using MockHasher3d = MockHasher<3>;
 
 } // namespace pge::terrain

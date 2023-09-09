@@ -62,7 +62,7 @@ TEST_P(Hasher2dTestSuite, Test_Hash)
   EXPECT_EQ(actual, param.expected);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Terrain_Hasher,
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_Hasher2d,
                          Hasher2dTestSuite,
                          Values(TestCase2d{LatticePoint2d(0, 1), 133065},
                                 TestCase2d{LatticePoint2d(-40, 32), 4196248},
@@ -94,7 +94,7 @@ TEST_P(Hasher3dTestSuite, Test_Hash)
   EXPECT_EQ(actual, param.expected);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Terrain_Hasher,
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_Hasher3d,
                          Hasher3dTestSuite,
                          Values(TestCase3d{LatticePoint3d(0, 1, 2), 2139},
                                 TestCase3d{LatticePoint3d(-40, 32, 9), 9570553},

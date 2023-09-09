@@ -8,18 +8,18 @@
 
 namespace pge::terrain {
 
-template<typename Generator, typename LatticeValueType>
+template<typename Generator, int Dimension, typename LatticeValueType>
 class GeneratorPreparer
 {
   protected:
-  MockHasher2d *mockHasher{nullptr};
+  MockHasher<Dimension> *mockHasher{nullptr};
   MockNoise *mockNoise{nullptr};
 
   std::unique_ptr<Generator> generator{};
 
   void prepareGenerator()
   {
-    auto hasher = std::make_unique<::testing::NiceMock<MockHasher2d>>();
+    auto hasher = std::make_unique<::testing::NiceMock<MockHasher<Dimension>>>();
     mockHasher  = hasher.get();
 
     auto noise = std::make_unique<::testing::NiceMock<MockNoise>>();

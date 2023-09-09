@@ -6,8 +6,8 @@
 using namespace ::testing;
 
 namespace pge::terrain {
-class Unit_Terrain_GradientGenerator : public GeneratorPreparer<GradientGenerator2d, Point3d>,
-                                       public Test
+class Unit_Terrain_GradientGenerator2d : public GeneratorPreparer<GradientGenerator2d, 2, Point3d>,
+                                         public Test
 {
   protected:
   void SetUp() override
@@ -16,17 +16,17 @@ class Unit_Terrain_GradientGenerator : public GeneratorPreparer<GradientGenerato
   }
 };
 
-TEST_F(Unit_Terrain_GradientGenerator, Test_UseHasher)
+TEST_F(Unit_Terrain_GradientGenerator2d, Test_UseHasher)
 {
   EXPECT_CALL(*mockHasher, hash(_)).Times(1);
-  generator->generateFor({}, {});
+  generator->generateFor(LatticePoint2d::Zero(), Point2d::Zero());
 }
 
-TEST_F(Unit_Terrain_GradientGenerator, Test_UseNoise)
+TEST_F(Unit_Terrain_GradientGenerator2d, Test_UseNoise)
 {
   EXPECT_CALL(*mockNoise, seed(_)).Times(1);
   EXPECT_CALL(*mockNoise, next()).Times(3);
-  generator->generateFor({}, {});
+  generator->generateFor(LatticePoint2d::Zero(), Point2d::Zero());
 }
 
 namespace {
@@ -45,7 +45,7 @@ struct TestCase
   float threshold{REASONABLE_COMPARISON_THRESHOLD};
 };
 
-class GenerateForTestSuite : public GeneratorPreparer<GradientGenerator2d, Point3d>,
+class GenerateForTestSuite : public GeneratorPreparer<GradientGenerator2d, 2, Point3d>,
                              public TestWithParam<TestCase>
 {
   protected:
@@ -98,7 +98,7 @@ TEST_P(GenerateForTestSuite, Test_GenerateFor)
 } // namespace
 
 INSTANTIATE_TEST_SUITE_P(
-  Unit_Terrain_GradientGenerator,
+  Unit_Terrain_GradientGenerator2d,
   GenerateForTestSuite,
   Values(
     TestCase{Point2d{0.2f, 0.3f}, LatticePoint2d{0, 1}, NoiseValues{1.0f, 0.0f, 0.0f}, 0.2f},
