@@ -12,12 +12,12 @@ constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
 
 TEST(Unit_Terrain_PeriodicGradientGenerator, Test_PeriodOddThrowException)
 {
-  EXPECT_THROW(PeriodicGradientGenerator(3, DEFAULT_SEED), std::invalid_argument);
+  EXPECT_THROW(PeriodicGradientGenerator2d(3, DEFAULT_SEED), std::invalid_argument);
 }
 
 TEST(Unit_Terrain_PeriodicGradientGenerator, Test_PeriodicX)
 {
-  PeriodicGradientGenerator generator{DEFAULT_PERIOD, DEFAULT_SEED};
+  PeriodicGradientGenerator2d generator{DEFAULT_PERIOD, DEFAULT_SEED};
 
   auto p        = LatticePoint2d(0, 1);
   const auto v1 = generator.at(p);
@@ -37,7 +37,7 @@ TEST(Unit_Terrain_PeriodicGradientGenerator, Test_PeriodicX)
 
 TEST(Unit_Terrain_PeriodicGradientGenerator, Test_PeriodicY)
 {
-  PeriodicGradientGenerator generator{DEFAULT_PERIOD, DEFAULT_SEED};
+  PeriodicGradientGenerator2d generator{DEFAULT_PERIOD, DEFAULT_SEED};
 
   auto p        = LatticePoint2d(0, 1);
   const auto v1 = generator.at(p);
@@ -95,7 +95,7 @@ auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
 TEST_P(PeriodicGradientAtTestSuite, Test_At)
 {
   const auto param = GetParam();
-  PeriodicGradientGenerator generator{param.period, param.seed};
+  PeriodicGradientGenerator2d generator{param.period, param.seed};
 
   const auto actual = generator.at(param.latticePoint);
   EXPECT_NEAR(actual(0), param.expected(0), param.threshold);
@@ -153,7 +153,7 @@ auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
 TEST_P(PeriodicGradientGenerateForTestSuite, Test_GenerateFor)
 {
   const auto param = GetParam();
-  PeriodicGradientGenerator generator{param.period, param.seed};
+  PeriodicGradientGenerator2d generator{param.period, param.seed};
 
   const auto actual = generator.generateFor(param.latticePoint, param.point);
   EXPECT_NEAR(actual, param.expected, param.threshold);
