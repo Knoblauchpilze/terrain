@@ -13,7 +13,7 @@ constexpr auto MAGNITUDE_PERLIN_NOISE = 1.0f;
 PeriodicPerlinLattice::PeriodicPerlinLattice(const int period,
                                              const Seed seed,
                                              IInterpolator2dPtr interpolator)
-  : AbstractLattice2d(std::make_unique<PeriodicPerlinGenerator>(period, seed),
+  : AbstractLattice2d(std::make_unique<PeriodicPerlinGenerator2d>(period, seed),
                       std::move(interpolator),
                       {[](const float value) -> float {
                         return (MAGNITUDE_PERLIN_NOISE + value) / (2.0f * MAGNITUDE_PERLIN_NOISE);

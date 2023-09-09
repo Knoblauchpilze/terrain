@@ -182,8 +182,8 @@ void Game::generate()
                                                                  m_terrain.seed());
       break;
     case terrain::LatticeType::PERIODIC_PERLIN:
-      m_gradientGenerator = std::make_unique<terrain::PeriodicPerlinGenerator>(m_terrain.period(),
-                                                                               m_terrain.seed());
+      m_gradientGenerator = std::make_unique<terrain::PeriodicPerlinGenerator2d>(m_terrain.period(),
+                                                                                 m_terrain.seed());
       break;
     case terrain::LatticeType::VALUE:
     default:
