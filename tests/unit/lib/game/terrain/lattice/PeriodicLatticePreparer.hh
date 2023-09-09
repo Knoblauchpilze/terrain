@@ -3,6 +3,7 @@
 
 #include "ILattice.hh"
 #include "MockInterpolator.hh"
+#include "Seed.hh"
 #include <gmock/gmock.h>
 
 namespace pge::terrain {

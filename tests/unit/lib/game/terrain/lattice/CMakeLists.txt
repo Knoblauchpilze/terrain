@@ -4,8 +4,8 @@ target_include_directories(terrain-tests PUBLIC
 	)
 
 target_sources(terrain-tests PUBLIC
-	${CMAKE_CURRENT_SOURCE_DIR}/ValueLatticeTest.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/GradientLatticeTest.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/PeriodicGradientLatticeTest.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/PeriodicPerlinLatticeTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/ValueLattice2dTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/GradientLattice2dTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/PeriodicGradientLattice2dTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/PeriodicPerlinLattice2dTest.cc
 	)
