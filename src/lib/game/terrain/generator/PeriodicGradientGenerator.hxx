@@ -1,22 +1,29 @@
 
+#pragma once
+
 #include "PeriodicGradientGenerator.hh"
 #include <random>
 
 #include <iostream>
 
 namespace pge::terrain {
-PeriodicGradientGenerator::PeriodicGradientGenerator(const int period, const Seed seed)
-  : AbstractPeriodicGradientGenerator(period, seed)
+
+template<int Dimension>
+inline PeriodicGradientGenerator<Dimension>::PeriodicGradientGenerator(const int period,
+                                                                       const Seed seed)
+  : AbstractPeriodicGradientGenerator<Dimension>(period, seed)
 {
   generate(period, seed);
 }
 
-auto PeriodicGradientGenerator::gradientAt(const int id) const noexcept -> Point3d
+template<int Dimension>
+inline auto PeriodicGradientGenerator<Dimension>::gradientAt(const int id) const noexcept -> Point3d
 {
   return m_gradients[id];
 }
 
-void PeriodicGradientGenerator::generate(const int period, const Seed seed)
+template<int Dimension>
+void PeriodicGradientGenerator<Dimension>::generate(const int period, const Seed seed)
 {
   std::mt19937 generator(seed);
   std::uniform_real_distribution<float> distribution(-1.0f, 1.0f);
