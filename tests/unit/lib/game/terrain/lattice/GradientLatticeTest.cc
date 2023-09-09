@@ -2,15 +2,15 @@
 #include "GradientLattice.hh"
 #include "Bilinear2d.hh"
 #include "Hasher.hh"
-#include "ILatticePreparer.hh"
 #include "IPoint.hh"
+#include "LatticePreparer.hh"
 #include "WhiteNoise.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
 
 namespace pge::terrain {
-class Unit_Terrain_GradientLattice : public LatticePreparer<GradientLattice>, public Test
+class Unit_Terrain_GradientLattice : public LatticePreparer<GradientLattice, 2>, public Test
 {
   protected:
   void SetUp() override
@@ -46,7 +46,7 @@ struct TestCaseInterpolate
   float interpolatedY;
 };
 
-class GradientLatticeInterpolateTestSuite : public LatticePreparer<GradientLattice>,
+class GradientLatticeInterpolateTestSuite : public LatticePreparer<GradientLattice, 2>,
                                             public TestWithParam<TestCaseInterpolate>
 {
   protected:

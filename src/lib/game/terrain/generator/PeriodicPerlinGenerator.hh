@@ -21,6 +21,7 @@ class PeriodicPerlinGenerator : public AbstractPeriodicGradientGenerator<Dimensi
 };
 
 using PeriodicPerlinGenerator2d = PeriodicPerlinGenerator<2>;
+using PeriodicPerlinGenerator3d = PeriodicPerlinGenerator<3>;
 
 } // namespace pge::terrain
 

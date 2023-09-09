@@ -25,8 +25,10 @@ class ValueGenerator : public IValueGenerator<Dimension, float>
 };
 
 using ValueGenerator2d = ValueGenerator<2>;
+using ValueGenerator3d = ValueGenerator<3>;
 
 using ValueGenerator2dPtr = std::unique_ptr<ValueGenerator2d>;
+using ValueGenerator3dPtr = std::unique_ptr<ValueGenerator3d>;
 
 } // namespace pge::terrain
 

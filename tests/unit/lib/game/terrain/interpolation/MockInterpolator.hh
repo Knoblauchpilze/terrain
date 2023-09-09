@@ -6,14 +6,17 @@
 
 namespace pge::terrain {
 
-class MockInterpolator : public IInterpolator2d
+template<int Dimension>
+class MockInterpolator : public IInterpolator<Dimension>
 {
   public:
   MockInterpolator();
 
-  MOCK_METHOD(float, interpolate, (const InterpolationData2d &), (const, override));
+  MOCK_METHOD(float, interpolate, (const InterpolationData<Dimension> &), (const, override));
 
-  InterpolationData2d data{};
+  InterpolationData<Dimension> data{};
 };
 
 } // namespace pge::terrain
+
+#include "MockInterpolator.hxx"

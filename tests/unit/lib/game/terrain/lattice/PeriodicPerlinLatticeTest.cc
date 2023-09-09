@@ -1,8 +1,8 @@
 
 #include "PeriodicPerlinLattice.hh"
 #include "Bilinear2d.hh"
-#include "IPeriodicLatticePreparer.hh"
 #include "IPoint.hh"
+#include "PeriodicLatticePreparer.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
@@ -11,7 +11,7 @@ namespace pge::terrain {
 constexpr auto PERIOD = 8;
 constexpr auto SEED   = 1993;
 
-class Unit_Terrain_PeriodicPerlinLattice : public PeriodicLatticePreparer<PeriodicPerlinLattice>,
+class Unit_Terrain_PeriodicPerlinLattice : public PeriodicLatticePreparer<PeriodicPerlinLattice, 2>,
                                            public Test
 {
   protected:
@@ -79,7 +79,7 @@ struct TestCaseInterpolate
 };
 
 class PeriodicPerlinLatticeInterpolateTestSuite
-  : public PeriodicLatticePreparer<PeriodicPerlinLattice>,
+  : public PeriodicLatticePreparer<PeriodicPerlinLattice, 2>,
     public TestWithParam<TestCaseInterpolate>
 {
   protected:

@@ -22,6 +22,7 @@ class GradientGenerator : public AbstractGradientGenerator<Dimension>
 };
 
 using GradientGenerator2d = GradientGenerator<2>;
+using GradientGenerator3d = GradientGenerator<3>;
 
 } // namespace pge::terrain
 
