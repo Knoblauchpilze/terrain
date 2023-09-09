@@ -1,5 +1,6 @@
 
 #include "InterpolationAxis.hh"
+#include "TestName.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
@@ -29,11 +30,6 @@ struct TestCase
   float expected;
 };
 
-auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
-{
-  return info.param.name;
-}
-
 using InterpolationAxisTestSuite = TestWithParam<TestCase>;
 
 TEST_P(InterpolationAxisTestSuite, Test_Evaluate)
@@ -53,6 +49,6 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_InterpolationAxis,
                                 TestCase{"null_range_low", 32.5f, 32.5f, 0.0f, 32.5f},
                                 TestCase{"null_range_high", -28.7f, -28.7f, 1.0f, -28.7f},
                                 TestCase{"null_range_inside", 17.4f, 17.4f, 0.2f, 17.4f}),
-                         generateTestName);
+                         testNameFromTestCase<TestCase>);
 } // namespace evaluate
 } // namespace pge::terrain
