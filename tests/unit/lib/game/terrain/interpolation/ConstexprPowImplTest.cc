@@ -1,5 +1,6 @@
 
 #include "ConstexprPowImpl.hh"
+#include "SanitizeTestName.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
@@ -41,9 +42,7 @@ auto generateTestName(const TestParamInfo<TestCase> &info) -> std::string
   out += "_";
   out += std::to_string(info.param.exp);
 
-  std::replace(out.begin(), out.end(), '-', 'm');
-
-  return out;
+  return sanitizeTestName(out);
 }
 
 using EvalTestSuite = TestWithParam<TestCase>;

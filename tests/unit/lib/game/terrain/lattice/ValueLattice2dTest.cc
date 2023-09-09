@@ -77,7 +77,7 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_ValueLattice2d,
                                 TestCaseForInterpolate{Point2d{0.7f, 0.1f}, 0.7f, 0.1f},
                                 TestCaseForInterpolate{Point2d{0.9f, 0.51f}, 0.9f, 0.51f},
                                 TestCaseForInterpolate{Point2d{0.02f, 0.98f}, 0.02f, 0.98f}),
-                         testNameForSingleInputPoint<TestCaseForInterpolate>);
+                         testNameFromSingleInputPoint<TestCaseForInterpolate>);
 
 } // namespace interpolate
 
@@ -119,7 +119,7 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_ValueLattice2d,
                                 TestCaseValue{Point2d{0.49f, 0.98f}, 0.6624752f},
                                 TestCaseValue{Point2d{0.67f, 0.51f}, 0.4813684f},
                                 TestCaseValue{Point2d{0.01f, 0.79f}, 0.5179381f}),
-                         testNameForSingleInputPoint<TestCaseValue>);
+                         testNameFromSingleInputPoint<TestCaseValue>);
 
 } // namespace at
 

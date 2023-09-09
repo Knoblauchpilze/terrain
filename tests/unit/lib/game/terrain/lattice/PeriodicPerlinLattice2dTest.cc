@@ -111,7 +111,7 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicPerlinLattice2d,
                                 TestCaseInterpolate{Point2d{0.7f, 0.1f}, 0.7f, 0.1f},
                                 TestCaseInterpolate{Point2d{0.9f, 0.51f}, 0.9f, 0.51f},
                                 TestCaseInterpolate{Point2d{0.02f, 0.98f}, 0.02f, 0.98f}),
-                         testNameForSingleInputPoint<TestCaseInterpolate>);
+                         testNameFromSingleInputPoint<TestCaseInterpolate>);
 
 } // namespace interpolate
 
@@ -148,6 +148,6 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicPerlinLattice2d,
                                 TestCaseValue{Point2d{0.49f, 0.98f}, 0.254706f},
                                 TestCaseValue{Point2d{0.67f, 0.51f}, 0.472205f},
                                 TestCaseValue{Point2d{0.01f, 0.79f}, 0.329597f}),
-                         testNameForSingleInputPoint<TestCaseValue>);
+                         testNameFromSingleInputPoint<TestCaseValue>);
 } // namespace at
 } // namespace pge::terrain
