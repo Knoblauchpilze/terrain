@@ -7,17 +7,17 @@
 
 namespace pge::terrain {
 
-template<typename Lattice>
+template<typename Lattice, int Dimension>
 class PeriodicLatticePreparer
 {
   protected:
-  MockInterpolator *mockInterpolator{nullptr};
+  MockInterpolator<Dimension> *mockInterpolator{nullptr};
 
-  ILattice2dPtr lattice{};
+  std::unique_ptr<Lattice> lattice{};
 
   void prepareLattice(const int period, const Seed seed)
   {
-    auto interpolator = std::make_unique<::testing::NiceMock<MockInterpolator>>();
+    auto interpolator = std::make_unique<::testing::NiceMock<MockInterpolator<Dimension>>>();
     mockInterpolator  = interpolator.get();
 
     lattice = std::make_unique<Lattice>(period, seed, std::move(interpolator));

@@ -23,4 +23,24 @@ const std::vector<Point3d> PeriodicPerlinGenerator<2>::DEFAULT_GRADIENTS
      Point3d(0.0f, -1.0f, 1.0f),
      Point3d(0.0f, -1.0f, -1.0f)};
 
+template<>
+const std::vector<Point3d> PeriodicPerlinGenerator<3>::DEFAULT_GRADIENTS
+  = {Point3d(1.0f, 1.0f, 0.0f),
+     Point3d(-1.0f, 1.0f, 0.0f),
+     Point3d(1.0f, -1.0f, 0.0f),
+     Point3d(-1.0f, -1.0f, 0.0f),
+     Point3d(1.0f, 0.0f, 1.0f),
+     Point3d(-1.0f, 0.0f, 1.0f),
+     Point3d(1.0f, 0.0f, -1.0f),
+     Point3d(-1.0f, 0.0f, -1.0f),
+     Point3d(0.0f, 1.0f, 1.0f),
+     Point3d(0.0f, -1.0f, 1.0f),
+     Point3d(0.0f, 1.0f, -1.0f),
+     Point3d(0.0f, -1.0f, -1.0f),
+     // Additional padding
+     Point3d(1.0f, 1.0f, 0.0f),
+     Point3d(-1.0f, 1.0f, 0.0f),
+     Point3d(0.0f, -1.0f, 1.0f),
+     Point3d(0.0f, -1.0f, -1.0f)};
+
 } // namespace pge::terrain

@@ -2,15 +2,15 @@
 #include "ValueLattice.hh"
 #include "Bilinear2d.hh"
 #include "Hasher.hh"
-#include "ILatticePreparer.hh"
 #include "IPoint.hh"
+#include "LatticePreparer.hh"
 #include "WhiteNoise.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
 
 namespace pge::terrain {
-class Unit_Terrain_ValueLattice : public LatticePreparer<ValueLattice>, public Test
+class Unit_Terrain_ValueLattice : public LatticePreparer<ValueLattice, 2>, public Test
 {
   protected:
   void SetUp() override
@@ -46,7 +46,7 @@ struct TestCaseForInterpolate
   float interpolatedY;
 };
 
-class ValueLatticeInterpolateTestSuite : public LatticePreparer<ValueLattice>,
+class ValueLatticeInterpolateTestSuite : public LatticePreparer<ValueLattice, 2>,
                                          public TestWithParam<TestCaseForInterpolate>
 {
   protected:

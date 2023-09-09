@@ -1,8 +1,8 @@
 
 #include "PeriodicGradientLattice.hh"
 #include "Bilinear2d.hh"
-#include "IPeriodicLatticePreparer.hh"
 #include "IPoint.hh"
+#include "PeriodicLatticePreparer.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
@@ -12,7 +12,7 @@ constexpr auto PERIOD = 8;
 constexpr auto SEED   = 1993;
 
 class Unit_Terrain_PeriodicGradientLattice
-  : public PeriodicLatticePreparer<PeriodicGradientLattice>,
+  : public PeriodicLatticePreparer<PeriodicGradientLattice, 2>,
     public Test
 {
   protected:
@@ -80,7 +80,7 @@ struct TestCaseInterpolate
 };
 
 class PeriodicGradientLatticeInterpolateTestSuite
-  : public PeriodicLatticePreparer<PeriodicGradientLattice>,
+  : public PeriodicLatticePreparer<PeriodicGradientLattice, 2>,
     public TestWithParam<TestCaseInterpolate>
 {
   protected:

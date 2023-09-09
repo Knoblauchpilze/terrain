@@ -23,6 +23,7 @@ class PeriodicGradientGenerator : public AbstractPeriodicGradientGenerator<Dimen
 };
 
 using PeriodicGradientGenerator2d = PeriodicGradientGenerator<2>;
+using PeriodicGradientGenerator3d = PeriodicGradientGenerator<3>;
 
 } // namespace pge::terrain
 

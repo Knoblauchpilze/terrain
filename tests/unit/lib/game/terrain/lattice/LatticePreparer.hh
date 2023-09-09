@@ -9,23 +9,23 @@
 
 namespace pge::terrain {
 
-template<typename Lattice>
+template<typename Lattice, int Dimension>
 class LatticePreparer
 {
   protected:
-  MockHasher2d *mockHasher{nullptr};
+  MockHasher<Dimension> *mockHasher{nullptr};
   MockNoise *mockNoise{nullptr};
-  MockInterpolator *mockInterpolator{nullptr};
+  MockInterpolator<Dimension> *mockInterpolator{nullptr};
 
-  ILattice2dPtr lattice{};
+  std::unique_ptr<Lattice> lattice{};
 
   void prepareLattice()
   {
-    auto hasher       = std::make_unique<::testing::NiceMock<MockHasher2d>>();
+    auto hasher       = std::make_unique<::testing::NiceMock<MockHasher<Dimension>>>();
     mockHasher        = hasher.get();
     auto noise        = std::make_unique<::testing::NiceMock<MockNoise>>();
     mockNoise         = noise.get();
-    auto interpolator = std::make_unique<::testing::NiceMock<MockInterpolator>>();
+    auto interpolator = std::make_unique<::testing::NiceMock<MockInterpolator<Dimension>>>();
     mockInterpolator  = interpolator.get();
 
     lattice = std::make_unique<Lattice>(std::move(hasher),
