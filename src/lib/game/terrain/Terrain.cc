@@ -101,21 +101,42 @@ auto Terrain::period() const noexcept -> int
   return m_period.current();
 }
 
-void Terrain::nextLattice()
+void Terrain::nextLattice(bool prev)
 {
-  m_latticeType = nextLatticeType(m_latticeType);
+  if (prev)
+  {
+    m_latticeType = previousLatticeType(m_latticeType);
+  }
+  else
+  {
+    m_latticeType = nextLatticeType(m_latticeType);
+  }
   generate();
 }
 
-void Terrain::nextScale()
+void Terrain::nextScale(bool prev)
 {
-  m_scale.next();
+  if (prev)
+  {
+    m_scale.previous();
+  }
+  else
+  {
+    m_scale.next();
+  }
   generate();
 }
 
-void Terrain::nextPeriod()
+void Terrain::nextPeriod(bool prev)
 {
-  m_period.next();
+  if (prev)
+  {
+    m_period.previous();
+  }
+  else
+  {
+    m_period.next();
+  }
   generate();
 }
 

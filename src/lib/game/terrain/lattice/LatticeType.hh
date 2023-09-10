@@ -16,5 +16,6 @@ enum class LatticeType
 
 auto str(const LatticeType type) noexcept -> std::string;
 auto nextLatticeType(const LatticeType type) noexcept -> LatticeType;
+auto previousLatticeType(const LatticeType type) noexcept -> LatticeType;
 
 } // namespace pge::terrain

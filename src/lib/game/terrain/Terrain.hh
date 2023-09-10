@@ -27,9 +27,9 @@ class Terrain : public utils::CoreObject
   auto lattice() const noexcept -> LatticeType;
   auto scale() const noexcept -> int;
   auto period() const noexcept -> int;
-  void nextLattice();
-  void nextScale();
-  void nextPeriod();
+  void nextLattice(bool prev);
+  void nextScale(bool prev);
+  void nextPeriod(bool prev);
   void nextSeed();
 
   private:

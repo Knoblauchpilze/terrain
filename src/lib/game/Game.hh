@@ -79,12 +79,12 @@ class Game : public utils::CoreObject
 
   void save(const std::string &fileName) const;
 
-  void toggleLatticeMode();
-  void toggleDisplayMode();
+  void toggleLatticeMode(bool prev);
+  void toggleDisplayMode(bool prev);
   auto displayMode() const noexcept -> DisplayMode;
   void toggleNextSeed();
-  void toggleTerrainScale();
-  void toggleNoisePeriod();
+  void toggleTerrainScale(bool prev);
+  void toggleNoisePeriod(bool prev);
   auto latticeAt(const int x, const int y) const -> std::vector<float>;
 
   void generate();

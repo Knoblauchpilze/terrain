@@ -15,7 +15,8 @@ inline State newState() noexcept
   c.keys.resize(keys::KeysCount, false);
   c.buttons.resize(mouse::ButtonsCount, ButtonState::Free);
 
-  c.tab = false;
+  c.tab   = false;
+  c.shift = false;
 
   return c;
 }
