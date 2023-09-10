@@ -13,6 +13,8 @@ class ILattice
   virtual ~ILattice() = default;
 
   virtual auto at(const IPoint<Dimension> &p) -> float = 0;
+
+  static constexpr auto DIMENSION = Dimension;
 };
 
 using ILattice2d = ILattice<2>;
