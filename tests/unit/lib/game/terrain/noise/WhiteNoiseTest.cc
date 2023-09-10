@@ -30,8 +30,6 @@ struct TestCase
 
   float min{0.0f};
   float max{1.0f};
-
-  float threshold{REASONABLE_COMPARISON_THRESHOLD};
 };
 
 using WhiteNoiseTestSuite = TestWithParam<TestCase>;
@@ -57,7 +55,7 @@ TEST_P(WhiteNoiseTestSuite, Test_Next)
 
   auto n = std::make_unique<WhiteNoise>(param.min, param.max);
   n->seed(param.seed);
-  EXPECT_NEAR(param.expected, n->next(), param.threshold);
+  EXPECT_NEAR(param.expected, n->next(), REASONABLE_COMPARISON_THRESHOLD);
 }
 
 INSTANTIATE_TEST_SUITE_P(Unit_Terrain_WhiteNoise,

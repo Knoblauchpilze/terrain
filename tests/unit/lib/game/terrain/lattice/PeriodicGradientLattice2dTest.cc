@@ -140,9 +140,7 @@ constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
 struct TestCaseValue
 {
   Point2d in;
-
   float expected;
-  float threshold{REASONABLE_COMPARISON_THRESHOLD};
 };
 
 using PeriodicGradientLatticeAtTestSuite = TestWithParam<TestCaseValue>;
@@ -155,7 +153,7 @@ TEST_P(PeriodicGradientLatticeAtTestSuite, Test_At)
   auto lattice = std::make_unique<PeriodicGradientLattice>(PERIOD, SEED, std::move(interpolator));
 
   const auto actual = lattice->at(param.in);
-  EXPECT_NEAR(actual, param.expected, param.threshold);
+  EXPECT_NEAR(actual, param.expected, REASONABLE_COMPARISON_THRESHOLD);
 }
 
 INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicGradientLattice2d,

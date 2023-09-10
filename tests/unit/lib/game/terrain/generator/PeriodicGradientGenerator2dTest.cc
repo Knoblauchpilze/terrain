@@ -65,7 +65,6 @@ struct TestCase
 
   int period{DEFAULT_PERIOD};
   Seed seed{DEFAULT_SEED};
-  float threshold{REASONABLE_COMPARISON_THRESHOLD};
 };
 
 using PeriodicGradientAtTestSuite = TestWithParam<TestCase>;
@@ -76,9 +75,9 @@ TEST_P(PeriodicGradientAtTestSuite, Test_At)
   PeriodicGradientGenerator2d generator{param.period, param.seed};
 
   const auto actual = generator.at(param.latticePoint);
-  EXPECT_NEAR(actual(0), param.expected(0), param.threshold);
-  EXPECT_NEAR(actual(1), param.expected(1), param.threshold);
-  EXPECT_NEAR(actual(2), param.expected(2), param.threshold);
+  EXPECT_NEAR(actual(0), param.expected(0), REASONABLE_COMPARISON_THRESHOLD);
+  EXPECT_NEAR(actual(1), param.expected(1), REASONABLE_COMPARISON_THRESHOLD);
+  EXPECT_NEAR(actual(2), param.expected(2), REASONABLE_COMPARISON_THRESHOLD);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -99,7 +98,6 @@ struct TestCase
 
   int period{DEFAULT_PERIOD};
   Seed seed{DEFAULT_SEED};
-  float threshold{REASONABLE_COMPARISON_THRESHOLD};
 };
 
 using PeriodicGradientGenerateForTestSuite = TestWithParam<TestCase>;
@@ -110,7 +108,7 @@ TEST_P(PeriodicGradientGenerateForTestSuite, Test_GenerateFor)
   PeriodicGradientGenerator2d generator{param.period, param.seed};
 
   const auto actual = generator.generateFor(param.latticePoint, param.inPoint);
-  EXPECT_NEAR(actual, param.expected, param.threshold);
+  EXPECT_NEAR(actual, param.expected, REASONABLE_COMPARISON_THRESHOLD);
 }
 
 INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicGradientGenerator2d,

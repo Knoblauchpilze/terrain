@@ -43,7 +43,6 @@ struct TestCase
   NoiseValues noise;
 
   float expected;
-  float threshold{REASONABLE_COMPARISON_THRESHOLD};
 };
 
 class GenerateForTestSuite : public GeneratorPreparer<GradientGenerator2d, 2, Point3d>,
@@ -72,7 +71,7 @@ TEST_P(GenerateForTestSuite, Test_GenerateFor)
   }));
 
   const auto actual = generator->generateFor(param.latticePoint, param.inPoint);
-  EXPECT_NEAR(param.expected, actual, param.threshold);
+  EXPECT_NEAR(param.expected, actual, REASONABLE_COMPARISON_THRESHOLD);
 }
 } // namespace
 
