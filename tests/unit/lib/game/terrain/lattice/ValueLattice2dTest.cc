@@ -11,32 +11,50 @@
 using namespace ::testing;
 
 namespace pge::terrain {
-class Unit_Terrain_ValueLattice2d : public LatticePreparer<ValueLattice, 2>, public Test
+namespace behavior {
+class Unit_Terrain_ValueLattice : public LatticePreparer<ValueLattice, ValueLattice::DIMENSION>,
+                                  public Test
 {
   protected:
   void SetUp() override
   {
     prepareLattice();
   }
+
+  void testUseHasher()
+  {
+    EXPECT_CALL(*mockHasher, hash(_)).Times(4);
+    lattice->at(IPoint<ValueLattice::DIMENSION>::Zero());
+  }
+
+  void testUseNoise()
+  {
+    EXPECT_CALL(*mockNoise, next()).Times(4);
+    lattice->at(IPoint<ValueLattice::DIMENSION>::Zero());
+  }
+
+  void testUseInterpolate()
+  {
+    EXPECT_CALL(*mockInterpolator, interpolate(_)).Times(1);
+    lattice->at(IPoint<ValueLattice::DIMENSION>::Zero());
+  }
 };
 
-TEST_F(Unit_Terrain_ValueLattice2d, Test_UseHasher)
+TEST_F(Unit_Terrain_ValueLattice, Test_UseHasher)
 {
-  EXPECT_CALL(*mockHasher, hash(_)).Times(4);
-  lattice->at(Point2d::Zero());
+  this->testUseHasher();
 }
 
-TEST_F(Unit_Terrain_ValueLattice2d, Test_UseNoise)
+TEST_F(Unit_Terrain_ValueLattice, Test_UseNoise)
 {
-  EXPECT_CALL(*mockNoise, next()).Times(4);
-  lattice->at(Point2d::Zero());
+  this->testUseNoise();
 }
 
-TEST_F(Unit_Terrain_ValueLattice2d, Test_UseInterpolate)
+TEST_F(Unit_Terrain_ValueLattice, Test_UseInterpolate)
 {
-  EXPECT_CALL(*mockInterpolator, interpolate(_)).Times(1);
-  lattice->at(Point2d::Zero());
+  this->testUseInterpolate();
 }
+} // namespace behavior
 
 namespace interpolate {
 struct TestCaseForInterpolate
