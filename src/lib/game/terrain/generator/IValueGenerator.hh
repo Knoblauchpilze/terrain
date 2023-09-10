@@ -19,6 +19,8 @@ class IValueGenerator
   virtual auto generateFor(const ILatticePoint<Dimension> &latticePoint,
                            const IPoint<Dimension> &point) const noexcept -> float
     = 0;
+
+  static constexpr auto DIMENSION = Dimension;
 };
 
 template<int Dimension, typename ValueType>
