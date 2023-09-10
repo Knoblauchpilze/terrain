@@ -20,7 +20,10 @@ class ILattice
 using ILattice2d = ILattice<2>;
 using ILattice3d = ILattice<3>;
 
-using ILattice2dPtr = std::unique_ptr<ILattice2d>;
-using ILattice3dPtr = std::unique_ptr<ILattice3d>;
+template<int Dimension>
+using ILatticePtr = std::unique_ptr<ILattice<Dimension>>;
+
+using ILattice2dPtr = ILatticePtr<2>;
+using ILattice3dPtr = ILatticePtr<3>;
 
 } // namespace pge::terrain
