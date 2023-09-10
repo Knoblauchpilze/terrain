@@ -11,12 +11,12 @@ constexpr auto SEED   = 2023;
 
 constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
 
-using PeriodicPerlinGeneratorToTest = PeriodicPerlinGenerator2d;
-using LatticePoint                  = ILatticePoint<PeriodicPerlinGeneratorToTest::DIMENSION>;
-
 namespace behavior {
+template<typename PeriodicPerlinGeneratorToTest>
 class Unit_Terrain_PeriodicPerlinGenerator : public Test
 {
+  using LatticePoint = ILatticePoint<PeriodicPerlinGeneratorToTest::DIMENSION>;
+
   protected:
   void SetUp() override {}
 
@@ -47,11 +47,6 @@ class Unit_Terrain_PeriodicPerlinGenerator : public Test
   }
 };
 
-TEST_F(Unit_Terrain_PeriodicPerlinGenerator, Test_OddPeriodThrowException)
-{
-  this->testOddPeriodThrowException();
-}
-
 enum Axis
 {
   X = 0,
@@ -59,17 +54,55 @@ enum Axis
   Z = 2
 };
 
-TEST_F(Unit_Terrain_PeriodicPerlinGenerator, Test_X)
+namespace dim2d {
+using Unit_Terrain_PeriodicPerlinGenerator2d
+  = Unit_Terrain_PeriodicPerlinGenerator<PeriodicPerlinGenerator2d>;
+
+TEST_F(Unit_Terrain_PeriodicPerlinGenerator2d, Test_OddPeriodThrowException)
+{
+  this->testOddPeriodThrowException();
+}
+
+TEST_F(Unit_Terrain_PeriodicPerlinGenerator2d, Test_PeriodicX)
 {
   this->testPeriodic(Axis::X);
 }
 
-TEST_F(Unit_Terrain_PeriodicPerlinGenerator, Test_Y)
+TEST_F(Unit_Terrain_PeriodicPerlinGenerator2d, Test_PeriodicY)
+{
+  this->testPeriodic(Axis::Y);
+}
+} // namespace dim2d
+
+namespace dim3d {
+using Unit_Terrain_PeriodicPerlinGenerator3d
+  = Unit_Terrain_PeriodicPerlinGenerator<PeriodicPerlinGenerator3d>;
+
+TEST_F(Unit_Terrain_PeriodicPerlinGenerator3d, Test_OddPeriodThrowException)
+{
+  this->testOddPeriodThrowException();
+}
+
+TEST_F(Unit_Terrain_PeriodicPerlinGenerator3d, Test_PeriodicX)
+{
+  this->testPeriodic(Axis::X);
+}
+
+TEST_F(Unit_Terrain_PeriodicPerlinGenerator3d, Test_PeriodicY)
 {
   this->testPeriodic(Axis::Y);
 }
 
+TEST_F(Unit_Terrain_PeriodicPerlinGenerator3d, Test_PeriodicZ)
+{
+  this->testPeriodic(Axis::Z);
+}
+} // namespace dim3d
+
 } // namespace behavior
+
+using PeriodicPerlinGeneratorToTest = PeriodicPerlinGenerator2d;
+using LatticePoint                  = ILatticePoint<PeriodicPerlinGeneratorToTest::DIMENSION>;
 
 namespace at {
 struct TestCase
