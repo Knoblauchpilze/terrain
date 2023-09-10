@@ -26,7 +26,7 @@ class AbstractLattice : public ILattice<Dimension>
   protected:
   IAreaGeneratorPtr<Dimension> m_areaGenerator;
   IValueGeneratorPtr<Dimension, ValueType> m_valueGenerator;
-  IInterpolator2dPtr m_interpolator;
+  IInterpolatorPtr<Dimension> m_interpolator;
   std::optional<NormalizationFunc> m_normalization;
 };
 
