@@ -10,6 +10,7 @@ class PositiveCyclicInteger
 
   auto current() const noexcept -> int;
   void next() noexcept;
+  void previous() noexcept;
 
   private:
   int m_min;

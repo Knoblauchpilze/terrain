@@ -51,7 +51,16 @@ TEST(Unit_Terrain_PositiveCyclicInteger, NextUpdateValue)
   EXPECT_EQ(2, ci.current());
 }
 
-TEST(Unit_Terrain_PositiveCyclicInteger, WhenValueExceedMaxExpectReturnToMin)
+TEST(Unit_Terrain_PositiveCyclicInteger, BasicNextTest)
+{
+  auto ci = PositiveCyclicInteger(1, 2, 8, 2);
+  EXPECT_EQ(2, ci.current());
+
+  ci.next();
+  EXPECT_EQ(4, ci.current());
+}
+
+TEST(Unit_Terrain_PositiveCyclicInteger, WhenValueExceedsMaxExpectReturnToMin)
 {
   auto ci = PositiveCyclicInteger(1, 2, 3, 2);
   EXPECT_EQ(2, ci.current());
@@ -67,6 +76,42 @@ TEST(Unit_Terrain_PositiveCyclicInteger, WhenValueIsMaxExpectNoCycling)
 
   ci.next();
   EXPECT_EQ(4, ci.current());
+}
+
+TEST(Unit_Terrain_PositiveCyclicInteger, PreviousUpdateValue)
+{
+  auto ci = PositiveCyclicInteger(1, 1, 3, 2);
+  EXPECT_EQ(1, ci.current());
+
+  ci.previous();
+  EXPECT_EQ(3, ci.current());
+}
+
+TEST(Unit_Terrain_PositiveCyclicInteger, BasicPreviousTest)
+{
+  auto ci = PositiveCyclicInteger(1, 4, 8, 2);
+  EXPECT_EQ(4, ci.current());
+
+  ci.previous();
+  EXPECT_EQ(2, ci.current());
+}
+
+TEST(Unit_Terrain_PositiveCyclicInteger, WhenValueIsBelowMaxExpectReturnToMin)
+{
+  auto ci = PositiveCyclicInteger(2, 3, 4, 2);
+  EXPECT_EQ(3, ci.current());
+
+  ci.previous();
+  EXPECT_EQ(4, ci.current());
+}
+
+TEST(Unit_Terrain_PositiveCyclicInteger, WhenValueIsMinExpectNoCycling)
+{
+  auto ci = PositiveCyclicInteger(1, 2, 4, 2);
+  EXPECT_EQ(2, ci.current());
+
+  ci.previous();
+  EXPECT_EQ(1, ci.current());
 }
 
 } // namespace pge::terrain

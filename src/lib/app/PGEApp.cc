@@ -209,7 +209,10 @@ PGEApp::InputChanges PGEApp::handleInputs()
   b                                  = GetKey(olc::L);
   m_controls.keys[controls::keys::L] = b.bReleased;
 
-  b = GetKey(olc::TAB), m_controls.tab = b.bReleased;
+  b                = GetKey(olc::TAB);
+  m_controls.tab   = (b.bPressed || b.bHeld);
+  b                = GetKey(olc::SHIFT);
+  m_controls.shift = (b.bPressed || b.bHeld);
 
   auto analysis = [](const olc::HWButton &b) {
     if (b.bPressed)

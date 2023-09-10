@@ -46,4 +46,13 @@ void PositiveCyclicInteger::next() noexcept
   }
 }
 
+void PositiveCyclicInteger::previous() noexcept
+{
+  m_value /= m_step;
+  if (m_value < m_min)
+  {
+    m_value = m_max;
+  }
+}
+
 } // namespace pge::terrain

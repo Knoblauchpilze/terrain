@@ -107,14 +107,15 @@ void Game::save(const std::string &fileName) const
   m_terrain.save(fileName);
 }
 
-void Game::toggleLatticeMode()
+void Game::toggleLatticeMode(bool prev)
 {
-  m_terrain.nextLattice();
+  m_terrain.nextLattice(prev);
   generate();
 }
 
-void Game::toggleDisplayMode()
+void Game::toggleDisplayMode(bool /*prev*/)
 {
+  /// Two values don't really benefit from the cycling order.
   m_displayMode = (m_displayMode == DisplayMode::HEIGHT ? DisplayMode::TERRAIN
                                                         : DisplayMode::HEIGHT);
 }
@@ -130,15 +131,15 @@ void Game::toggleNextSeed()
   generate();
 }
 
-void Game::toggleTerrainScale()
+void Game::toggleTerrainScale(bool prev)
 {
-  m_terrain.nextScale();
+  m_terrain.nextScale(prev);
   generate();
 }
 
-void Game::toggleNoisePeriod()
+void Game::toggleNoisePeriod(bool prev)
 {
-  m_terrain.nextPeriod();
+  m_terrain.nextPeriod(prev);
   generate();
 }
 
@@ -249,27 +250,37 @@ auto Game::generateStatusMenus(int width, int /*height*/) -> std::vector<MenuShP
                                "Scale: N/A",
                                "scale",
                                true);
-  m_menus.scale->setSimpleAction([](Game &g) { g.toggleTerrainScale(); });
+  m_menus.scale->setSimpleAction([](Game &g) { g.toggleTerrainScale(false); });
   status->addMenu(m_menus.scale);
   m_menus.lattice = generateMenu(olc::vi2d{0, 0},
                                  olc::vi2d{10, DEFAULT_MENU_HEIGHT},
                                  "Lattice: N/A",
                                  "lattice",
-                                 false);
+                                 true);
+  m_menus.lattice->setSimpleAction([](Game &g) { g.toggleLatticeMode(false); });
   status->addMenu(m_menus.lattice);
   m_menus.display = generateMenu(olc::vi2d{0, 0},
                                  olc::vi2d{10, DEFAULT_MENU_HEIGHT},
                                  "Display: N/A",
                                  "display",
-                                 false);
+                                 true);
+  m_menus.display->setSimpleAction([](Game &g) { g.toggleDisplayMode(false); });
   status->addMenu(m_menus.display);
   m_menus.period = generateMenu(olc::vi2d{0, 0},
                                 olc::vi2d{10, DEFAULT_MENU_HEIGHT},
                                 "Period: N/A",
                                 "period",
                                 true);
-  m_menus.period->setSimpleAction([](Game &g) { g.toggleNoisePeriod(); });
+  m_menus.period->setSimpleAction([](Game &g) { g.toggleNoisePeriod(false); });
   status->addMenu(m_menus.period);
+
+  auto gen = generateMenu(olc::vi2d{0, 0},
+                          olc::vi2d{10, DEFAULT_MENU_HEIGHT},
+                          "Generate",
+                          "generate",
+                          true);
+  gen->setSimpleAction([](Game &g) { g.toggleNextSeed(); });
+  status->addMenu(gen);
 
   out.push_back(status);
   return out;

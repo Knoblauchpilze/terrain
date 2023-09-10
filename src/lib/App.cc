@@ -113,11 +113,11 @@ void App::onInputs(const controls::State &c, const CoordinateFrame &cf)
     }
     if (c.keys[controls::keys::M])
     {
-      m_game->toggleDisplayMode();
+      m_game->toggleDisplayMode(c.shift);
     }
     if (c.keys[controls::keys::L])
     {
-      m_game->toggleLatticeMode();
+      m_game->toggleLatticeMode(c.shift);
     }
   }
 }
