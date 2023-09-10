@@ -7,46 +7,65 @@
 using namespace ::testing;
 
 namespace pge::terrain {
-class Unit_Terrain_GradientGenerator2d : public GeneratorPreparer<GradientGenerator2d, 2, Point3d>,
-                                         public Test
+
+using GradientGeneratorToTest = GradientGenerator2d;
+
+namespace behavior {
+class Unit_Terrain_GradientGenerator
+  : public GeneratorPreparer<GradientGeneratorToTest, GradientGeneratorToTest::DIMENSION, Point3d>,
+    public Test
 {
   protected:
   void SetUp() override
   {
     prepareGenerator();
   }
+
+  void testUseHasher()
+  {
+    EXPECT_CALL(*mockHasher, hash(_)).Times(1);
+    generator->generateFor(ILatticePoint<GradientGeneratorToTest::DIMENSION>::Zero(),
+                           IPoint<GradientGeneratorToTest::DIMENSION>::Zero());
+  }
+
+  void testUseNoise()
+  {
+    EXPECT_CALL(*mockNoise, seed(_)).Times(1);
+    EXPECT_CALL(*mockNoise, next()).Times(3);
+    generator->generateFor(ILatticePoint<GradientGeneratorToTest::DIMENSION>::Zero(),
+                           IPoint<GradientGeneratorToTest::DIMENSION>::Zero());
+  }
 };
 
-TEST_F(Unit_Terrain_GradientGenerator2d, Test_UseHasher)
+TEST_F(Unit_Terrain_GradientGenerator, Test_UseHasher)
 {
-  EXPECT_CALL(*mockHasher, hash(_)).Times(1);
-  generator->generateFor(LatticePoint2d::Zero(), Point2d::Zero());
+  this->testUseHasher();
 }
 
-TEST_F(Unit_Terrain_GradientGenerator2d, Test_UseNoise)
+TEST_F(Unit_Terrain_GradientGenerator, Test_UseNoise)
 {
-  EXPECT_CALL(*mockNoise, seed(_)).Times(1);
-  EXPECT_CALL(*mockNoise, next()).Times(3);
-  generator->generateFor(LatticePoint2d::Zero(), Point2d::Zero());
+  this->testUseNoise();
 }
+} // namespace behavior
 
 namespace {
-using NoiseValues = std::vector<float>;
-
 constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
+
+using NoiseValues = std::vector<float>;
 
 struct TestCase
 {
   Point2d inPoint;
   LatticePoint2d latticePoint;
 
-  NoiseValues noise;
+  NoiseValues noise{};
 
   float expected;
 };
 
-class GenerateForTestSuite : public GeneratorPreparer<GradientGenerator2d, 2, Point3d>,
-                             public TestWithParam<TestCase>
+class GenerateForTestSuite
+  : public GeneratorPreparer<GradientGeneratorToTest, GradientGeneratorToTest::DIMENSION, Point3d>,
+    public TestWithParam<TestCase>
 {
   protected:
   void SetUp() override
@@ -73,7 +92,6 @@ TEST_P(GenerateForTestSuite, Test_GenerateFor)
   const auto actual = generator->generateFor(param.latticePoint, param.inPoint);
   EXPECT_NEAR(param.expected, actual, REASONABLE_COMPARISON_THRESHOLD);
 }
-} // namespace
 
 INSTANTIATE_TEST_SUITE_P(
   Unit_Terrain_GradientGenerator2d,
@@ -87,5 +105,5 @@ INSTANTIATE_TEST_SUITE_P(
     // to compute the dot product with the 2d point.
     TestCase{Point2d{-0.7f, 1.2f}, LatticePoint2d{0, 1}, NoiseValues{0.4f, -0.5f, 0.2f}, -0.56647f}),
   testNameFromPointLatticePointAndExpected<TestCase>);
-
+} // namespace
 } // namespace pge::terrain
