@@ -8,44 +8,64 @@ using namespace ::testing;
 
 namespace pge::terrain {
 
-using GradientGeneratorToTest = GradientGenerator2d;
+// using GradientGeneratorToTest = GradientGenerator2d;
 
 namespace behavior {
+template<typename GradientGeneratorToTest>
 class Unit_Terrain_GradientGenerator
   : public GeneratorPreparer<GradientGeneratorToTest, GradientGeneratorToTest::DIMENSION, Point3d>,
     public Test
 {
+  using LatticePoint = ILatticePoint<GradientGeneratorToTest::DIMENSION>;
+  using Point        = IPoint<GradientGeneratorToTest::DIMENSION>;
+
   protected:
   void SetUp() override
   {
-    prepareGenerator();
+    this->prepareGenerator();
   }
 
   void testUseHasher()
   {
-    EXPECT_CALL(*mockHasher, hash(_)).Times(1);
-    generator->generateFor(ILatticePoint<GradientGeneratorToTest::DIMENSION>::Zero(),
-                           IPoint<GradientGeneratorToTest::DIMENSION>::Zero());
+    EXPECT_CALL(*this->mockHasher, hash(_)).Times(1);
+    this->generator->generateFor(LatticePoint::Zero(), Point::Zero());
   }
 
   void testUseNoise()
   {
-    EXPECT_CALL(*mockNoise, seed(_)).Times(1);
-    EXPECT_CALL(*mockNoise, next()).Times(3);
-    generator->generateFor(ILatticePoint<GradientGeneratorToTest::DIMENSION>::Zero(),
-                           IPoint<GradientGeneratorToTest::DIMENSION>::Zero());
+    EXPECT_CALL(*this->mockNoise, seed(_)).Times(1);
+    EXPECT_CALL(*this->mockNoise, next()).Times(3);
+    this->generator->generateFor(LatticePoint::Zero(), Point::Zero());
   }
 };
 
-TEST_F(Unit_Terrain_GradientGenerator, Test_UseHasher)
+namespace dim2d {
+using Unit_Terrain_GradientGenerator2d = Unit_Terrain_GradientGenerator<GradientGenerator2d>;
+
+TEST_F(Unit_Terrain_GradientGenerator2d, Test_UseHasher)
 {
   this->testUseHasher();
 }
 
-TEST_F(Unit_Terrain_GradientGenerator, Test_UseNoise)
+TEST_F(Unit_Terrain_GradientGenerator2d, Test_UseNoise)
 {
   this->testUseNoise();
 }
+} // namespace dim2d
+
+namespace dim3d {
+using Unit_Terrain_GradientGenerator3d = Unit_Terrain_GradientGenerator<GradientGenerator3d>;
+
+TEST_F(Unit_Terrain_GradientGenerator3d, Test_UseHasher)
+{
+  this->testUseHasher();
+}
+
+TEST_F(Unit_Terrain_GradientGenerator3d, Test_UseNoise)
+{
+  this->testUseNoise();
+}
+} // namespace dim3d
 } // namespace behavior
 
 namespace {
@@ -62,6 +82,8 @@ struct TestCase
 
   float expected;
 };
+
+using GradientGeneratorToTest = GradientGenerator2d;
 
 class GenerateForTestSuite
   : public GeneratorPreparer<GradientGeneratorToTest, GradientGeneratorToTest::DIMENSION, Point3d>,
