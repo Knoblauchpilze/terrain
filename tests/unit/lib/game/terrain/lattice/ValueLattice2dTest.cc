@@ -12,8 +12,9 @@ using namespace ::testing;
 
 namespace pge::terrain {
 namespace behavior {
-class Unit_Terrain_ValueLattice : public LatticePreparer<ValueLattice, ValueLattice::DIMENSION>,
-                                  public Test
+class Unit_Terrain_ValueLattice_Behavior
+  : public LatticePreparer<ValueLattice, ValueLattice::DIMENSION>,
+    public Test
 {
   protected:
   void SetUp() override
@@ -40,17 +41,17 @@ class Unit_Terrain_ValueLattice : public LatticePreparer<ValueLattice, ValueLatt
   }
 };
 
-TEST_F(Unit_Terrain_ValueLattice, Test_UseHasher)
+TEST_F(Unit_Terrain_ValueLattice_Behavior, Test_UseHasher)
 {
   this->testUseHasher();
 }
 
-TEST_F(Unit_Terrain_ValueLattice, Test_UseNoise)
+TEST_F(Unit_Terrain_ValueLattice_Behavior, Test_UseNoise)
 {
   this->testUseNoise();
 }
 
-TEST_F(Unit_Terrain_ValueLattice, Test_UseInterpolate)
+TEST_F(Unit_Terrain_ValueLattice_Behavior, Test_UseInterpolate)
 {
   this->testUseInterpolate();
 }

@@ -12,8 +12,9 @@ namespace pge::terrain {
 constexpr auto PERIOD = 8;
 constexpr auto SEED   = 1993;
 
-class Unit_Terrain_PeriodicGradientLattice2d
-  : public PeriodicLatticePreparer<PeriodicGradientLattice, 2>,
+namespace behavior {
+class Unit_Terrain_PeriodicGradientLattice_Behavior
+  : public PeriodicLatticePreparer<PeriodicGradientLattice, PeriodicGradientLattice::DIMENSION>,
     public Test
 {
   protected:
@@ -21,55 +22,73 @@ class Unit_Terrain_PeriodicGradientLattice2d
   {
     prepareLattice(PERIOD, SEED);
   }
+
+  void testUseInterpolate()
+  {
+    EXPECT_CALL(*mockInterpolator, interpolate(_)).Times(1);
+    lattice->at(IPoint<PeriodicGradientLattice::DIMENSION>::Zero());
+  }
 };
 
-TEST_F(Unit_Terrain_PeriodicGradientLattice2d, Test_UseInterpolate)
+TEST_F(Unit_Terrain_PeriodicGradientLattice_Behavior, Test_UseInterpolate)
 {
   EXPECT_CALL(*mockInterpolator, interpolate(_)).Times(1);
   lattice->at(Point2d::Zero());
 }
+} // namespace behavior
 
-namespace {
-auto createLattice() -> ILattice2dPtr
+namespace periodic {
+class Unit_Terrain_PeriodicGradientLattice_Periodic
+  : public PeriodicLatticePreparer<PeriodicGradientLattice, PeriodicGradientLattice::DIMENSION>,
+    public Test
 {
-  auto interpolator = std::make_unique<Bilinear2d>();
-  return std::make_unique<PeriodicGradientLattice>(PERIOD, SEED, std::move(interpolator));
-}
-} // namespace
+  protected:
+  void SetUp() override
+  {
+    prepareLattice(PERIOD, SEED);
+  }
 
-TEST_F(Unit_Terrain_PeriodicGradientLattice2d, Test_PeriodicX)
+  void testPeriodic(const int axis)
+  {
+    ASSERT_GE(PeriodicGradientLattice::DIMENSION, axis);
+    using Point = IPoint<PeriodicGradientLattice::DIMENSION>;
+
+    const Point p1 = IPoint<PeriodicGradientLattice::DIMENSION>::Zero();
+    Point p2       = IPoint<PeriodicGradientLattice::DIMENSION>::Zero();
+    Point p3       = IPoint<PeriodicGradientLattice::DIMENSION>::Zero();
+
+    p2(axis) = PERIOD;
+    p3(axis) = -5.0f * PERIOD;
+
+    auto interpolator = std::make_unique<Bilinear2d>();
+    auto lattice = std::make_unique<PeriodicGradientLattice>(PERIOD, SEED, std::move(interpolator));
+
+    const auto v1 = lattice->at(p1);
+    const auto v2 = lattice->at(p2);
+    const auto v3 = lattice->at(p3);
+
+    EXPECT_EQ(v1, v2);
+    EXPECT_EQ(v1, v3);
+  }
+};
+
+enum Axis
 {
-  auto lattice = createLattice();
+  X = 0,
+  Y = 1,
+  Z = 2
+};
 
-  auto p        = Point2d(0.0f, 1.0f);
-  const auto v1 = lattice->at(p);
-
-  p             = Point2d(0.0f + PERIOD, 1.0f);
-  const auto v2 = lattice->at(p);
-
-  p             = Point2d(0.0f - 5.0f * PERIOD, 1.0f);
-  const auto v3 = lattice->at(p);
-
-  EXPECT_EQ(v1, v2);
-  EXPECT_EQ(v1, v3);
-}
-
-TEST_F(Unit_Terrain_PeriodicGradientLattice2d, Test_PeriodicY)
+TEST_F(Unit_Terrain_PeriodicGradientLattice_Periodic, Test_X)
 {
-  auto lattice = createLattice();
-
-  auto p        = Point2d(-1.0f, -2.0f);
-  const auto v1 = lattice->at(p);
-
-  p             = Point2d(-1.0f, -2.0f + PERIOD);
-  const auto v2 = lattice->at(p);
-
-  p             = Point2d(-1.0f, -2.0f - 5.0f * PERIOD);
-  const auto v3 = lattice->at(p);
-
-  EXPECT_EQ(v1, v2);
-  EXPECT_EQ(v1, v3);
+  this->testPeriodic(Axis::X);
 }
+
+TEST_F(Unit_Terrain_PeriodicGradientLattice_Periodic, Test_Y)
+{
+  this->testPeriodic(Axis::Y);
+}
+} // namespace periodic
 
 namespace interpolate {
 struct TestCaseInterpolate
