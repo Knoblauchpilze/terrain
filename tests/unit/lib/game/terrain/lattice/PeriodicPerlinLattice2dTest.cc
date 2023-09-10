@@ -53,9 +53,9 @@ class Unit_Terrain_PeriodicPerlinLattice_Periodic
     ASSERT_GE(PeriodicPerlinLattice::DIMENSION, axis);
     using Point = IPoint<PeriodicPerlinLattice::DIMENSION>;
 
-    const Point p1 = IPoint<PeriodicPerlinLattice::DIMENSION>::Zero();
-    Point p2       = IPoint<PeriodicPerlinLattice::DIMENSION>::Zero();
-    Point p3       = IPoint<PeriodicPerlinLattice::DIMENSION>::Zero();
+    const Point p1 = Point::Zero();
+    Point p2       = Point::Zero();
+    Point p3       = Point::Zero();
 
     p2(axis) = PERIOD;
     p3(axis) = -5.0f * PERIOD;

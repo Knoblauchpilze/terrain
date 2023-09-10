@@ -53,9 +53,9 @@ class Unit_Terrain_PeriodicGradientLattice_Periodic
     ASSERT_GE(PeriodicGradientLattice::DIMENSION, axis);
     using Point = IPoint<PeriodicGradientLattice::DIMENSION>;
 
-    const Point p1 = IPoint<PeriodicGradientLattice::DIMENSION>::Zero();
-    Point p2       = IPoint<PeriodicGradientLattice::DIMENSION>::Zero();
-    Point p3       = IPoint<PeriodicGradientLattice::DIMENSION>::Zero();
+    const Point p1 = Point::Zero();
+    Point p2       = Point::Zero();
+    Point p3       = Point::Zero();
 
     p2(axis) = PERIOD;
     p3(axis) = -5.0f * PERIOD;
