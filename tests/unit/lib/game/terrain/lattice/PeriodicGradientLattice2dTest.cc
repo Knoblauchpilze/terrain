@@ -137,35 +137,49 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicGradientLattice2d,
 namespace at {
 constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
 
-struct TestCaseValue
+template<int Dimension>
+struct TestCase
 {
-  Point2d in;
+  IPoint<Dimension> in;
   float expected;
 };
 
-using PeriodicGradientLatticeAtTestSuite = TestWithParam<TestCaseValue>;
+template<int Dimension, typename Interpolator>
+class PeriodicGradientTestSuiteAt : public TestWithParam<TestCase<Dimension>>
+{
+  protected:
+  void SetUp() override {}
 
-TEST_P(PeriodicGradientLatticeAtTestSuite, Test_At)
+  void testAt(const TestCase<Dimension> &testCase)
+  {
+    auto interpolator = std::make_unique<Interpolator>();
+    auto lattice = std::make_unique<PeriodicGradientLattice>(PERIOD, SEED, std::move(interpolator));
+
+    const auto actual = lattice->at(testCase.in);
+    EXPECT_NEAR(actual, testCase.expected, REASONABLE_COMPARISON_THRESHOLD);
+  }
+};
+
+namespace dim2d {
+using PeriodicGradientAt2d = PeriodicGradientTestSuiteAt<2, Bilinear2d>;
+
+TEST_P(PeriodicGradientAt2d, Test_At)
 {
   const auto param = GetParam();
-
-  auto interpolator = std::make_unique<Bilinear2d>();
-  auto lattice = std::make_unique<PeriodicGradientLattice>(PERIOD, SEED, std::move(interpolator));
-
-  const auto actual = lattice->at(param.in);
-  EXPECT_NEAR(actual, param.expected, REASONABLE_COMPARISON_THRESHOLD);
+  this->testAt(param);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicGradientLattice2d,
-                         PeriodicGradientLatticeAtTestSuite,
-                         Values(TestCaseValue{Point2d{0.0f, 0.0f}, 0.5f},
-                                TestCaseValue{Point2d{0.0f, 1.0f}, 0.5f},
-                                TestCaseValue{Point2d{0.5f, 0.5f}, 0.602046f},
-                                TestCaseValue{Point2d{0.1f, 0.32f}, 0.383933f},
-                                TestCaseValue{Point2d{0.49f, 0.98f}, 0.656713f},
-                                TestCaseValue{Point2d{0.67f, 0.51f}, 0.671274f},
-                                TestCaseValue{Point2d{0.01f, 0.79f}, 0.37766f}),
-                         testNameFromSingleInputPoint<TestCaseValue>);
-
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_PeriodicGradientLattice,
+                         PeriodicGradientAt2d,
+                         Values(TestCase{Point2d{0.0f, 0.0f}, 0.5f},
+                                TestCase{Point2d{0.0f, 1.0f}, 0.5f},
+                                TestCase{Point2d{0.5f, 0.5f}, 0.602046f},
+                                TestCase{Point2d{0.1f, 0.32f}, 0.383933f},
+                                TestCase{Point2d{0.49f, 0.98f}, 0.656713f},
+                                TestCase{Point2d{0.67f, 0.51f}, 0.671274f},
+                                TestCase{Point2d{0.01f, 0.79f}, 0.37766f}),
+                         testNameFromSingleInputPoint<TestCase<2>>);
+} // namespace dim2d
 } // namespace at
+
 } // namespace pge::terrain

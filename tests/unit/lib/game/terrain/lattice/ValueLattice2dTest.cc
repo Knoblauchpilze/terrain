@@ -103,41 +103,54 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_ValueLattice2d,
 namespace at {
 constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
 
-struct TestCaseValue
+template<int Dimension>
+struct TestCase
 {
-  Point2d in;
+  IPoint<Dimension> in;
   float expected;
 };
 
-using ValueLatticeAtTestSuite = TestWithParam<TestCaseValue>;
+template<int Dimension, typename Interpolator>
+class ValueTestSuiteAt : public TestWithParam<TestCase<Dimension>>
+{
+  protected:
+  void SetUp() override {}
 
-TEST_P(ValueLatticeAtTestSuite, Test_At)
+  void testAt(const TestCase<Dimension> &testCase)
+  {
+    constexpr auto SEED = 1993;
+    auto hasher         = std::make_unique<Hasher<Dimension>>(SEED);
+    auto noise          = std::make_unique<WhiteNoise>();
+    auto interpolator   = std::make_unique<Interpolator>();
+    auto lattice        = std::make_unique<ValueLattice>(std::move(hasher),
+                                                  std::move(noise),
+                                                  std::move(interpolator));
+
+    const auto actual = lattice->at(testCase.in);
+    EXPECT_NEAR(actual, testCase.expected, REASONABLE_COMPARISON_THRESHOLD);
+  }
+};
+
+namespace dim2d {
+using ValueAt2d = ValueTestSuiteAt<2, Bilinear2d>;
+
+TEST_P(ValueAt2d, Test_At)
 {
   const auto param = GetParam();
-
-  constexpr auto SEED = 1993;
-  auto hasher         = std::make_unique<Hasher2d>(SEED);
-  auto noise          = std::make_unique<WhiteNoise>();
-  auto interpolator   = std::make_unique<Bilinear2d>();
-  auto lattice        = std::make_unique<ValueLattice>(std::move(hasher),
-                                                std::move(noise),
-                                                std::move(interpolator));
-
-  const auto actual = lattice->at(param.in);
-  EXPECT_NEAR(actual, param.expected, REASONABLE_COMPARISON_THRESHOLD);
+  this->testAt(param);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Terrain_ValueLattice2d,
-                         ValueLatticeAtTestSuite,
-                         Values(TestCaseValue{Point2d{0.0f, 0.0f}, 0.1004222f},
-                                TestCaseValue{Point2d{0.0f, 1.0f}, 0.6273638f},
-                                TestCaseValue{Point2d{0.5f, 0.5f}, 0.4484194f},
-                                TestCaseValue{Point2d{0.1f, 0.32f}, 0.2887946f},
-                                TestCaseValue{Point2d{0.49f, 0.98f}, 0.6624752f},
-                                TestCaseValue{Point2d{0.67f, 0.51f}, 0.4813684f},
-                                TestCaseValue{Point2d{0.01f, 0.79f}, 0.5179381f}),
-                         testNameFromSingleInputPoint<TestCaseValue>);
-
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_ValueLattice,
+                         ValueAt2d,
+                         Values(TestCase{Point2d{0.0f, 0.0f}, 0.1004222f},
+                                TestCase{Point2d{0.0f, 1.0f}, 0.6273638f},
+                                TestCase{Point2d{0.5f, 0.5f}, 0.4484194f},
+                                TestCase{Point2d{0.1f, 0.32f}, 0.2887946f},
+                                TestCase{Point2d{0.49f, 0.98f}, 0.6624752f},
+                                TestCase{Point2d{0.67f, 0.51f}, 0.4813684f},
+                                TestCase{Point2d{0.01f, 0.79f}, 0.5179381f}),
+                         testNameFromSingleInputPoint<TestCase<2>>);
+} // namespace dim2d
 } // namespace at
 
 } // namespace pge::terrain
