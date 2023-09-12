@@ -187,50 +187,57 @@ INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice2d,
 
 } // namespace interpolate
 
-namespace {
-auto createGradientLattice() -> ILattice2dPtr
-{
-  constexpr auto SEED = 1993;
-  auto hasher         = std::make_unique<Hasher2d>(SEED);
-  auto noise          = std::make_unique<WhiteNoise>(-1.0f, 1.0f);
-  auto interpolator   = std::make_unique<Bilinear2d>();
-  return std::make_unique<GradientLattice>(std::move(hasher),
-                                           std::move(noise),
-                                           std::move(interpolator));
-}
-} // namespace
-
 namespace at {
 constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
 
-struct TestCaseValue
+template<int Dimension>
+struct TestCase
 {
-  Point2d in;
+  IPoint<Dimension> in;
   float expected;
 };
 
-using GradientLatticeAtTestSuite = TestWithParam<TestCaseValue>;
+template<int Dimension, typename Interpolator>
+class GradientTestSuiteAt : public TestWithParam<TestCase<Dimension>>
+{
+  protected:
+  void SetUp() override {}
 
-TEST_P(GradientLatticeAtTestSuite, Test_At)
+  void testAt(const TestCase<Dimension> &testCase)
+  {
+    constexpr auto SEED = 1993;
+    auto hasher         = std::make_unique<Hasher<Dimension>>(SEED);
+    auto noise          = std::make_unique<WhiteNoise>(-1.0f, 1.0f);
+    auto interpolator   = std::make_unique<Interpolator>();
+    auto lattice        = std::make_unique<GradientLattice>(std::move(hasher),
+                                                     std::move(noise),
+                                                     std::move(interpolator));
+
+    const auto actual = lattice->at(testCase.in);
+    EXPECT_NEAR(actual, testCase.expected, REASONABLE_COMPARISON_THRESHOLD);
+  }
+};
+
+namespace dim2d {
+using GradientAt2d = GradientTestSuiteAt<2, Bilinear2d>;
+
+TEST_P(GradientAt2d, Test_At)
 {
   const auto param = GetParam();
-
-  auto lattice      = createGradientLattice();
-  const auto actual = lattice->at(param.in);
-  EXPECT_NEAR(actual, param.expected, REASONABLE_COMPARISON_THRESHOLD);
+  this->testAt(param);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice2d,
-                         GradientLatticeAtTestSuite,
-                         Values(TestCaseValue{Point2d{0.0f, 0.0f}, 0.5f},
-                                TestCaseValue{Point2d{0.0f, 1.0f}, 0.5f},
-                                TestCaseValue{Point2d{0.5f, 0.5f}, 0.483331f},
-                                TestCaseValue{Point2d{0.1f, 0.32f}, 0.32799f},
-                                TestCaseValue{Point2d{0.49f, 0.98f}, 0.504369f},
-                                TestCaseValue{Point2d{0.67f, 0.51f}, 0.570583f},
-                                TestCaseValue{Point2d{0.01f, 0.79f}, 0.352243f}),
-                         testNameFromSingleInputPoint<TestCaseValue>);
-
+INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice,
+                         GradientAt2d,
+                         Values(TestCase{Point2d{0.0f, 0.0f}, 0.5f},
+                                TestCase{Point2d{0.0f, 1.0f}, 0.5f},
+                                TestCase{Point2d{0.5f, 0.5f}, 0.483331f},
+                                TestCase{Point2d{0.1f, 0.32f}, 0.32799f},
+                                TestCase{Point2d{0.49f, 0.98f}, 0.504369f},
+                                TestCase{Point2d{0.67f, 0.51f}, 0.570583f},
+                                TestCase{Point2d{0.01f, 0.79f}, 0.352243f}),
+                         testNameFromSingleInputPoint<TestCase<2>>);
+} // namespace dim2d
 } // namespace at
 
 } // namespace pge::terrain
