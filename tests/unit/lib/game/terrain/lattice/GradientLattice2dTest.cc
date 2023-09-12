@@ -219,6 +219,7 @@ class GradientTestSuiteAt : public TestWithParam<TestCase<Dimension>>
 };
 
 namespace dim2d {
+using TestCase2d   = TestCase<2>;
 using GradientAt2d = GradientTestSuiteAt<2, Bilinear2d>;
 
 TEST_P(GradientAt2d, Test_At)
@@ -229,14 +230,14 @@ TEST_P(GradientAt2d, Test_At)
 
 INSTANTIATE_TEST_SUITE_P(Unit_Terrain_GradientLattice,
                          GradientAt2d,
-                         Values(TestCase{Point2d{0.0f, 0.0f}, 0.5f},
-                                TestCase{Point2d{0.0f, 1.0f}, 0.5f},
-                                TestCase{Point2d{0.5f, 0.5f}, 0.483331f},
-                                TestCase{Point2d{0.1f, 0.32f}, 0.32799f},
-                                TestCase{Point2d{0.49f, 0.98f}, 0.504369f},
-                                TestCase{Point2d{0.67f, 0.51f}, 0.570583f},
-                                TestCase{Point2d{0.01f, 0.79f}, 0.352243f}),
-                         testNameFromSingleInputPoint<TestCase<2>>);
+                         Values(TestCase2d{Point2d{0.0f, 0.0f}, 0.5f},
+                                TestCase2d{Point2d{0.0f, 1.0f}, 0.5f},
+                                TestCase2d{Point2d{0.5f, 0.5f}, 0.483331f},
+                                TestCase2d{Point2d{0.1f, 0.32f}, 0.32799f},
+                                TestCase2d{Point2d{0.49f, 0.98f}, 0.504369f},
+                                TestCase2d{Point2d{0.67f, 0.51f}, 0.570583f},
+                                TestCase2d{Point2d{0.01f, 0.79f}, 0.352243f}),
+                         testNameFromSingleInputPoint<TestCase2d>);
 } // namespace dim2d
 } // namespace at
 
