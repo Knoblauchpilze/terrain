@@ -1,5 +1,6 @@
 
 #include "Bilinear2d.hh"
+#include "Bilinear3d.hh"
 #include "Hasher.hh"
 #include "IPoint.hh"
 #include "LatticePreparer.hh"
@@ -132,7 +133,8 @@ class ValueTestSuiteAt : public TestWithParam<TestCase<Dimension>>
 };
 
 namespace dim2d {
-using ValueAt2d = ValueTestSuiteAt<2, Bilinear2d>;
+using TestCase2d = TestCase<2>;
+using ValueAt2d  = ValueTestSuiteAt<2, Bilinear2d>;
 
 TEST_P(ValueAt2d, Test_At)
 {
@@ -142,14 +144,14 @@ TEST_P(ValueAt2d, Test_At)
 
 INSTANTIATE_TEST_SUITE_P(Unit_Terrain_ValueLattice,
                          ValueAt2d,
-                         Values(TestCase{Point2d{0.0f, 0.0f}, 0.1004222f},
-                                TestCase{Point2d{0.0f, 1.0f}, 0.6273638f},
-                                TestCase{Point2d{0.5f, 0.5f}, 0.4484194f},
-                                TestCase{Point2d{0.1f, 0.32f}, 0.2887946f},
-                                TestCase{Point2d{0.49f, 0.98f}, 0.6624752f},
-                                TestCase{Point2d{0.67f, 0.51f}, 0.4813684f},
-                                TestCase{Point2d{0.01f, 0.79f}, 0.5179381f}),
-                         testNameFromSingleInputPoint<TestCase<2>>);
+                         Values(TestCase2d{Point2d{0.0f, 0.0f}, 0.1004222f},
+                                TestCase2d{Point2d{0.0f, 1.0f}, 0.6273638f},
+                                TestCase2d{Point2d{0.5f, 0.5f}, 0.4484194f},
+                                TestCase2d{Point2d{0.1f, 0.32f}, 0.2887946f},
+                                TestCase2d{Point2d{0.49f, 0.98f}, 0.6624752f},
+                                TestCase2d{Point2d{0.67f, 0.51f}, 0.4813684f},
+                                TestCase2d{Point2d{0.01f, 0.79f}, 0.5179381f}),
+                         testNameFromSingleInputPoint<TestCase2d>);
 } // namespace dim2d
 } // namespace at
 
