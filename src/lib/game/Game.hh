@@ -85,6 +85,7 @@ class Game : public utils::CoreObject
   void toggleNextSeed();
   void toggleTerrainScale(bool prev);
   void toggleNoisePeriod(bool prev);
+  void toggleCacheSize(bool prev);
   auto latticeAt(const int x, const int y) const -> std::vector<float>;
 
   void generate();
@@ -159,6 +160,7 @@ class Game : public utils::CoreObject
     MenuShPtr lattice;
     MenuShPtr display;
     MenuShPtr period;
+    MenuShPtr cache;
   };
 
   /// @brief - The definition of the game state.

@@ -119,6 +119,10 @@ void App::onInputs(const controls::State &c, const CoordinateFrame &cf)
     {
       m_game->toggleLatticeMode(c.shift);
     }
+    if (c.keys[controls::keys::C])
+    {
+      m_game->toggleCacheSize(c.shift);
+    }
   }
 }
 

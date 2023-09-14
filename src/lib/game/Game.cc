@@ -143,6 +143,12 @@ void Game::toggleNoisePeriod(bool prev)
   generate();
 }
 
+void Game::toggleCacheSize(bool prev)
+{
+  m_terrain.nextCacheSize(prev);
+  generate();
+}
+
 auto Game::latticeAt(const int x, const int y) const -> std::vector<float>
 {
   std::vector<float> out;
@@ -233,6 +239,10 @@ void Game::updateUI()
   text = "Period: ";
   text += std::to_string(m_terrain.period());
   m_menus.period->setText(text);
+
+  text = "Cache: ";
+  text += std::to_string(m_terrain.cacheSize());
+  m_menus.cache->setText(text);
 }
 
 auto Game::generateStatusMenus(int width, int /*height*/) -> std::vector<MenuShPtr>
@@ -273,6 +283,13 @@ auto Game::generateStatusMenus(int width, int /*height*/) -> std::vector<MenuShP
                                 true);
   m_menus.period->setSimpleAction([](Game &g) { g.toggleNoisePeriod(false); });
   status->addMenu(m_menus.period);
+  m_menus.cache = generateMenu(olc::vi2d{0, 0},
+                               olc::vi2d{10, DEFAULT_MENU_HEIGHT},
+                               "Cache: N/A",
+                               "cache",
+                               true);
+  m_menus.cache->setSimpleAction([](Game &g) { g.toggleCacheSize(false); });
+  status->addMenu(m_menus.cache);
 
   auto gen = generateMenu(olc::vi2d{0, 0},
                           olc::vi2d{10, DEFAULT_MENU_HEIGHT},

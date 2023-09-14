@@ -101,6 +101,11 @@ auto Terrain::period() const noexcept -> int
   return m_period.current();
 }
 
+auto Terrain::cacheSize() const noexcept -> int
+{
+  return m_cacheSize.current();
+}
+
 void Terrain::nextLattice(bool prev)
 {
   if (prev)
@@ -140,6 +145,19 @@ void Terrain::nextPeriod(bool prev)
   generate();
 }
 
+void Terrain::nextCacheSize(bool prev)
+{
+  if (prev)
+  {
+    m_cacheSize.previous();
+  }
+  else
+  {
+    m_cacheSize.next();
+  }
+  generate();
+}
+
 void Terrain::nextSeed()
 {
   ++m_seed;
@@ -148,9 +166,9 @@ void Terrain::nextSeed()
 
 void Terrain::generate()
 {
-  info("Generating terrain with properties: seed = " + std::to_string(m_seed)
-       + " lattice = " + str(m_latticeType) + " period = " + std::to_string(m_period.current())
-       + " scale = " + std::to_string(m_period.current()));
+  info("Generating terrain with properties: seed = " + std::to_string(m_seed) + " lattice = "
+       + str(m_latticeType) + " period = " + std::to_string(m_period.current()) + " scale = "
+       + std::to_string(m_period.current()) + " cache = " + std::to_string(m_cacheSize.current()));
 
   switch (m_latticeType)
   {
