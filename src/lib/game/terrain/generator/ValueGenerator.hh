@@ -4,6 +4,8 @@
 #include "IHasher.hh"
 #include "INoise.hh"
 #include "IValueGenerator.hh"
+#include <deque>
+#include <map>
 #include <memory>
 
 namespace pge::terrain {
@@ -22,6 +24,13 @@ class ValueGenerator : public IValueGenerator<Dimension, float>
   private:
   IHasherPtr<Dimension> m_hasher;
   INoisePtr m_noise;
+
+  static constexpr auto MAX_CACHE_SIZE = 2000;
+  using Key                            = std::pair<int, int>;
+  mutable std::map<Key, float> m_cache{};
+  mutable std::deque<Key> m_keys{};
+
+  auto fromCacheOrGenerate(const ILatticePoint<Dimension> &lp) const -> float;
 };
 
 using ValueGenerator2d = ValueGenerator<2>;

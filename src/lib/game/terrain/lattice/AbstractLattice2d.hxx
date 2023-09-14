@@ -4,7 +4,6 @@
 #include "AbstractLattice2d.hh"
 #include "Area2dGenerator.hh"
 #include "Bilinear2d.hh"
-#include <cmath>
 
 namespace pge::terrain {
 
@@ -31,10 +30,10 @@ inline auto AbstractLattice2d<ValueType>::at(const Point2d &p) -> float
   const auto &bottomRight = area.points[Area2dGenerator::BOTTOM_RIGHT];
   const auto &bottomLeft  = area.points[Area2dGenerator::BOTTOM_LEFT];
 
-  const auto tl = this->fromCacheOrGenerate(topLeft, p);
-  const auto tr = this->fromCacheOrGenerate(topRight, p);
-  const auto br = this->fromCacheOrGenerate(bottomRight, p);
-  const auto bl = this->fromCacheOrGenerate(bottomLeft, p);
+  const auto tl = this->m_valueGenerator->generateFor(topLeft, p);
+  const auto tr = this->m_valueGenerator->generateFor(topRight, p);
+  const auto br = this->m_valueGenerator->generateFor(bottomRight, p);
+  const auto bl = this->m_valueGenerator->generateFor(bottomLeft, p);
 
   const auto xRange = topRight(0) - topLeft(0);
   const auto yRange = topLeft(1) - bottomLeft(1);
@@ -53,13 +52,6 @@ inline auto AbstractLattice2d<ValueType>::at(const Point2d &p) -> float
   }
 
   return (*this->m_normalization)(val);
-}
-
-template<typename ValueType>
-inline auto AbstractLattice2d<ValueType>::fromCacheOrGenerate(const LatticePoint2d &lp,
-                                                              const Point2d &p) const -> float
-{
-  return this->m_valueGenerator->generateFor(lp, p);
 }
 
 } // namespace pge::terrain
