@@ -41,8 +41,8 @@ inline auto AbstractLattice2d<ValueType>::at(const Point2d &p) -> float
   const auto py     = (p(1) - bottomLeft(1)) / yRange;
 
   InterpolationData2d data{};
-  data.axes[Bilinear2d::BOTTOM] = InterpolationAxis(bl, br, px);
-  data.axes[Bilinear2d::TOP]    = InterpolationAxis(tl, tr, px);
+  data.axes[Bilinear2d::BOTTOM] = InterpolationAxis(bl, br, px, this->m_interpolator->strategy());
+  data.axes[Bilinear2d::TOP]    = InterpolationAxis(tl, tr, px, this->m_interpolator->strategy());
   data.deltas[Bilinear2d::Y]    = py;
 
   const auto val = this->m_interpolator->interpolate(data);

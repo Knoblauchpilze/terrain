@@ -8,6 +8,7 @@ namespace pge::terrain {
 class Bilinear3d : public AbstractInterpolator<3>
 {
   public:
+  Bilinear3d() noexcept = default;
   Bilinear3d(const InterpolationStrategy &strategy) noexcept;
   ~Bilinear3d() override = default;
 

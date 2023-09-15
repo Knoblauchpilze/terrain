@@ -2,6 +2,7 @@
 #pragma once
 
 #include "InterpolationData.hh"
+#include "InterpolationStrategy.hh"
 #include <array>
 #include <memory>
 
@@ -13,6 +14,7 @@ class IInterpolator
   public:
   virtual ~IInterpolator() = default;
 
+  virtual auto strategy() const noexcept -> InterpolationStrategy                   = 0;
   virtual auto interpolate(const InterpolationData<Dimension> &data) const -> float = 0;
 };
 

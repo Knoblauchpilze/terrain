@@ -123,6 +123,10 @@ void App::onInputs(const controls::State &c, const CoordinateFrame &cf)
     {
       m_game->toggleCacheSize(c.shift);
     }
+    if (c.keys[controls::keys::I])
+    {
+      m_game->toggleInterpolationMode(c.shift);
+    }
   }
 }
 

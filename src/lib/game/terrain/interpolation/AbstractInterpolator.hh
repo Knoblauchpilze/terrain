@@ -2,18 +2,18 @@
 #pragma once
 
 #include "IInterpolator.hh"
-#include "InterpolationStrategy.hh"
 
 namespace pge::terrain {
 
 template<int Dimension>
-class AbstractInterpolator : IInterpolator<Dimension>
+class AbstractInterpolator : public IInterpolator<Dimension>
 {
   public:
+  AbstractInterpolator() = default;
   AbstractInterpolator(const InterpolationStrategy &strategy);
   ~AbstractInterpolator() override = default;
 
-  auto strategy() const noexcept -> InterpolationStrategy;
+  auto strategy() const noexcept -> InterpolationStrategy override;
 
   private:
   InterpolationStrategy m_strategy{InterpolationStrategy::LINEAR};
