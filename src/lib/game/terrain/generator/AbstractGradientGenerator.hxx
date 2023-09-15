@@ -3,6 +3,8 @@
 
 #include "AbstractGradientGenerator.hh"
 
+#include <iostream>
+
 namespace pge::terrain {
 
 template<int Dimension>

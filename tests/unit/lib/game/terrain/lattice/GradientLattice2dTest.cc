@@ -11,6 +11,9 @@
 using namespace ::testing;
 
 namespace pge::terrain {
+constexpr auto CACHE_SIZE = 10;
+constexpr auto SEED       = 1993;
+
 namespace behavior {
 class Unit_Terrain_GradientLattice
   : public LatticePreparer<GradientLattice, GradientLattice::DIMENSION>,
@@ -19,7 +22,7 @@ class Unit_Terrain_GradientLattice
   protected:
   void SetUp() override
   {
-    prepareLattice();
+    prepareLattice(CACHE_SIZE);
   }
 
   void testUseHasher()
@@ -45,12 +48,12 @@ namespace {
 auto createGradientLatticeWithMockedNoise(INoisePtr mockNoise)
   -> ILatticePtr<GradientLattice::DIMENSION>
 {
-  constexpr auto SEED = 1993;
-  auto hasher         = std::make_unique<Hasher2d>(SEED);
-  auto interpolator   = std::make_unique<Bilinear2d>();
+  auto hasher       = std::make_unique<Hasher2d>(SEED);
+  auto interpolator = std::make_unique<Bilinear2d>();
   return std::make_unique<GradientLattice>(std::move(hasher),
                                            std::move(mockNoise),
-                                           std::move(interpolator));
+                                           std::move(interpolator),
+                                           CACHE_SIZE);
 }
 } // namespace
 
@@ -159,7 +162,7 @@ class GradientLatticeInterpolateTestSuite : public LatticePreparer<GradientLatti
   protected:
   void SetUp() override
   {
-    prepareLattice();
+    prepareLattice(CACHE_SIZE);
   }
 };
 
@@ -205,13 +208,13 @@ class GradientTestSuiteAt : public TestWithParam<TestCase<Dimension>>
 
   void testAt(const TestCase<Dimension> &testCase)
   {
-    constexpr auto SEED = 1993;
-    auto hasher         = std::make_unique<Hasher<Dimension>>(SEED);
-    auto noise          = std::make_unique<WhiteNoise>(-1.0f, 1.0f);
-    auto interpolator   = std::make_unique<Interpolator>();
-    auto lattice        = std::make_unique<GradientLattice>(std::move(hasher),
+    auto hasher       = std::make_unique<Hasher<Dimension>>(SEED);
+    auto noise        = std::make_unique<WhiteNoise>(-1.0f, 1.0f);
+    auto interpolator = std::make_unique<Interpolator>();
+    auto lattice      = std::make_unique<GradientLattice>(std::move(hasher),
                                                      std::move(noise),
-                                                     std::move(interpolator));
+                                                     std::move(interpolator),
+                                                     CACHE_SIZE);
 
     const auto actual = lattice->at(testCase.in);
     EXPECT_NEAR(actual, testCase.expected, REASONABLE_COMPARISON_THRESHOLD);

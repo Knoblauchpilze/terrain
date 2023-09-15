@@ -5,8 +5,11 @@
 namespace pge::terrain {
 
 template<int Dimension>
-inline ValueGenerator<Dimension>::ValueGenerator(IHasherPtr<Dimension> hasher, INoisePtr noise)
-  : m_hasher(std::move(hasher))
+inline ValueGenerator<Dimension>::ValueGenerator(IHasherPtr<Dimension> hasher,
+                                                 INoisePtr noise,
+                                                 const int cacheSize)
+  : AbstractCachedGenerator<Dimension, float>(cacheSize)
+  , m_hasher(std::move(hasher))
   , m_noise(std::move(noise))
 {}
 
@@ -19,11 +22,11 @@ inline auto ValueGenerator<Dimension>::at(const ILatticePoint<Dimension> &lattic
 }
 
 template<int Dimension>
-inline auto ValueGenerator<Dimension>::generateFor(const ILatticePoint<Dimension> &latticePoint,
-                                                   const IPoint<Dimension> & /*point*/) const noexcept
+inline auto ValueGenerator<Dimension>::combine(const float &latticeValue,
+                                               const IPoint<Dimension> & /*point*/) const noexcept
   -> float
 {
-  return at(latticePoint);
+  return latticeValue;
 }
 
 } // namespace pge::terrain

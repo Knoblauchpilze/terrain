@@ -7,8 +7,7 @@
 using namespace ::testing;
 
 namespace pge::terrain {
-
-// using GradientGeneratorToTest = GradientGenerator2d;
+constexpr auto CACHE_SIZE = 10;
 
 namespace behavior {
 template<typename GradientGeneratorToTest>
@@ -22,7 +21,7 @@ class Unit_Terrain_GradientGenerator
   protected:
   void SetUp() override
   {
-    this->prepareGenerator();
+    this->prepareGenerator(CACHE_SIZE);
   }
 
   void testUseHasher()
@@ -35,6 +34,21 @@ class Unit_Terrain_GradientGenerator
   {
     EXPECT_CALL(*this->mockNoise, seed(_)).Times(1);
     EXPECT_CALL(*this->mockNoise, next()).Times(3);
+    this->generator->generateFor(LatticePoint::Zero(), Point::Zero());
+  }
+
+  void testNegativeCacheSizeThrowsException()
+  {
+    EXPECT_THROW(this->prepareGenerator(-2), std::invalid_argument);
+  }
+
+  void testUseCache()
+  {
+    EXPECT_CALL(*this->mockNoise, seed(_)).Times(1);
+    EXPECT_CALL(*this->mockNoise, next()).Times(3);
+    EXPECT_CALL(*this->mockHasher, hash(_)).Times(1);
+
+    this->generator->generateFor(LatticePoint::Zero(), Point::Zero());
     this->generator->generateFor(LatticePoint::Zero(), Point::Zero());
   }
 };
@@ -51,6 +65,16 @@ TEST_F(Unit_Terrain_GradientGenerator2d, Test_UseNoise)
 {
   this->testUseNoise();
 }
+
+TEST_F(Unit_Terrain_GradientGenerator2d, Test_InvalidCacheSize)
+{
+  this->testNegativeCacheSizeThrowsException();
+}
+
+TEST_F(Unit_Terrain_GradientGenerator2d, Test_UseCache)
+{
+  this->testUseCache();
+}
 } // namespace dim2d
 
 namespace dim3d {
@@ -64,6 +88,16 @@ TEST_F(Unit_Terrain_GradientGenerator3d, Test_UseHasher)
 TEST_F(Unit_Terrain_GradientGenerator3d, Test_UseNoise)
 {
   this->testUseNoise();
+}
+
+TEST_F(Unit_Terrain_GradientGenerator3d, Test_InvalidCacheSize)
+{
+  this->testNegativeCacheSizeThrowsException();
+}
+
+TEST_F(Unit_Terrain_GradientGenerator3d, Test_UseCache)
+{
+  this->testUseCache();
 }
 } // namespace dim3d
 } // namespace behavior
@@ -92,7 +126,7 @@ class GenerateForTestSuite
   protected:
   void SetUp() override
   {
-    prepareGenerator();
+    prepareGenerator(CACHE_SIZE);
   }
 };
 
