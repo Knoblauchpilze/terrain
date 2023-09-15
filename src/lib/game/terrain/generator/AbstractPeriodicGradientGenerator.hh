@@ -19,7 +19,6 @@ class AbstractPeriodicGradientGenerator : public AbstractGradientGenerator<Dimen
   virtual auto gradientAt(const int id) const noexcept -> Point3d = 0;
 
   private:
-  static constexpr auto NO_CACHE_SIZE_REQUIRED = 0;
   int m_period;
   int m_modulusMask;
   std::vector<int> m_permutations{};

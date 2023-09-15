@@ -2,8 +2,6 @@
 #pragma once
 
 #include "IGradientGenerator.hh"
-#include <deque>
-#include <map>
 #include <memory>
 
 namespace pge::terrain {
@@ -12,21 +10,11 @@ template<int Dimension>
 class AbstractGradientGenerator : public IGradientGenerator<Dimension, 3>
 {
   public:
-  AbstractGradientGenerator() = default;
-  AbstractGradientGenerator(const int cacheSize);
+  AbstractGradientGenerator()           = default;
   ~AbstractGradientGenerator() override = default;
 
   auto generateFor(const ILatticePoint<Dimension> &latticePoint,
                    const IPoint<Dimension> &point) const noexcept -> float override;
-
-  private:
-  /// https://stackoverflow.com/questions/2196995/is-there-any-advantage-of-using-map-over-unordered-map-in-case-of-trivial-keys
-  using Key = std::pair<int, int>;
-  unsigned m_cacheSize{256};
-  mutable std::map<Key, Point3d> m_cache{};
-  mutable std::deque<Key> m_keys{};
-
-  auto fromCacheOrGenerate(const ILatticePoint<Dimension> &lp) const -> Point3d;
 };
 
 template<int Dimension>

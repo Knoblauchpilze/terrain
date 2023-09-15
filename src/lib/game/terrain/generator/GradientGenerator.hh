@@ -4,6 +4,8 @@
 #include "AbstractGradientGenerator.hh"
 #include "IHasher.hh"
 #include "INoise.hh"
+#include <deque>
+#include <map>
 
 namespace pge::terrain {
 
@@ -19,6 +21,13 @@ class GradientGenerator : public AbstractGradientGenerator<Dimension>
   private:
   IHasherPtr<Dimension> m_hasher;
   INoisePtr m_noise;
+
+  using Key = std::pair<int, int>;
+  unsigned m_cacheSize{256};
+  mutable std::map<Key, Point3d> m_cache{};
+  mutable std::deque<Key> m_keys{};
+
+  auto generateAndRegisterInCache(const ILatticePoint<Dimension> &lp) const -> Point3d;
 };
 
 using GradientGenerator2d = GradientGenerator<2>;
