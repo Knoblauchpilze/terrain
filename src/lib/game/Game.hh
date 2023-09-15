@@ -80,6 +80,7 @@ class Game : public utils::CoreObject
   void save(const std::string &fileName) const;
 
   void toggleLatticeMode(bool prev);
+  void toggleInterpolationMode(bool prev);
   void toggleDisplayMode(bool prev);
   auto displayMode() const noexcept -> DisplayMode;
   void toggleNextSeed();
@@ -158,6 +159,7 @@ class Game : public utils::CoreObject
   {
     MenuShPtr scale;
     MenuShPtr lattice;
+    MenuShPtr interpolation;
     MenuShPtr display;
     MenuShPtr period;
     MenuShPtr cache;

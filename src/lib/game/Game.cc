@@ -113,6 +113,12 @@ void Game::toggleLatticeMode(bool prev)
   generate();
 }
 
+void Game::toggleInterpolationMode(bool prev)
+{
+  m_terrain.nextInterpolation(prev);
+  generate();
+}
+
 void Game::toggleDisplayMode(bool /*prev*/)
 {
   /// Two values don't really benefit from the cycling order.
@@ -230,12 +236,13 @@ void Game::updateUI()
   auto text = "Scale: " + std::to_string(m_terrain.scale());
   m_menus.scale->setText(text);
 
-  text = "Lattice: ";
-  text += str(m_terrain.lattice());
+  text = str(m_terrain.lattice());
   m_menus.lattice->setText(text);
 
-  text = "Display: ";
-  text += (m_displayMode == DisplayMode::HEIGHT ? "height" : "terrain");
+  text = str(m_terrain.interpolation());
+  m_menus.interpolation->setText(text);
+
+  text = (m_displayMode == DisplayMode::HEIGHT ? "height" : "terrain");
   m_menus.display->setText(text);
 
   text = "Period: ";
@@ -271,6 +278,13 @@ auto Game::generateStatusMenus(int width, int /*height*/) -> std::vector<MenuShP
                                  true);
   m_menus.lattice->setSimpleAction([](Game &g) { g.toggleLatticeMode(false); });
   status->addMenu(m_menus.lattice);
+  m_menus.interpolation = generateMenu(olc::vi2d{0, 0},
+                                       olc::vi2d{10, DEFAULT_MENU_HEIGHT},
+                                       "Interpolation: N/A",
+                                       "interpolation",
+                                       true);
+  m_menus.interpolation->setSimpleAction([](Game &g) { g.toggleInterpolationMode(false); });
+  status->addMenu(m_menus.interpolation);
   m_menus.display = generateMenu(olc::vi2d{0, 0},
                                  olc::vi2d{10, DEFAULT_MENU_HEIGHT},
                                  "Display: N/A",

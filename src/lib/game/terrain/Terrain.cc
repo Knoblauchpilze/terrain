@@ -91,6 +91,11 @@ auto Terrain::lattice() const noexcept -> LatticeType
   return m_latticeType;
 }
 
+auto Terrain::interpolation() const noexcept -> InterpolationStrategy
+{
+  return m_interpolationStrategy;
+}
+
 auto Terrain::scale() const noexcept -> int
 {
   return m_scale.current();
@@ -115,6 +120,19 @@ void Terrain::nextLattice(bool prev)
   else
   {
     m_latticeType = nextLatticeType(m_latticeType);
+  }
+  generate();
+}
+
+void Terrain::nextInterpolation(bool prev)
+{
+  if (prev)
+  {
+    m_interpolationStrategy = previousInterpolationStrategy(m_interpolationStrategy);
+  }
+  else
+  {
+    m_interpolationStrategy = nextInterpolationStrategy(m_interpolationStrategy);
   }
   generate();
 }
@@ -166,8 +184,9 @@ void Terrain::nextSeed()
 
 void Terrain::generate()
 {
-  info("Generating terrain with properties: seed = " + std::to_string(m_seed) + " lattice = "
-       + str(m_latticeType) + " period = " + std::to_string(m_period.current()) + " scale = "
+  info("Generating terrain with properties: seed = " + std::to_string(m_seed)
+       + " lattice = " + str(m_latticeType) + " interpolation = " + str(m_interpolationStrategy)
+       + " period = " + std::to_string(m_period.current()) + " scale = "
        + std::to_string(m_period.current()) + " cache = " + std::to_string(m_cacheSize.current()));
 
   switch (m_latticeType)

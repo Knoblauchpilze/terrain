@@ -23,7 +23,7 @@ auto InterpolationAxis::delta() const noexcept -> float
 
 auto InterpolationAxis::evaluate() const noexcept -> float
 {
-  return (1.0f - m_perc) * m_low + m_perc * m_high;
+  return m_low + m_perc * (m_high - m_low);
 }
 
 } // namespace pge::terrain

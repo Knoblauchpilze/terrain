@@ -2,6 +2,7 @@
 #pragma once
 
 #include "ILattice.hh"
+#include "InterpolationStrategy.hh"
 #include "LatticeType.hh"
 #include "PositiveCyclicInteger.hh"
 #include "Seed.hh"
@@ -25,10 +26,12 @@ class Terrain : public utils::CoreObject
 
   auto seed() const noexcept -> Seed;
   auto lattice() const noexcept -> LatticeType;
+  auto interpolation() const noexcept -> InterpolationStrategy;
   auto scale() const noexcept -> int;
   auto period() const noexcept -> int;
   auto cacheSize() const noexcept -> int;
   void nextLattice(bool prev);
+  void nextInterpolation(bool prev);
   void nextScale(bool prev);
   void nextPeriod(bool prev);
   void nextCacheSize(bool prev);
@@ -52,6 +55,7 @@ class Terrain : public utils::CoreObject
                                     256,
                                     MAX_VALUE_GENERATOR_CACHE_SIZE,
                                     CYCLIC_VALUES_STEP};
+  InterpolationStrategy m_interpolationStrategy{InterpolationStrategy::LINEAR};
   LatticeType m_latticeType{LatticeType::PERIODIC_PERLIN};
 
   ILattice2dPtr m_lattice2d{nullptr};
