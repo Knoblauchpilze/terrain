@@ -196,7 +196,8 @@ auto Terrain::generateValueLattice() const -> ILattice2dPtr
 
   return std::make_unique<ValueLattice>(std::move(hasher),
                                         std::move(noise),
-                                        std::move(interpolator));
+                                        std::move(interpolator),
+                                        m_cacheSize.current());
 }
 
 auto Terrain::generateGradientLattice() const -> ILattice2dPtr
@@ -207,7 +208,8 @@ auto Terrain::generateGradientLattice() const -> ILattice2dPtr
 
   return std::make_unique<GradientLattice>(std::move(hasher),
                                            std::move(noise),
-                                           std::move(interpolator));
+                                           std::move(interpolator),
+                                           m_cacheSize.current());
 }
 
 auto Terrain::generatePeriodicGradientLattice() const -> ILattice2dPtr

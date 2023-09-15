@@ -11,7 +11,7 @@ template<int Dimension>
 class GradientGenerator : public AbstractGradientGenerator<Dimension>
 {
   public:
-  GradientGenerator(IHasherPtr<Dimension> hasher, INoisePtr noise);
+  GradientGenerator(IHasherPtr<Dimension> hasher, INoisePtr noise, const int cacheSize);
   ~GradientGenerator() override = default;
 
   auto at(const ILatticePoint<Dimension> &latticePoint) const noexcept -> Point3d override;

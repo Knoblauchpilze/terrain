@@ -180,7 +180,8 @@ void Game::generate()
       auto noise          = std::make_unique<terrain::WhiteNoise>(-1.0f, 1.0f);
       auto hasher         = std::make_unique<terrain::Hasher2d>(m_terrain.seed());
       m_gradientGenerator = std::make_unique<terrain::GradientGenerator2d>(std::move(hasher),
-                                                                           std::move(noise));
+                                                                           std::move(noise),
+                                                                           m_terrain.cacheSize());
     }
     break;
     case terrain::LatticeType::PERIODIC_GRADIENT:
@@ -198,7 +199,8 @@ void Game::generate()
       auto noise       = std::make_unique<terrain::WhiteNoise>();
       auto hasher      = std::make_unique<terrain::Hasher2d>(m_terrain.seed());
       m_valueGenerator = std::make_unique<terrain::ValueGenerator2d>(std::move(hasher),
-                                                                     std::move(noise));
+                                                                     std::move(noise),
+                                                                     m_terrain.cacheSize());
     }
     break;
   }

@@ -12,16 +12,17 @@ template<int Dimension>
 class AbstractGradientGenerator : public IGradientGenerator<Dimension, 3>
 {
   public:
-  AbstractGradientGenerator()           = default;
+  AbstractGradientGenerator() = default;
+  AbstractGradientGenerator(const int cacheSize);
   ~AbstractGradientGenerator() override = default;
 
   auto generateFor(const ILatticePoint<Dimension> &latticePoint,
                    const IPoint<Dimension> &point) const noexcept -> float override;
 
   private:
-  static constexpr auto MAX_CACHE_SIZE = 2000;
   /// https://stackoverflow.com/questions/2196995/is-there-any-advantage-of-using-map-over-unordered-map-in-case-of-trivial-keys
   using Key = std::pair<int, int>;
+  unsigned m_cacheSize{256};
   mutable std::map<Key, Point3d> m_cache{};
   mutable std::deque<Key> m_keys{};
 

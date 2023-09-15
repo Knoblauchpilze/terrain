@@ -12,6 +12,8 @@
 using namespace ::testing;
 
 namespace pge::terrain {
+constexpr auto CACHE_SIZE = 10;
+
 namespace behavior {
 class Unit_Terrain_ValueLattice_Behavior
   : public LatticePreparer<ValueLattice, ValueLattice::DIMENSION>,
@@ -20,7 +22,7 @@ class Unit_Terrain_ValueLattice_Behavior
   protected:
   void SetUp() override
   {
-    prepareLattice();
+    prepareLattice(CACHE_SIZE);
   }
 
   void testUseHasher()
@@ -73,7 +75,7 @@ class ValueLatticeInterpolateTestSuite : public LatticePreparer<ValueLattice, 2>
   protected:
   void SetUp() override
   {
-    prepareLattice();
+    prepareLattice(CACHE_SIZE);
   }
 };
 
@@ -125,7 +127,8 @@ class ValueTestSuiteAt : public TestWithParam<TestCase<Dimension>>
     auto interpolator   = std::make_unique<Interpolator>();
     auto lattice        = std::make_unique<ValueLattice>(std::move(hasher),
                                                   std::move(noise),
-                                                  std::move(interpolator));
+                                                  std::move(interpolator),
+                                                  CACHE_SIZE);
 
     const auto actual = lattice->at(testCase.in);
     EXPECT_NEAR(actual, testCase.expected, REASONABLE_COMPARISON_THRESHOLD);

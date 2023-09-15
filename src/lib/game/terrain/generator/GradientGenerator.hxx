@@ -6,8 +6,11 @@
 namespace pge::terrain {
 
 template<int Dimension>
-inline GradientGenerator<Dimension>::GradientGenerator(IHasherPtr<Dimension> hasher, INoisePtr noise)
-  : m_hasher(std::move(hasher))
+inline GradientGenerator<Dimension>::GradientGenerator(IHasherPtr<Dimension> hasher,
+                                                       INoisePtr noise,
+                                                       const int cacheSize)
+  : AbstractGradientGenerator<Dimension>(cacheSize)
+  , m_hasher(std::move(hasher))
   , m_noise(std::move(noise))
 {}
 
