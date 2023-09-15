@@ -6,9 +6,11 @@ using namespace ::testing;
 
 namespace pge::terrain {
 namespace {
+constexpr auto INTERPOLATION_STRATEGY = InterpolationStrategy::LINEAR;
+
 auto generateInterpolator() -> Bilinear2d
 {
-  return Bilinear2d();
+  return Bilinear2d(INTERPOLATION_STRATEGY);
 }
 
 constexpr auto TOP_LEFT     = 0.0f;
