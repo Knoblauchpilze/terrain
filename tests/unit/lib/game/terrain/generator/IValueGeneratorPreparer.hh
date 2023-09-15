@@ -17,7 +17,7 @@ class GeneratorPreparer
 
   std::unique_ptr<Generator> generator{};
 
-  void prepareGenerator()
+  void prepareGenerator(const int cacheSize)
   {
     auto hasher = std::make_unique<::testing::NiceMock<MockHasher<Dimension>>>();
     mockHasher  = hasher.get();
@@ -25,7 +25,7 @@ class GeneratorPreparer
     auto noise = std::make_unique<::testing::NiceMock<MockNoise>>();
     mockNoise  = noise.get();
 
-    generator = std::make_unique<Generator>(std::move(hasher), std::move(noise));
+    generator = std::make_unique<Generator>(std::move(hasher), std::move(noise), cacheSize);
   }
 };
 

@@ -6,6 +6,7 @@
 using namespace ::testing;
 
 namespace pge::terrain {
+constexpr auto CACHE_SIZE = 10;
 
 template<typename ValueGeneratorToTest>
 class Unit_Terrain_ValueGenerator
@@ -18,7 +19,7 @@ class Unit_Terrain_ValueGenerator
   protected:
   void SetUp() override
   {
-    this->prepareGenerator();
+    this->prepareGenerator(CACHE_SIZE);
   }
 
   void testUseHasher()
@@ -31,6 +32,21 @@ class Unit_Terrain_ValueGenerator
   {
     EXPECT_CALL(*this->mockNoise, seed(_)).Times(1);
     EXPECT_CALL(*this->mockNoise, next()).Times(1);
+    this->generator->generateFor(LatticePoint::Zero(), Point::Zero());
+  }
+
+  void testNegativeCacheSizeThrowsException()
+  {
+    EXPECT_THROW(this->prepareGenerator(-2), std::invalid_argument);
+  }
+
+  void testUseCache()
+  {
+    EXPECT_CALL(*this->mockNoise, seed(_)).Times(1);
+    EXPECT_CALL(*this->mockNoise, next()).Times(1);
+    EXPECT_CALL(*this->mockHasher, hash(_)).Times(1);
+
+    this->generator->generateFor(LatticePoint::Zero(), Point::Zero());
     this->generator->generateFor(LatticePoint::Zero(), Point::Zero());
   }
 
@@ -56,6 +72,16 @@ TEST_F(Unit_Terrain_ValueGenerator2d, Test_UseNoise)
   this->testUseNoise();
 }
 
+TEST_F(Unit_Terrain_ValueGenerator2d, Test_InvalidCacheSize)
+{
+  this->testNegativeCacheSizeThrowsException();
+}
+
+TEST_F(Unit_Terrain_ValueGenerator2d, Test_UseCache)
+{
+  this->testUseCache();
+}
+
 TEST_F(Unit_Terrain_ValueGenerator2d, Test_GenerateFor)
 {
   this->testGeneratFor();
@@ -73,6 +99,16 @@ TEST_F(Unit_Terrain_ValueGenerator3d, Test_UseHasher)
 TEST_F(Unit_Terrain_ValueGenerator3d, Test_UseNoise)
 {
   this->testUseNoise();
+}
+
+TEST_F(Unit_Terrain_ValueGenerator3d, Test_InvalidCacheSize)
+{
+  this->testNegativeCacheSizeThrowsException();
+}
+
+TEST_F(Unit_Terrain_ValueGenerator3d, Test_UseCache)
+{
+  this->testUseCache();
 }
 
 TEST_F(Unit_Terrain_ValueGenerator3d, Test_GenerateFor)

@@ -91,6 +91,11 @@ auto Terrain::lattice() const noexcept -> LatticeType
   return m_latticeType;
 }
 
+auto Terrain::interpolation() const noexcept -> InterpolationStrategy
+{
+  return m_interpolationStrategy;
+}
+
 auto Terrain::scale() const noexcept -> int
 {
   return m_scale.current();
@@ -99,6 +104,11 @@ auto Terrain::scale() const noexcept -> int
 auto Terrain::period() const noexcept -> int
 {
   return m_period.current();
+}
+
+auto Terrain::cacheSize() const noexcept -> int
+{
+  return m_cacheSize.current();
 }
 
 void Terrain::nextLattice(bool prev)
@@ -110,6 +120,19 @@ void Terrain::nextLattice(bool prev)
   else
   {
     m_latticeType = nextLatticeType(m_latticeType);
+  }
+  generate();
+}
+
+void Terrain::nextInterpolation(bool prev)
+{
+  if (prev)
+  {
+    m_interpolationStrategy = previousInterpolationStrategy(m_interpolationStrategy);
+  }
+  else
+  {
+    m_interpolationStrategy = nextInterpolationStrategy(m_interpolationStrategy);
   }
   generate();
 }
@@ -140,6 +163,19 @@ void Terrain::nextPeriod(bool prev)
   generate();
 }
 
+void Terrain::nextCacheSize(bool prev)
+{
+  if (prev)
+  {
+    m_cacheSize.previous();
+  }
+  else
+  {
+    m_cacheSize.next();
+  }
+  generate();
+}
+
 void Terrain::nextSeed()
 {
   ++m_seed;
@@ -149,8 +185,9 @@ void Terrain::nextSeed()
 void Terrain::generate()
 {
   info("Generating terrain with properties: seed = " + std::to_string(m_seed)
-       + " lattice = " + str(m_latticeType) + " period = " + std::to_string(m_period.current())
-       + " scale = " + std::to_string(m_period.current()));
+       + " lattice = " + str(m_latticeType) + " interpolation = " + str(m_interpolationStrategy)
+       + " period = " + std::to_string(m_period.current()) + " scale = "
+       + std::to_string(m_period.current()) + " cache = " + std::to_string(m_cacheSize.current()));
 
   switch (m_latticeType)
   {
@@ -174,27 +211,29 @@ auto Terrain::generateValueLattice() const -> ILattice2dPtr
 {
   auto hasher       = std::make_unique<Hasher2d>(m_seed);
   auto noise        = std::make_unique<WhiteNoise>();
-  auto interpolator = std::make_unique<Bilinear2d>();
+  auto interpolator = std::make_unique<Bilinear2d>(m_interpolationStrategy);
 
   return std::make_unique<ValueLattice>(std::move(hasher),
                                         std::move(noise),
-                                        std::move(interpolator));
+                                        std::move(interpolator),
+                                        m_cacheSize.current());
 }
 
 auto Terrain::generateGradientLattice() const -> ILattice2dPtr
 {
   auto hasher       = std::make_unique<Hasher2d>(m_seed);
   auto noise        = std::make_unique<WhiteNoise>(-1.0f, 1.0f);
-  auto interpolator = std::make_unique<Bilinear2d>();
+  auto interpolator = std::make_unique<Bilinear2d>(m_interpolationStrategy);
 
   return std::make_unique<GradientLattice>(std::move(hasher),
                                            std::move(noise),
-                                           std::move(interpolator));
+                                           std::move(interpolator),
+                                           m_cacheSize.current());
 }
 
 auto Terrain::generatePeriodicGradientLattice() const -> ILattice2dPtr
 {
-  auto interpolator = std::make_unique<Bilinear2d>();
+  auto interpolator = std::make_unique<Bilinear2d>(m_interpolationStrategy);
 
   return std::make_unique<PeriodicGradientLattice>(m_period.current(),
                                                    m_seed,
@@ -203,7 +242,7 @@ auto Terrain::generatePeriodicGradientLattice() const -> ILattice2dPtr
 
 auto Terrain::generatePeriodicPerlinLattice() const -> ILattice2dPtr
 {
-  auto interpolator = std::make_unique<Bilinear2d>();
+  auto interpolator = std::make_unique<Bilinear2d>(m_interpolationStrategy);
 
   return std::make_unique<PeriodicPerlinLattice>(m_period.current(),
                                                  m_seed,

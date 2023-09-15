@@ -1,23 +1,25 @@
 
 #pragma once
 
+#include "AbstractCachedGenerator.hh"
 #include "IHasher.hh"
 #include "INoise.hh"
-#include "IValueGenerator.hh"
 #include <memory>
 
 namespace pge::terrain {
 
 template<int Dimension>
-class ValueGenerator : public IValueGenerator<Dimension, float>
+class ValueGenerator : public AbstractCachedGenerator<Dimension, float>
 {
   public:
-  ValueGenerator(IHasherPtr<Dimension> hasher, INoisePtr noise);
+  ValueGenerator(IHasherPtr<Dimension> hasher, INoisePtr noise, const int cacheSize);
   ~ValueGenerator() override = default;
 
   auto at(const ILatticePoint<Dimension> &latticePoint) const noexcept -> float override;
-  auto generateFor(const ILatticePoint<Dimension> &latticePoint,
-                   const IPoint<Dimension> &point) const noexcept -> float override;
+
+  protected:
+  auto combine(const float &latticeValue, const IPoint<Dimension> &point) const noexcept
+    -> float override;
 
   private:
   IHasherPtr<Dimension> m_hasher;

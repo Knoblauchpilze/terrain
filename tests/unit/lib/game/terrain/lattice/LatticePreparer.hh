@@ -19,7 +19,7 @@ class LatticePreparer
 
   std::unique_ptr<Lattice> lattice{};
 
-  void prepareLattice()
+  void prepareLattice(const int cacheSize)
   {
     auto hasher       = std::make_unique<::testing::NiceMock<MockHasher<Dimension>>>();
     mockHasher        = hasher.get();
@@ -30,7 +30,8 @@ class LatticePreparer
 
     lattice = std::make_unique<Lattice>(std::move(hasher),
                                         std::move(noise),
-                                        std::move(interpolator));
+                                        std::move(interpolator),
+                                        cacheSize);
   }
 };
 

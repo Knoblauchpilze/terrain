@@ -53,10 +53,22 @@ auto AbstractLattice3d<ValueType>::at(const Point3d &p) -> float
   const auto pz     = (p(2) - frontBottomLeft(2)) / zRange;
 
   InterpolationData3d data{};
-  data.axes[Bilinear3d::FRONT_BOTTOM] = InterpolationAxis(fbl, fbr, px);
-  data.axes[Bilinear3d::FRONT_TOP]    = InterpolationAxis(ftl, ftr, px);
-  data.axes[Bilinear3d::BACK_TOP]     = InterpolationAxis(btl, btr, px);
-  data.axes[Bilinear3d::BACK_BOTTOM]  = InterpolationAxis(bbl, bbr, px);
+  data.axes[Bilinear3d::FRONT_BOTTOM] = InterpolationAxis(fbl,
+                                                          fbr,
+                                                          px,
+                                                          this->m_interpolator->strategy());
+  data.axes[Bilinear3d::FRONT_TOP]    = InterpolationAxis(ftl,
+                                                       ftr,
+                                                       px,
+                                                       this->m_interpolator->strategy());
+  data.axes[Bilinear3d::BACK_TOP]     = InterpolationAxis(btl,
+                                                      btr,
+                                                      px,
+                                                      this->m_interpolator->strategy());
+  data.axes[Bilinear3d::BACK_BOTTOM]  = InterpolationAxis(bbl,
+                                                         bbr,
+                                                         px,
+                                                         this->m_interpolator->strategy());
   data.deltas[Bilinear3d::Z]          = pz;
   data.deltas[Bilinear3d::Y]          = py;
 

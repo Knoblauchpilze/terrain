@@ -4,7 +4,6 @@
 #include "AbstractLattice2d.hh"
 #include "Area2dGenerator.hh"
 #include "Bilinear2d.hh"
-#include <cmath>
 
 namespace pge::terrain {
 
@@ -20,7 +19,7 @@ AbstractLattice2d<ValueType>::AbstractLattice2d(
 {}
 
 template<typename ValueType>
-auto AbstractLattice2d<ValueType>::at(const Point2d &p) -> float
+inline auto AbstractLattice2d<ValueType>::at(const Point2d &p) -> float
 {
   // https://stackoverflow.com/questions/1120833/derived-template-class-access-to-base-class-member-data
   // https://www.scratchapixel.com/lessons/procedural-generation-virtual-worlds/procedural-patterns-noise-part-1/creating-simple-1D-noise.html
@@ -42,8 +41,8 @@ auto AbstractLattice2d<ValueType>::at(const Point2d &p) -> float
   const auto py     = (p(1) - bottomLeft(1)) / yRange;
 
   InterpolationData2d data{};
-  data.axes[Bilinear2d::BOTTOM] = InterpolationAxis(bl, br, px);
-  data.axes[Bilinear2d::TOP]    = InterpolationAxis(tl, tr, px);
+  data.axes[Bilinear2d::BOTTOM] = InterpolationAxis(bl, br, px, this->m_interpolator->strategy());
+  data.axes[Bilinear2d::TOP]    = InterpolationAxis(tl, tr, px, this->m_interpolator->strategy());
   data.deltas[Bilinear2d::Y]    = py;
 
   const auto val = this->m_interpolator->interpolate(data);

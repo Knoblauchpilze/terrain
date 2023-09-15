@@ -6,10 +6,18 @@ using namespace ::testing;
 
 namespace pge::terrain {
 namespace {
+constexpr auto INTERPOLATION_STRATEGY = InterpolationStrategy::LINEAR;
+
+auto generateInterpolator() -> Bilinear2d
+{
+  return Bilinear2d(INTERPOLATION_STRATEGY);
+}
+
 constexpr auto TOP_LEFT     = 0.0f;
 constexpr auto TOP_RIGHT    = 1.0f;
 constexpr auto BOTTOM_LEFT  = 2.0f;
 constexpr auto BOTTOM_RIGHT = 3.0f;
+
 auto generateInterpolationData(const float dx, const float dy) -> InterpolationData2d
 {
   InterpolationData2d data;
@@ -22,7 +30,7 @@ auto generateInterpolationData(const float dx, const float dy) -> InterpolationD
 
 TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Bottom_Left)
 {
-  const auto interpolator = Bilinear2d();
+  const auto interpolator = generateInterpolator();
 
   const auto data = generateInterpolationData(0.0f, 0.0f);
   const auto out  = interpolator.interpolate(data);
@@ -31,7 +39,7 @@ TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Bottom_Left)
 
 TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Bottom_Right)
 {
-  const auto interpolator = Bilinear2d();
+  const auto interpolator = generateInterpolator();
 
   const auto data = generateInterpolationData(1.0f, 0.0f);
   const auto out  = interpolator.interpolate(data);
@@ -40,7 +48,7 @@ TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Bottom_Right)
 
 TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Top_Left)
 {
-  const auto interpolator = Bilinear2d();
+  const auto interpolator = generateInterpolator();
 
   const auto data = generateInterpolationData(0.0f, 1.0f);
   const auto out  = interpolator.interpolate(data);
@@ -49,7 +57,7 @@ TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Top_Left)
 
 TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Top_Right)
 {
-  const auto interpolator = Bilinear2d();
+  const auto interpolator = generateInterpolator();
 
   const auto data = generateInterpolationData(1.0f, 1.0f);
   const auto out  = interpolator.interpolate(data);
@@ -58,7 +66,7 @@ TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Top_Right)
 
 TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Bottom_Edge)
 {
-  const auto interpolator = Bilinear2d();
+  const auto interpolator = generateInterpolator();
 
   const auto data     = generateInterpolationData(0.5f, 0.0f);
   const auto out      = interpolator.interpolate(data);
@@ -68,7 +76,7 @@ TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Bottom_Edge)
 
 TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Top_Edge)
 {
-  const auto interpolator = Bilinear2d();
+  const auto interpolator = generateInterpolator();
 
   const auto data     = generateInterpolationData(0.5f, 1.0f);
   const auto out      = interpolator.interpolate(data);
@@ -78,7 +86,7 @@ TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Top_Edge)
 
 TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Left_Edge)
 {
-  const auto interpolator = Bilinear2d();
+  const auto interpolator = generateInterpolator();
 
   const auto data     = generateInterpolationData(0.0f, 0.5f);
   const auto out      = interpolator.interpolate(data);
@@ -88,7 +96,7 @@ TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Left_Edge)
 
 TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Right_Edge)
 {
-  const auto interpolator = Bilinear2d();
+  const auto interpolator = generateInterpolator();
 
   const auto data     = generateInterpolationData(1.0f, 0.5f);
   const auto out      = interpolator.interpolate(data);
@@ -100,7 +108,7 @@ constexpr auto REASONABLE_COMPARISON_THRESHOLD = 0.0001f;
 
 TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Bottom_Left_Quadrant)
 {
-  const auto interpolator = Bilinear2d();
+  const auto interpolator = generateInterpolator();
 
   const auto data = generateInterpolationData(0.2f, 0.2f);
   const auto out  = interpolator.interpolate(data);
@@ -109,7 +117,7 @@ TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Bottom_Left_Quadrant)
 
 TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Bottom_Right_Quadrant)
 {
-  const auto interpolator = Bilinear2d();
+  const auto interpolator = generateInterpolator();
 
   const auto data = generateInterpolationData(0.6f, 0.2f);
   const auto out  = interpolator.interpolate(data);
@@ -118,7 +126,7 @@ TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Bottom_Right_Quadrant)
 
 TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Top_Left_Quadrant)
 {
-  const auto interpolator = Bilinear2d();
+  const auto interpolator = generateInterpolator();
 
   const auto data = generateInterpolationData(0.1f, 0.9f);
   const auto out  = interpolator.interpolate(data);
@@ -127,7 +135,7 @@ TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Top_Left_Quadrant)
 
 TEST(Unit_Terrain_Bilinear2d, Test_Interpolate_Top_Right_Quadrant)
 {
-  const auto interpolator = Bilinear2d();
+  const auto interpolator = generateInterpolator();
 
   const auto data = generateInterpolationData(0.85f, 0.7f);
   const auto out  = interpolator.interpolate(data);

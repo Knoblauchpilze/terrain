@@ -23,6 +23,8 @@ enum Keys
   G,
   M,
   L,
+  C,
+  I,
 
   KeysCount
 };

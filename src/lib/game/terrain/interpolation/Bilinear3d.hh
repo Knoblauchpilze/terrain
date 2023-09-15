@@ -1,14 +1,15 @@
 
 #pragma once
 
-#include "IInterpolator.hh"
+#include "AbstractInterpolator.hh"
 
 namespace pge::terrain {
 
-class Bilinear3d : public IInterpolator<3>
+class Bilinear3d : public AbstractInterpolator<3>
 {
   public:
-  Bilinear3d() noexcept  = default;
+  Bilinear3d() noexcept = default;
+  Bilinear3d(const InterpolationStrategy &strategy) noexcept;
   ~Bilinear3d() override = default;
 
   enum Axis
