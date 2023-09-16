@@ -79,14 +79,21 @@ class Game : public utils::CoreObject
 
   void save(const std::string &fileName) const;
 
+  auto displayMode() const noexcept -> DisplayMode;
+  void toggleDisplayMode(bool prev);
+
   void toggleLatticeMode(bool prev);
   void toggleInterpolationMode(bool prev);
-  void toggleDisplayMode(bool prev);
-  auto displayMode() const noexcept -> DisplayMode;
-  void toggleNextSeed();
-  void toggleTerrainScale(bool prev);
   void toggleNoisePeriod(bool prev);
   void toggleCacheSize(bool prev);
+
+  void toggleTerrainScale(bool prev);
+  void toggleTerrainLacunarity(bool prev);
+  void toggleTerrainGain(bool prev);
+  void toggleTerrainLayer(bool prev);
+
+  void toggleNextSeed();
+
   auto latticeAt(const int x, const int y) const -> std::vector<float>;
 
   void generate();
@@ -103,7 +110,8 @@ class Game : public utils::CoreObject
   /// the UI and the text content of menus.
   virtual void updateUI();
 
-  auto generateStatusMenus(int width, int height) -> std::vector<MenuShPtr>;
+  auto generateLatticeMenus(int width, int height) -> std::vector<MenuShPtr>;
+  auto generateTerrainMenus(int width, int height) -> std::vector<MenuShPtr>;
 
   private:
   /// @brief - Convenience structure allowing to group information
@@ -157,12 +165,18 @@ class Game : public utils::CoreObject
   /// in a single struct.
   struct Menus
   {
+    // Lattice menus.
     MenuShPtr scale;
     MenuShPtr lattice;
     MenuShPtr interpolation;
     MenuShPtr display;
     MenuShPtr period;
     MenuShPtr cache;
+
+    // Terrain menus.
+    MenuShPtr layers;
+    MenuShPtr gain;
+    MenuShPtr lacunarity;
   };
 
   /// @brief - The definition of the game state.

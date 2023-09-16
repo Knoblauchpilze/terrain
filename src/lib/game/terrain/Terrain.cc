@@ -81,11 +81,6 @@ void Terrain::save(const std::string &fileName) const
   warn("Should save " + fileName);
 }
 
-auto Terrain::seed() const noexcept -> Seed
-{
-  return m_seed;
-}
-
 auto Terrain::lattice() const noexcept -> LatticeType
 {
   return m_latticeType;
@@ -109,6 +104,11 @@ auto Terrain::period() const noexcept -> int
 auto Terrain::cacheSize() const noexcept -> int
 {
   return m_cacheSize.current();
+}
+
+auto Terrain::seed() const noexcept -> Seed
+{
+  return m_seed;
 }
 
 void Terrain::nextLattice(bool prev)
@@ -180,6 +180,58 @@ void Terrain::nextSeed()
 {
   ++m_seed;
   generate();
+}
+
+auto Terrain::layersCount() const noexcept -> int
+{
+  return m_layerCount.current();
+}
+
+auto Terrain::lacunarity() const noexcept -> int
+{
+  return m_lacunarity.current();
+}
+
+auto Terrain::gain() const noexcept -> float
+{
+  const auto den = std::pow(TERRAIN_POWER_BASE, m_gainExponent.current());
+  return 1.0f / den;
+}
+
+void Terrain::nextLayersCount(bool prev) noexcept
+{
+  if (prev)
+  {
+    m_layerCount.previous();
+  }
+  else
+  {
+    m_layerCount.next();
+  }
+}
+
+void Terrain::nextLacunarity(bool prev) noexcept
+{
+  if (prev)
+  {
+    m_lacunarity.previous();
+  }
+  else
+  {
+    m_lacunarity.next();
+  }
+}
+
+void Terrain::nextGain(bool prev) noexcept
+{
+  if (prev)
+  {
+    m_gainExponent.previous();
+  }
+  else
+  {
+    m_gainExponent.next();
+  }
 }
 
 void Terrain::generate()
