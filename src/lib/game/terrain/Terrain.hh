@@ -24,18 +24,29 @@ class Terrain : public utils::CoreObject
   void load(const std::string &fileName);
   void save(const std::string &fileName) const;
 
-  auto seed() const noexcept -> Seed;
   auto lattice() const noexcept -> LatticeType;
   auto interpolation() const noexcept -> InterpolationStrategy;
   auto scale() const noexcept -> int;
   auto period() const noexcept -> int;
   auto cacheSize() const noexcept -> int;
+
+  auto seed() const noexcept -> Seed;
+
   void nextLattice(bool prev);
   void nextInterpolation(bool prev);
   void nextScale(bool prev);
   void nextPeriod(bool prev);
   void nextCacheSize(bool prev);
+
   void nextSeed();
+
+  auto layersCount() const noexcept -> int;
+  auto lacunarity() const noexcept -> int;
+  auto gain() const noexcept -> float;
+
+  void nextLayersCount(bool prev) noexcept;
+  void nextLacunarity(bool prev) noexcept;
+  void nextGain(bool prev) noexcept;
 
   private:
   static constexpr auto MIN_NOISE_PERIOD  = 4;
@@ -57,6 +68,25 @@ class Terrain : public utils::CoreObject
                                     CYCLIC_VALUES_STEP};
   InterpolationStrategy m_interpolationStrategy{InterpolationStrategy::LINEAR};
   LatticeType m_latticeType{LatticeType::PERIODIC_PERLIN};
+
+  /// https://www.scratchapixel.com/lessons/procedural-generation-virtual-worlds/procedural-patterns-noise-part-1/simple-pattern-examples.html
+  static constexpr auto MIN_LAYER_COUNT = 1;
+  static constexpr auto MAX_LAYER_COUNT = 8;
+
+  static constexpr auto MIN_LACUNARITY = 1;
+  static constexpr auto MAX_LACUNARITY = 8;
+
+  static constexpr auto MIN_LAYER_GAIN_EXPONENT = 1;
+  static constexpr auto MAX_LAYER_GAIN_EXPONENT = 8;
+
+  static constexpr auto TERRAIN_POWER_BASE = 2;
+
+  PositiveCyclicInteger m_layerCount{MIN_LAYER_COUNT, 1, MAX_LAYER_COUNT, CYCLIC_VALUES_STEP};
+  PositiveCyclicInteger m_lacunarity{MIN_LACUNARITY, 1, MAX_LACUNARITY, CYCLIC_VALUES_STEP};
+  PositiveCyclicInteger m_gainExponent{MIN_LAYER_GAIN_EXPONENT,
+                                       1,
+                                       MAX_LAYER_GAIN_EXPONENT,
+                                       CYCLIC_VALUES_STEP};
 
   ILattice2dPtr m_lattice2d{nullptr};
   ILattice3dPtr m_lattice3d{nullptr};

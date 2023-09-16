@@ -12,9 +12,9 @@ auto str(const LatticeType type) noexcept -> std::string
     case LatticeType::GRADIENT:
       return "gradient";
     case LatticeType::PERIODIC_GRADIENT:
-      return "periodic gradient";
+      return "gradient (P)";
     case LatticeType::PERIODIC_PERLIN:
-      return "periodic perlin";
+      return "perlin (P)";
     default:
 
       return "unknown";

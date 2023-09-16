@@ -51,8 +51,14 @@ std::vector<MenuShPtr> Game::generateMenus(float width, float height)
 {
   std::vector<MenuShPtr> out;
 
-  auto menus = generateStatusMenus(width, height);
-  for (auto &menu : menus)
+  auto menus = generateLatticeMenus(width, height);
+  for (const auto &menu : menus)
+  {
+    out.push_back(menu);
+  }
+
+  menus = generateTerrainMenus(width, height);
+  for (const auto &menu : menus)
   {
     out.push_back(menu);
   }
@@ -107,6 +113,18 @@ void Game::save(const std::string &fileName) const
   m_terrain.save(fileName);
 }
 
+auto Game::displayMode() const noexcept -> DisplayMode
+{
+  return m_displayMode;
+}
+
+void Game::toggleDisplayMode(bool /*prev*/)
+{
+  /// Two values don't really benefit from the cycling order.
+  m_displayMode = (m_displayMode == DisplayMode::HEIGHT ? DisplayMode::TERRAIN
+                                                        : DisplayMode::HEIGHT);
+}
+
 void Game::toggleLatticeMode(bool prev)
 {
   m_terrain.nextLattice(prev);
@@ -119,30 +137,6 @@ void Game::toggleInterpolationMode(bool prev)
   generate();
 }
 
-void Game::toggleDisplayMode(bool /*prev*/)
-{
-  /// Two values don't really benefit from the cycling order.
-  m_displayMode = (m_displayMode == DisplayMode::HEIGHT ? DisplayMode::TERRAIN
-                                                        : DisplayMode::HEIGHT);
-}
-
-auto Game::displayMode() const noexcept -> DisplayMode
-{
-  return m_displayMode;
-}
-
-void Game::toggleNextSeed()
-{
-  m_terrain.nextSeed();
-  generate();
-}
-
-void Game::toggleTerrainScale(bool prev)
-{
-  m_terrain.nextScale(prev);
-  generate();
-}
-
 void Game::toggleNoisePeriod(bool prev)
 {
   m_terrain.nextPeriod(prev);
@@ -152,6 +146,36 @@ void Game::toggleNoisePeriod(bool prev)
 void Game::toggleCacheSize(bool prev)
 {
   m_terrain.nextCacheSize(prev);
+  generate();
+}
+
+void Game::toggleTerrainScale(bool prev)
+{
+  m_terrain.nextScale(prev);
+  generate();
+}
+
+void Game::toggleTerrainLacunarity(bool prev)
+{
+  m_terrain.nextLacunarity(prev);
+  generate();
+}
+
+void Game::toggleTerrainGain(bool prev)
+{
+  m_terrain.nextGain(prev);
+  generate();
+}
+
+void Game::toggleTerrainLayer(bool prev)
+{
+  m_terrain.nextLayersCount(prev);
+  generate();
+}
+
+void Game::toggleNextSeed()
+{
+  m_terrain.nextSeed();
   generate();
 }
 
@@ -233,6 +257,7 @@ void Game::enable(bool enable)
 
 void Game::updateUI()
 {
+  // Lattice options.
   auto text = "Scale: " + std::to_string(m_terrain.scale());
   m_menus.scale->setText(text);
 
@@ -252,9 +277,22 @@ void Game::updateUI()
   text = "Cache: ";
   text += std::to_string(m_terrain.cacheSize());
   m_menus.cache->setText(text);
+
+  // Terrain options.
+  text = "Layers: ";
+  text += std::to_string(m_terrain.layersCount());
+  m_menus.layers->setText(text);
+
+  text = "Gain: ";
+  text += std::to_string(m_terrain.gain());
+  m_menus.gain->setText(text);
+
+  text = "Lacunarity: ";
+  text += std::to_string(m_terrain.lacunarity());
+  m_menus.lacunarity->setText(text);
 }
 
-auto Game::generateStatusMenus(int width, int /*height*/) -> std::vector<MenuShPtr>
+auto Game::generateLatticeMenus(int width, int /*height*/) -> std::vector<MenuShPtr>
 {
   std::vector<MenuShPtr> out{};
   auto status = generateMenu(olc::vi2d{0, 0},
@@ -316,6 +354,42 @@ auto Game::generateStatusMenus(int width, int /*height*/) -> std::vector<MenuShP
   status->addMenu(gen);
 
   out.push_back(status);
+  return out;
+}
+
+auto Game::generateTerrainMenus(int width, int height) -> std::vector<MenuShPtr>
+{
+  std::vector<MenuShPtr> out{};
+  auto terrain = generateMenu(olc::vi2d{0, height - DEFAULT_MENU_HEIGHT},
+                              olc::vi2d{width, DEFAULT_MENU_HEIGHT},
+                              "",
+                              "terrain",
+                              false,
+                              menu::Layout::Horizontal);
+
+  m_menus.layers = generateMenu(olc::vi2d{0, 0},
+                                olc::vi2d{10, DEFAULT_MENU_HEIGHT},
+                                "Layers: N/A",
+                                "layers",
+                                true);
+  m_menus.layers->setSimpleAction([](Game &g) { g.toggleTerrainLayer(false); });
+  terrain->addMenu(m_menus.layers);
+  m_menus.gain = generateMenu(olc::vi2d{0, 0},
+                              olc::vi2d{10, DEFAULT_MENU_HEIGHT},
+                              "Gain: N/A",
+                              "gain",
+                              true);
+  m_menus.gain->setSimpleAction([](Game &g) { g.toggleTerrainGain(false); });
+  terrain->addMenu(m_menus.gain);
+  m_menus.lacunarity = generateMenu(olc::vi2d{0, 0},
+                                    olc::vi2d{10, DEFAULT_MENU_HEIGHT},
+                                    "Lacunarity: N/A",
+                                    "lacunarity",
+                                    true);
+  m_menus.lacunarity->setSimpleAction([](Game &g) { g.toggleTerrainLacunarity(false); });
+  terrain->addMenu(m_menus.lacunarity);
+
+  out.push_back(terrain);
   return out;
 }
 
