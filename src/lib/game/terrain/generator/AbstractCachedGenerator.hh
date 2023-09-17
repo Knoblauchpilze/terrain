@@ -19,8 +19,9 @@ class AbstractCachedGenerator : public IValueGenerator<Dimension, ValueType>
                    const IPoint<Dimension> &point) const noexcept -> float override;
 
   protected:
-  virtual auto combine(const ValueType &latticeValue, const IPoint<Dimension> &point) const noexcept
-    -> float
+  virtual auto combine(const ILatticePoint<Dimension> &latticePoint,
+                       const ValueType &latticeValue,
+                       const IPoint<Dimension> &point) const noexcept -> float
     = 0;
 
   private:

@@ -22,7 +22,8 @@ inline auto ValueGenerator<Dimension>::at(const ILatticePoint<Dimension> &lattic
 }
 
 template<int Dimension>
-inline auto ValueGenerator<Dimension>::combine(const float &latticeValue,
+inline auto ValueGenerator<Dimension>::combine(const ILatticePoint<Dimension> & /*latticePoint*/,
+                                               const float &latticeValue,
                                                const IPoint<Dimension> & /*point*/) const noexcept
   -> float
 {

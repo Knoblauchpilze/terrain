@@ -10,7 +10,8 @@ template<int Dimension>
 inline AbstractPeriodicGradientGenerator<Dimension>::AbstractPeriodicGradientGenerator(
   const int period,
   const Seed seed)
-  : m_period(period)
+  : AbstractGradientGenerator<Dimension, 3>(DEFAULT_CACHE_SIZE)
+  , m_period(period)
   , m_modulusMask(m_period - 1)
 {
   if (period % 2 != 0)
