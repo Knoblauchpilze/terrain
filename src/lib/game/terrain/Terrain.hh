@@ -55,7 +55,7 @@ class Terrain : public utils::CoreObject
   static constexpr auto MAX_TERRAIN_SCALE = 64;
 
   static constexpr auto MIN_VALUE_GENERATOR_CACHE_SIZE = 128;
-  static constexpr auto MAX_VALUE_GENERATOR_CACHE_SIZE = 4096;
+  static constexpr auto MAX_VALUE_GENERATOR_CACHE_SIZE = 2 << 17;
 
   static constexpr auto CYCLIC_VALUES_STEP = 2;
 
