@@ -82,7 +82,7 @@ class Terrain : public utils::CoreObject
   static constexpr auto TERRAIN_POWER_BASE = 2;
 
   PositiveCyclicInteger m_layerCount{MIN_LAYER_COUNT, 1, MAX_LAYER_COUNT, CYCLIC_VALUES_STEP};
-  PositiveCyclicInteger m_lacunarity{MIN_LACUNARITY, 1, MAX_LACUNARITY, CYCLIC_VALUES_STEP};
+  PositiveCyclicInteger m_lacunarity{MIN_LACUNARITY, 2, MAX_LACUNARITY, CYCLIC_VALUES_STEP};
   PositiveCyclicInteger m_gainExponent{MIN_LAYER_GAIN_EXPONENT,
                                        1,
                                        MAX_LAYER_GAIN_EXPONENT,
