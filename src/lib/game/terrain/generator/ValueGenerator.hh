@@ -18,8 +18,9 @@ class ValueGenerator : public AbstractCachedGenerator<Dimension, float>
   auto at(const ILatticePoint<Dimension> &latticePoint) const noexcept -> float override;
 
   protected:
-  auto combine(const float &latticeValue, const IPoint<Dimension> &point) const noexcept
-    -> float override;
+  auto combine(const ILatticePoint<Dimension> &latticePoint,
+               const float &latticeValue,
+               const IPoint<Dimension> &point) const noexcept -> float override;
 
   private:
   IHasherPtr<Dimension> m_hasher;

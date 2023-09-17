@@ -1,24 +1,27 @@
 
 #pragma once
 
-#include "IGradientGenerator.hh"
+#include "AbstractCachedGenerator.hh"
 #include <memory>
 
 namespace pge::terrain {
 
-template<int Dimension>
-class AbstractGradientGenerator : public IGradientGenerator<Dimension, 3>
+template<int PointDimension, int GradientDimension>
+class AbstractGradientGenerator
+  : public AbstractCachedGenerator<PointDimension, IPoint<GradientDimension>>
 {
   public:
-  AbstractGradientGenerator()           = default;
-  ~AbstractGradientGenerator() override = default;
+  AbstractGradientGenerator(const int cacheSize);
+  virtual ~AbstractGradientGenerator() = default;
 
-  auto generateFor(const ILatticePoint<Dimension> &latticePoint,
-                   const IPoint<Dimension> &point) const noexcept -> float override;
+  protected:
+  auto combine(const ILatticePoint<PointDimension> &latticePoint,
+               const IPoint<GradientDimension> &latticeValue,
+               const IPoint<PointDimension> &point) const noexcept -> float override;
 };
 
-template<int Dimension>
-using AbstractGradientGeneratorPtr = std::unique_ptr<AbstractGradientGenerator<Dimension>>;
+template<int PointDimension>
+using AbstractGradient3dGeneratorPtr = std::unique_ptr<AbstractGradientGenerator<PointDimension, 3>>;
 
 } // namespace pge::terrain
 

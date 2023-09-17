@@ -3,8 +3,6 @@
 
 #include "AbstractCachedGenerator.hh"
 
-#include <iostream>
-
 namespace pge::terrain {
 
 template<int Dimension, typename ValueType>
@@ -27,7 +25,7 @@ inline auto AbstractCachedGenerator<Dimension, ValueType>::generateFor(
   if (0u == m_cacheSize)
   {
     const auto value = this->at(latticePoint);
-    return this->combine(value, point);
+    return this->combine(latticePoint, value, point);
   }
 
   return this->fromCacheOrGenerate(latticePoint, point);
@@ -42,7 +40,7 @@ inline auto AbstractCachedGenerator<Dimension, ValueType>::fromCacheOrGenerate(
   const auto key = std::make_pair(lp(0), lp(1));
   if (const auto it = this->m_cache.find(key); it != m_cache.end())
   {
-    return this->combine(it->second, p);
+    return this->combine(lp, it->second, p);
   }
 
   const auto value   = this->at(lp);
@@ -54,7 +52,7 @@ inline auto AbstractCachedGenerator<Dimension, ValueType>::fromCacheOrGenerate(
     this->m_keys.pop_front();
   }
 
-  return this->combine(value, p);
+  return this->combine(lp, value, p);
 }
 
 } // namespace pge::terrain

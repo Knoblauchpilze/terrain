@@ -9,7 +9,7 @@
 namespace pge::terrain {
 
 template<int Dimension>
-class AbstractPeriodicGradientGenerator : public AbstractGradientGenerator<Dimension>
+class AbstractPeriodicGradientGenerator : public AbstractGradientGenerator<Dimension, 3>
 {
   public:
   AbstractPeriodicGradientGenerator(const int period, const Seed seed);
@@ -19,6 +19,8 @@ class AbstractPeriodicGradientGenerator : public AbstractGradientGenerator<Dimen
   virtual auto gradientAt(const int id) const noexcept -> Point3d = 0;
 
   private:
+  static constexpr auto DEFAULT_CACHE_SIZE{256};
+
   int m_period;
   int m_modulusMask;
   std::vector<int> m_permutations{};
