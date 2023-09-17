@@ -229,10 +229,28 @@ void Terrain::nextGain(bool prev) noexcept
 
 void Terrain::generate()
 {
-  info("Generating terrain with properties: seed = " + std::to_string(m_seed)
-       + " lattice = " + str(m_latticeType) + " interpolation = " + str(m_interpolationStrategy)
-       + " period = " + std::to_string(m_period.current()) + " scale = "
-       + std::to_string(m_period.current()) + " cache = " + std::to_string(m_cacheSize.current()));
+  std::string msg("Generating terrain with properties: ");
+
+  msg += "seed = " + std::to_string(seed());
+  msg += ", ";
+  msg += "lattice = " + str(lattice());
+  msg += ", ";
+  msg += "interpolation = " + str(interpolation());
+  msg += ", ";
+  msg += "scale = " + std::to_string(scale());
+  msg += ", ";
+  msg += "period = " + std::to_string(period());
+  msg += ", ";
+  msg += "cache = " + std::to_string(cacheSize());
+  msg += ", ";
+
+  msg += "layers = " + std::to_string(layersCount());
+  msg += ", ";
+  msg += "lacunarity = " + std::to_string(lacunarity());
+  msg += ", ";
+  msg += "gain = " + std::to_string(gain());
+
+  info(msg);
 
   switch (m_latticeType)
   {
