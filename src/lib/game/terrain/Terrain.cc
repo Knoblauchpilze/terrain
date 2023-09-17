@@ -52,11 +52,31 @@ Terrain::Terrain() noexcept
 
 auto Terrain::height(const float x, const float y) const -> float
 {
-  if (m_lattice2d)
+  if (!m_lattice2d)
   {
-    return m_lattice2d->at(Point2d(x / m_scale.current(), y / m_scale.current()));
+    return 0.0f;
   }
-  return 0.0f;
+
+  float out{0.0f};
+
+  float frequency{1.0f};
+  float amplitude{1.0f};
+  float magnitude{0.0f};
+  for (auto i = 0; i < layersCount(); ++i)
+  {
+    const auto nx = x * frequency / scale();
+    const auto ny = y * frequency / scale();
+    magnitude += 1.0f * amplitude;
+
+    Point2d p(nx, ny);
+
+    out += amplitude * m_lattice2d->at(p);
+
+    frequency *= lacunarity();
+    amplitude *= gain();
+  }
+
+  return out / magnitude;
 }
 
 auto Terrain::at(const float x, const float y) const -> Type
@@ -108,11 +128,11 @@ void Terrain::nextLattice(bool prev)
 {
   if (prev)
   {
-    m_latticeType = previousLatticeType(m_latticeType);
+    m_latticeType = previousLatticeType(lattice());
   }
   else
   {
-    m_latticeType = nextLatticeType(m_latticeType);
+    m_latticeType = nextLatticeType(lattice());
   }
   generate();
 }
@@ -121,11 +141,11 @@ void Terrain::nextInterpolation(bool prev)
 {
   if (prev)
   {
-    m_interpolationStrategy = previousInterpolationStrategy(m_interpolationStrategy);
+    m_interpolationStrategy = previousInterpolationStrategy(interpolation());
   }
   else
   {
-    m_interpolationStrategy = nextInterpolationStrategy(m_interpolationStrategy);
+    m_interpolationStrategy = nextInterpolationStrategy(interpolation());
   }
   generate();
 }
@@ -252,7 +272,7 @@ void Terrain::generate()
 
   info(msg);
 
-  switch (m_latticeType)
+  switch (lattice())
   {
     case LatticeType::GRADIENT:
       m_lattice2d = generateGradientLattice();
@@ -272,44 +292,40 @@ void Terrain::generate()
 
 auto Terrain::generateValueLattice() const -> ILattice2dPtr
 {
-  auto hasher       = std::make_unique<Hasher2d>(m_seed);
+  auto hasher       = std::make_unique<Hasher2d>(seed());
   auto noise        = std::make_unique<WhiteNoise>();
-  auto interpolator = std::make_unique<Bilinear2d>(m_interpolationStrategy);
+  auto interpolator = std::make_unique<Bilinear2d>(interpolation());
 
   return std::make_unique<ValueLattice>(std::move(hasher),
                                         std::move(noise),
                                         std::move(interpolator),
-                                        m_cacheSize.current());
+                                        cacheSize());
 }
 
 auto Terrain::generateGradientLattice() const -> ILattice2dPtr
 {
-  auto hasher       = std::make_unique<Hasher2d>(m_seed);
+  auto hasher       = std::make_unique<Hasher2d>(seed());
   auto noise        = std::make_unique<WhiteNoise>(-1.0f, 1.0f);
-  auto interpolator = std::make_unique<Bilinear2d>(m_interpolationStrategy);
+  auto interpolator = std::make_unique<Bilinear2d>(interpolation());
 
   return std::make_unique<GradientLattice>(std::move(hasher),
                                            std::move(noise),
                                            std::move(interpolator),
-                                           m_cacheSize.current());
+                                           cacheSize());
 }
 
 auto Terrain::generatePeriodicGradientLattice() const -> ILattice2dPtr
 {
   auto interpolator = std::make_unique<Bilinear2d>(m_interpolationStrategy);
 
-  return std::make_unique<PeriodicGradientLattice>(m_period.current(),
-                                                   m_seed,
-                                                   std::move(interpolator));
+  return std::make_unique<PeriodicGradientLattice>(period(), seed(), std::move(interpolator));
 }
 
 auto Terrain::generatePeriodicPerlinLattice() const -> ILattice2dPtr
 {
   auto interpolator = std::make_unique<Bilinear2d>(m_interpolationStrategy);
 
-  return std::make_unique<PeriodicPerlinLattice>(m_period.current(),
-                                                 m_seed,
-                                                 std::move(interpolator));
+  return std::make_unique<PeriodicPerlinLattice>(period(), seed(), std::move(interpolator));
 }
 
 } // namespace pge::terrain
