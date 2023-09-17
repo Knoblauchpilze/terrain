@@ -89,7 +89,6 @@ class Terrain : public utils::CoreObject
                                        CYCLIC_VALUES_STEP};
 
   ILattice2dPtr m_lattice2d{nullptr};
-  ILattice3dPtr m_lattice3d{nullptr};
 
   void generate();
 

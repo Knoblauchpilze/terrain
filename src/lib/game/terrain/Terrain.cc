@@ -56,14 +56,7 @@ auto Terrain::height(const float x, const float y) const -> float
   {
     return m_lattice2d->at(Point2d(x / m_scale.current(), y / m_scale.current()));
   }
-  else if (m_lattice3d)
-  {
-    return m_lattice3d->at(Point3d(x / m_scale.current(), y / m_scale.current(), 0.0f));
-  }
-  else
-  {
-    return 0.0f;
-  }
+  return 0.0f;
 }
 
 auto Terrain::at(const float x, const float y) const -> Type
