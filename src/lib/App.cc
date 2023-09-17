@@ -127,6 +127,18 @@ void App::onInputs(const controls::State &c, const CoordinateFrame &cf)
     {
       m_game->toggleInterpolationMode(c.shift);
     }
+    if (c.keys[controls::keys::O])
+    {
+      m_game->toggleTerrainLayer(c.shift);
+    }
+    if (c.keys[controls::keys::F])
+    {
+      m_game->toggleTerrainLacunarity(c.shift);
+    }
+    if (c.keys[controls::keys::A])
+    {
+      m_game->toggleTerrainGain(c.shift);
+    }
   }
 }
 

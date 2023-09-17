@@ -215,6 +215,15 @@ PGEApp::InputChanges PGEApp::handleInputs()
   b                                  = GetKey(olc::I);
   m_controls.keys[controls::keys::I] = b.bReleased;
 
+  b                                  = GetKey(olc::O);
+  m_controls.keys[controls::keys::O] = b.bReleased;
+
+  b                                  = GetKey(olc::F);
+  m_controls.keys[controls::keys::F] = b.bReleased;
+
+  b                                  = GetKey(olc::A);
+  m_controls.keys[controls::keys::A] = b.bReleased;
+
   b                = GetKey(olc::TAB);
   m_controls.tab   = (b.bPressed || b.bHeld);
   b                = GetKey(olc::SHIFT);
