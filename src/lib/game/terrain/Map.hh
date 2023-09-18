@@ -4,7 +4,9 @@
 #include "Terrain.hh"
 #include "Type.hh"
 #include <core_utils/CoreObject.hh>
+#include <functional>
 #include <memory>
+#include <unordered_map>
 
 namespace pge::terrain {
 
@@ -48,7 +50,20 @@ class Map : public utils::CoreObject
 
   private:
   TerrainMode m_mode{TerrainMode::NOISE};
-  Terrain m_terrain{};
+
+  enum Kind
+  {
+    HEIGHT,
+    MOISTURE,
+    TEMPERATURE,
+  };
+
+  std::unordered_map<Kind, TerrainPtr> m_terrains{};
+
+  auto defaultTerrain() const noexcept -> const Terrain &;
+
+  using TerrainProcess = std::function<void(Terrain &)>;
+  void applyToTerrain(const TerrainProcess &process);
 };
 
 using MapPtr = std::unique_ptr<Map>;
