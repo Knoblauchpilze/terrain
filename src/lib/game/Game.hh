@@ -2,7 +2,7 @@
 #pragma once
 
 #include "AbstractGradientGenerator.hh"
-#include "Terrain.hh"
+#include "Map.hh"
 #include "ValueGenerator.hh"
 #include <core_utils/CoreObject.hh>
 #include <core_utils/TimeUtils.hh>
@@ -94,11 +94,13 @@ class Game : public utils::CoreObject
 
   void toggleNextSeed();
 
+  void toggleBiome(bool prev);
+
   auto latticeAt(const int x, const int y) const -> std::vector<float>;
 
   void generate();
 
-  auto terrain() const noexcept -> const terrain::Terrain &;
+  auto map() const noexcept -> const terrain::Map &;
 
   private:
   /// @brief - Used to enable or disable the menus that compose the game. This allows
@@ -174,6 +176,7 @@ class Game : public utils::CoreObject
     MenuShPtr cache;
 
     // Terrain menus.
+    MenuShPtr biome;
     MenuShPtr layers;
     MenuShPtr gain;
     MenuShPtr lacunarity;
@@ -186,7 +189,7 @@ class Game : public utils::CoreObject
   /// simulation.
   Menus m_menus{};
 
-  terrain::Terrain m_terrain{};
+  terrain::Map m_map{};
 
   terrain::ValueGenerator2dPtr m_valueGenerator{nullptr};
   terrain::AbstractGradient3dGeneratorPtr<2> m_gradientGenerator{nullptr};

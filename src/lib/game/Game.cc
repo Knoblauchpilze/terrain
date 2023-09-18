@@ -105,12 +105,12 @@ void Game::togglePause()
 
 void Game::load(const std::string &fileName)
 {
-  m_terrain.load(fileName);
+  m_map.load(fileName);
 }
 
 void Game::save(const std::string &fileName) const
 {
-  m_terrain.save(fileName);
+  m_map.save(fileName);
 }
 
 auto Game::displayMode() const noexcept -> DisplayMode
@@ -127,55 +127,61 @@ void Game::toggleDisplayMode(bool /*prev*/)
 
 void Game::toggleLatticeMode(bool prev)
 {
-  m_terrain.nextLattice(prev);
+  m_map.nextLattice(prev);
   generate();
 }
 
 void Game::toggleInterpolationMode(bool prev)
 {
-  m_terrain.nextInterpolation(prev);
+  m_map.nextInterpolation(prev);
   generate();
 }
 
 void Game::toggleNoisePeriod(bool prev)
 {
-  m_terrain.nextPeriod(prev);
+  m_map.nextPeriod(prev);
   generate();
 }
 
 void Game::toggleCacheSize(bool prev)
 {
-  m_terrain.nextCacheSize(prev);
+  m_map.nextCacheSize(prev);
   generate();
 }
 
 void Game::toggleTerrainScale(bool prev)
 {
-  m_terrain.nextScale(prev);
+  m_map.nextScale(prev);
   generate();
 }
 
 void Game::toggleTerrainLacunarity(bool prev)
 {
-  m_terrain.nextLacunarity(prev);
+  m_map.nextLacunarity(prev);
   generate();
 }
 
 void Game::toggleTerrainGain(bool prev)
 {
-  m_terrain.nextGain(prev);
+  m_map.nextGain(prev);
   generate();
 }
 
 void Game::toggleTerrainLayer(bool prev)
 {
-  m_terrain.nextLayersCount(prev);
+  m_map.nextLayersCount(prev);
   generate();
 }
 
 void Game::toggleNextSeed()
 {
-  m_terrain.nextSeed();
+  m_map.nextSeed();
+  generate();
+}
+
+void Game::toggleBiome(bool prev)
+{
+  m_map.toggleMode(prev);
   generate();
 }
 
@@ -183,7 +189,7 @@ auto Game::latticeAt(const int x, const int y) const -> std::vector<float>
 {
   std::vector<float> out;
 
-  const terrain::LatticePoint2d p(x / m_terrain.scale(), y / m_terrain.scale());
+  const terrain::LatticePoint2d p(x / m_map.scale(), y / m_map.scale());
 
   if (m_valueGenerator != nullptr)
   {
@@ -203,42 +209,41 @@ void Game::generate()
   m_valueGenerator.reset();
   m_gradientGenerator.reset();
 
-  switch (m_terrain.lattice())
+  switch (m_map.lattice())
   {
     case terrain::LatticeType::GRADIENT:
     {
       auto noise          = std::make_unique<terrain::WhiteNoise>(-1.0f, 1.0f);
-      auto hasher         = std::make_unique<terrain::Hasher2d>(m_terrain.seed());
+      auto hasher         = std::make_unique<terrain::Hasher2d>(m_map.seed());
       m_gradientGenerator = std::make_unique<terrain::GradientGenerator2d>(std::move(hasher),
                                                                            std::move(noise),
-                                                                           m_terrain.cacheSize());
+                                                                           m_map.cacheSize());
     }
     break;
     case terrain::LatticeType::PERIODIC_GRADIENT:
-      m_gradientGenerator
-        = std::make_unique<terrain::PeriodicGradientGenerator2d>(m_terrain.period(),
-                                                                 m_terrain.seed());
+      m_gradientGenerator = std::make_unique<terrain::PeriodicGradientGenerator2d>(m_map.period(),
+                                                                                   m_map.seed());
       break;
     case terrain::LatticeType::PERIODIC_PERLIN:
-      m_gradientGenerator = std::make_unique<terrain::PeriodicPerlinGenerator2d>(m_terrain.period(),
-                                                                                 m_terrain.seed());
+      m_gradientGenerator = std::make_unique<terrain::PeriodicPerlinGenerator2d>(m_map.period(),
+                                                                                 m_map.seed());
       break;
     case terrain::LatticeType::VALUE:
     default:
     {
       auto noise       = std::make_unique<terrain::WhiteNoise>();
-      auto hasher      = std::make_unique<terrain::Hasher2d>(m_terrain.seed());
+      auto hasher      = std::make_unique<terrain::Hasher2d>(m_map.seed());
       m_valueGenerator = std::make_unique<terrain::ValueGenerator2d>(std::move(hasher),
                                                                      std::move(noise),
-                                                                     m_terrain.cacheSize());
+                                                                     m_map.cacheSize());
     }
     break;
   }
 }
 
-auto Game::terrain() const noexcept -> const terrain::Terrain &
+auto Game::map() const noexcept -> const terrain::Map &
 {
-  return m_terrain;
+  return m_map;
 }
 
 void Game::enable(bool enable)
@@ -258,37 +263,41 @@ void Game::enable(bool enable)
 void Game::updateUI()
 {
   // Lattice options.
-  auto text = "Scale: " + std::to_string(m_terrain.scale());
+  auto text = "Scale: " + std::to_string(m_map.scale());
   m_menus.scale->setText(text);
 
-  text = str(m_terrain.lattice());
+  text = str(m_map.lattice());
   m_menus.lattice->setText(text);
 
-  text = str(m_terrain.interpolation());
+  text = str(m_map.interpolation());
   m_menus.interpolation->setText(text);
 
   text = (m_displayMode == DisplayMode::HEIGHT ? "height" : "terrain");
   m_menus.display->setText(text);
 
   text = "Period: ";
-  text += std::to_string(m_terrain.period());
+  text += std::to_string(m_map.period());
   m_menus.period->setText(text);
 
   text = "Cache: ";
-  text += std::to_string(m_terrain.cacheSize());
+  text += std::to_string(m_map.cacheSize());
   m_menus.cache->setText(text);
 
   // Terrain options.
+  text = "Mode: ";
+  text += str(m_map.mode());
+  m_menus.biome->setText(text);
+
   text = "Layers: ";
-  text += std::to_string(m_terrain.layersCount());
+  text += std::to_string(m_map.layersCount());
   m_menus.layers->setText(text);
 
   text = "Gain: ";
-  text += std::to_string(m_terrain.gain());
+  text += std::to_string(m_map.gain());
   m_menus.gain->setText(text);
 
   text = "Lacunarity: ";
-  text += std::to_string(m_terrain.lacunarity());
+  text += std::to_string(m_map.lacunarity());
   m_menus.lacunarity->setText(text);
 }
 
@@ -367,6 +376,13 @@ auto Game::generateTerrainMenus(int width, int height) -> std::vector<MenuShPtr>
                               false,
                               menu::Layout::Horizontal);
 
+  m_menus.biome = generateMenu(olc::vi2d{0, 0},
+                               olc::vi2d{10, DEFAULT_MENU_HEIGHT},
+                               "Biome: N/A",
+                               "biome",
+                               true);
+  m_menus.biome->setSimpleAction([](Game &g) { g.toggleBiome(false); });
+  terrain->addMenu(m_menus.biome);
   m_menus.layers = generateMenu(olc::vi2d{0, 0},
                                 olc::vi2d{10, DEFAULT_MENU_HEIGHT},
                                 "Layers: N/A",
