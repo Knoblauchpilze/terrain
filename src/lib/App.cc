@@ -139,6 +139,10 @@ void App::onInputs(const controls::State &c, const CoordinateFrame &cf)
     {
       m_game->toggleTerrainGain(c.shift);
     }
+    if (c.keys[controls::keys::B])
+    {
+      m_game->toggleBiome(c.shift);
+    }
   }
 }
 
@@ -273,10 +277,10 @@ void App::drawDebug(const RenderDesc &res)
   DrawString(olc::vi2d(0, h / 2 + 1 * dOffset), "World cell coords : " + mtp.str(), olc::CYAN);
   DrawString(olc::vi2d(0, h / 2 + 2 * dOffset), "Intra cell        : " + it.str(), olc::CYAN);
 
-  const auto &terrain = m_game->terrain();
+  const auto &map = m_game->map();
   const olc::vf2d pTile(mtp.x + it.x, mtp.y + it.y);
   DrawString(olc::vi2d(0, h / 2 + 3 * dOffset),
-             "Height            : " + std::to_string(terrain.height(pTile.x, pTile.y)),
+             "Height            : " + std::to_string(map.height(pTile.x, pTile.y)),
              olc::CYAN);
 
   SetPixelMode(olc::Pixel::NORMAL);
@@ -340,7 +344,7 @@ inline void App::drawWarpedRect(const SpriteDesc &t, const CoordinateFrame &cf)
 
 inline void App::renderTerrain(const CoordinateFrame &cf)
 {
-  const auto &terrain = m_game->terrain();
+  const auto &map = m_game->map();
 
   const auto vp     = cf.tilesViewport();
   const auto center = vp.center();
@@ -361,11 +365,11 @@ inline void App::renderTerrain(const CoordinateFrame &cf)
       sp.radius = 1.0f;
       if (DisplayMode::HEIGHT == m_game->displayMode())
       {
-        sp.sprite.tint = colorFromHeight(terrain.height(x, y));
+        sp.sprite.tint = colorFromHeight(map.height(x, y));
       }
       else
       {
-        sp.sprite.tint = colorFromTerrain(terrain.at(x, y));
+        sp.sprite.tint = colorFromTerrain(map.at(x, y));
       }
 
       drawRect(sp, cf);
@@ -375,7 +379,7 @@ inline void App::renderTerrain(const CoordinateFrame &cf)
 
 inline void App::renderLattice(const CoordinateFrame &cf)
 {
-  const auto scale = m_game->terrain().scale();
+  const auto scale = m_game->map().scale();
 
   const auto vp     = cf.tilesViewport();
   const auto center = vp.center();

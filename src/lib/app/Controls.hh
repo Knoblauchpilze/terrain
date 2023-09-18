@@ -28,6 +28,7 @@ enum Keys
   O,
   F,
   A,
+  B,
 
   KeysCount
 };

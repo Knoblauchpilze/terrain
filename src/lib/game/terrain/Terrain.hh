@@ -6,7 +6,6 @@
 #include "LatticeType.hh"
 #include "PositiveCyclicInteger.hh"
 #include "Seed.hh"
-#include "Type.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
 #include <vector>
@@ -19,7 +18,6 @@ class Terrain : public utils::CoreObject
   Terrain() noexcept;
 
   auto height(const float x, const float y) const -> float;
-  auto at(const float x, const float y) const -> Type;
 
   void load(const std::string &fileName);
   void save(const std::string &fileName) const;
