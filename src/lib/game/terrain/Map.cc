@@ -39,6 +39,9 @@ Map::Map() noexcept
   : utils::CoreObject("2d")
 {
   setService("2d");
+  m_terrains[HEIGHT]      = std::make_unique<Terrain>();
+  m_terrains[MOISTURE]    = std::make_unique<Terrain>();
+  m_terrains[TEMPERATURE] = std::make_unique<Terrain>();
 }
 
 auto Map::at(const float x, const float y) const -> Type
@@ -48,17 +51,18 @@ auto Map::at(const float x, const float y) const -> Type
 
 auto Map::height(const float x, const float y) const -> float
 {
-  return m_terrain.height(x, y);
+  /// TODO: Handle this.
+  return defaultTerrain().height(x, y);
 }
 
 void Map::load(const std::string &fileName)
 {
-  m_terrain.load(fileName);
+  warn("Should load from \"" + fileName + "\"");
 }
 
 void Map::save(const std::string &fileName) const
 {
-  m_terrain.save(fileName);
+  warn("Should save to \"" + fileName + "\"");
 }
 
 auto Map::mode() const noexcept -> TerrainMode
@@ -78,98 +82,109 @@ void Map::toggleMode(bool /*prev*/)
       m_mode = TerrainMode::NOISE;
       break;
   }
-
-  // TODO: Handle this.
 }
 
 auto Map::lattice() const noexcept -> LatticeType
 {
-  return m_terrain.lattice();
+  return defaultTerrain().lattice();
 }
 
 auto Map::interpolation() const noexcept -> InterpolationStrategy
 {
-  return m_terrain.interpolation();
+  return defaultTerrain().interpolation();
 }
 
 auto Map::scale() const noexcept -> int
 {
-  return m_terrain.scale();
+  return defaultTerrain().scale();
 }
 
 auto Map::period() const noexcept -> int
 {
-  return m_terrain.period();
+  return defaultTerrain().period();
 }
 
 auto Map::cacheSize() const noexcept -> int
 {
-  return m_terrain.cacheSize();
+  return defaultTerrain().cacheSize();
 }
 
 auto Map::seed() const noexcept -> Seed
 {
-  return m_terrain.seed();
+  return defaultTerrain().seed();
 }
 
 void Map::nextLattice(bool prev)
 {
-  m_terrain.nextLattice(prev);
+  applyToTerrain([prev](Terrain &terrain) { terrain.nextLattice(prev); });
 }
 
 void Map::nextInterpolation(bool prev)
 {
-  m_terrain.nextInterpolation(prev);
+  applyToTerrain([prev](Terrain &terrain) { terrain.nextInterpolation(prev); });
 }
 
 void Map::nextScale(bool prev)
 {
-  m_terrain.nextScale(prev);
+  applyToTerrain([prev](Terrain &terrain) { terrain.nextScale(prev); });
 }
 
 void Map::nextPeriod(bool prev)
 {
-  m_terrain.nextPeriod(prev);
+  applyToTerrain([prev](Terrain &terrain) { terrain.nextPeriod(prev); });
 }
 
 void Map::nextCacheSize(bool prev)
 {
-  m_terrain.nextCacheSize(prev);
+  applyToTerrain([prev](Terrain &terrain) { terrain.nextCacheSize(prev); });
 }
 
 void Map::nextSeed()
 {
-  m_terrain.nextSeed();
+  applyToTerrain([](Terrain &terrain) { terrain.nextSeed(); });
 }
 
 auto Map::layersCount() const noexcept -> int
 {
-  return m_terrain.layersCount();
+  return defaultTerrain().layersCount();
 }
 
 auto Map::lacunarity() const noexcept -> int
 {
-  return m_terrain.lacunarity();
+  return defaultTerrain().lacunarity();
 }
 
 auto Map::gain() const noexcept -> float
 {
-  return m_terrain.gain();
+  return defaultTerrain().gain();
 }
 
 void Map::nextLayersCount(bool prev) noexcept
 {
-  m_terrain.nextLayersCount(prev);
+  applyToTerrain([prev](Terrain &terrain) { terrain.nextLayersCount(prev); });
 }
 
 void Map::nextLacunarity(bool prev) noexcept
 {
-  m_terrain.nextLacunarity(prev);
+  applyToTerrain([prev](Terrain &terrain) { terrain.nextLacunarity(prev); });
 }
 
 void Map::nextGain(bool prev) noexcept
 {
-  m_terrain.nextGain(prev);
+  applyToTerrain([prev](Terrain &terrain) { terrain.nextGain(prev); });
+}
+
+auto Map::defaultTerrain() const noexcept -> const Terrain &
+{
+  return *m_terrains.at(HEIGHT);
+}
+
+void Map::applyToTerrain(const TerrainProcess &process)
+{
+  for (auto &terrain : m_terrains)
+  {
+    process(*(terrain.second));
+  }
 }
 
 } // namespace pge::terrain
