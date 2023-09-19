@@ -63,6 +63,10 @@ Finally the [Map](src/lib/game/terrain/Map.hh) class is combining multiple `Terr
 
 We tried to keep the classes as generic as possible to maybe handle various kind ofvalues at the lattice points or multiple dimensions for the input point. This worked to some extent: we can probably pretty easily instantiate a 3d lattice. The only issue would be with the testing, which is mostly suited for the 2d case.
 
+## Testing
+
+We have a relatively good set of tests for the value generators and the lattice at least for the 2d case. The `Terrain` and `Map` classes are not tested at all.
+
 ## Generation
 
 We explored multiple ways to generate the noise. The main strategies are listed below:
