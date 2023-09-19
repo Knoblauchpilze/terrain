@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Terrain.hh"
+#include "TerrainMode.hh"
 #include "Type.hh"
 #include <core_utils/CoreObject.hh>
 #include <functional>
@@ -9,6 +10,8 @@
 #include <unordered_map>
 
 namespace pge::terrain {
+
+auto str(const TerrainMode &terrain) noexcept -> std::string;
 
 class Map : public utils::CoreObject
 {
@@ -21,8 +24,8 @@ class Map : public utils::CoreObject
   void load(const std::string &fileName);
   void save(const std::string &fileName) const;
 
-  auto mode() const noexcept -> TerrainMode;
-  void toggleMode(bool prev);
+  auto terrain() const noexcept -> TerrainMode;
+  void nextTerrain(bool prev) noexcept;
 
   auto lattice() const noexcept -> LatticeType;
   auto interpolation() const noexcept -> InterpolationStrategy;
@@ -49,16 +52,10 @@ class Map : public utils::CoreObject
   void nextGain(bool prev) noexcept;
 
   private:
-  TerrainMode m_mode{TerrainMode::NOISE};
+  /// https://medium.com/@henchman/adventures-in-procedural-terrain-generation-part-1-b64c29e2367a
+  TerrainMode m_mode{TerrainMode::HEIGHT};
 
-  enum Kind
-  {
-    HEIGHT,
-    MOISTURE,
-    TEMPERATURE,
-  };
-
-  std::unordered_map<Kind, TerrainPtr> m_terrains{};
+  std::unordered_map<TerrainMode, TerrainPtr> m_terrains{};
 
   auto defaultTerrain() const noexcept -> const Terrain &;
 

@@ -2,7 +2,6 @@
 /// @brief - A terrain generator.
 
 /// Useful links:
-/// https://medium.com/@henchman/adventures-in-procedural-terrain-generation-part-1-b64c29e2367a
 /// https://rtouti.github.io/graphics/perlin-noise-algorithm
 
 #include "App.hh"

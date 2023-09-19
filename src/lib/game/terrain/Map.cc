@@ -7,25 +7,80 @@ constexpr auto OCEAN_THRESHOLD    = 0.2f;
 constexpr auto COAST_THRESHOLD    = 0.5f;
 constexpr auto PLAIN_THRESHOLD    = 0.6f;
 constexpr auto MOUNTAIN_THRESHOLD = 0.85f;
-constexpr auto ICE_THRESHOLD      = 1.0f;
 
-auto heightToTerrainType(const float height) noexcept -> Type
+auto heightToTerrainType(const float height, const float moisture, const float temperature) noexcept
+  -> Type
 {
-  if (height < OCEAN_THRESHOLD)
+  /// https://gamedev.stackexchange.com/questions/178084/map-generation-biome-3d-zonation-altitude-temperature-moisture
+  if (height < 0.1f)
+  {
+    return Type::ABYSS;
+  }
+  else if (height < 0.2f)
   {
     return Type::OCEAN;
   }
-  else if (height < COAST_THRESHOLD)
+  else if (height < 0.45f)
   {
-    return Type::COAST;
+    if (temperature < 0.5f)
+    {
+      return Type::ICE;
+    }
+    else
+    {
+      return Type::SEA;
+    }
   }
-  else if (height < PLAIN_THRESHOLD)
+  else if (height < 0.55f)
   {
-    return Type::PLAIN;
+    if (temperature < 0.5f)
+    {
+      return Type::ICE_PACK;
+    }
+    else
+    {
+      return Type::COAST;
+    }
   }
-  else if (height < MOUNTAIN_THRESHOLD)
+  else if (height < 0.70f)
   {
-    return Type::MOUNTAIN;
+    if (temperature < 0.5f)
+    {
+      if (moisture < 0.5f)
+      {
+        return Type::TOUNDRA;
+      }
+      else
+      {
+        return Type::TAIGA;
+      }
+    }
+    else
+    {
+      if (moisture < 0.3f)
+      {
+        return Type::DESERT;
+      }
+      else if (moisture < 0.6f)
+      {
+        return Type::PLAIN;
+      }
+      else
+      {
+        return Type::FOREST;
+      }
+    }
+  }
+  else if (height < 0.90f)
+  {
+    if (moisture < 0.5f)
+    {
+      return Type::MOUNTAIN;
+    }
+    else
+    {
+      return Type::ROCKS;
+    }
   }
   else
   {
@@ -39,20 +94,34 @@ Map::Map() noexcept
   : utils::CoreObject("2d")
 {
   setService("2d");
-  m_terrains[HEIGHT]      = std::make_unique<Terrain>();
-  m_terrains[MOISTURE]    = std::make_unique<Terrain>();
-  m_terrains[TEMPERATURE] = std::make_unique<Terrain>();
+  auto terrain                    = std::make_unique<Terrain>();
+  m_terrains[TerrainMode::HEIGHT] = std::move(terrain);
+
+  terrain = std::make_unique<Terrain>();
+  terrain->nextSeed();
+  terrain->nextSeed();
+  m_terrains[TerrainMode::MOISTURE] = std::move(terrain);
+
+  terrain = std::make_unique<Terrain>();
+  terrain->nextSeed();
+  terrain->nextSeed();
+  terrain->nextSeed();
+  terrain->nextSeed();
+  m_terrains[TerrainMode::TEMPERATURE] = std::move(terrain);
 }
 
 auto Map::at(const float x, const float y) const -> Type
 {
-  return heightToTerrainType(height(x, y));
+  const auto h     = m_terrains.at(TerrainMode::HEIGHT)->height(x, y);
+  const auto moist = m_terrains.at(TerrainMode::MOISTURE)->height(x, y);
+  const auto temp  = m_terrains.at(TerrainMode::TEMPERATURE)->height(x, y);
+
+  return heightToTerrainType(h, moist, temp);
 }
 
 auto Map::height(const float x, const float y) const -> float
 {
-  /// TODO: Handle this.
-  return defaultTerrain().height(x, y);
+  return m_terrains.at(m_mode)->height(x, y);
 }
 
 void Map::load(const std::string &fileName)
@@ -65,22 +134,20 @@ void Map::save(const std::string &fileName) const
   warn("Should save to \"" + fileName + "\"");
 }
 
-auto Map::mode() const noexcept -> TerrainMode
+auto Map::terrain() const noexcept -> TerrainMode
 {
   return m_mode;
 }
 
-void Map::toggleMode(bool /*prev*/)
+void Map::nextTerrain(bool prev) noexcept
 {
-  switch (m_mode)
+  if (prev)
   {
-    case TerrainMode::NOISE:
-      m_mode = TerrainMode::BIOME;
-      break;
-    case TerrainMode::BIOME:
-    default:
-      m_mode = TerrainMode::NOISE;
-      break;
+    m_mode = previousTerrainMode(m_mode);
+  }
+  else
+  {
+    m_mode = nextTerrainMode(m_mode);
   }
 }
 
@@ -176,7 +243,7 @@ void Map::nextGain(bool prev) noexcept
 
 auto Map::defaultTerrain() const noexcept -> const Terrain &
 {
-  return *m_terrains.at(HEIGHT);
+  return *m_terrains.at(TerrainMode::HEIGHT);
 }
 
 void Map::applyToTerrain(const TerrainProcess &process)
