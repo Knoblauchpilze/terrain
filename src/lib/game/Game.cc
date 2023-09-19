@@ -125,6 +125,11 @@ void Game::toggleDisplayMode(bool /*prev*/)
                                                         : DisplayMode::HEIGHT);
 }
 
+void Game::toggleTerrainMode(bool prev)
+{
+  m_map.nextTerrain(prev);
+}
+
 void Game::toggleLatticeMode(bool prev)
 {
   m_map.nextLattice(prev);
@@ -176,12 +181,6 @@ void Game::toggleTerrainLayer(bool prev)
 void Game::toggleNextSeed()
 {
   m_map.nextSeed();
-  generate();
-}
-
-void Game::toggleBiome(bool prev)
-{
-  m_map.toggleMode(prev);
   generate();
 }
 
@@ -284,9 +283,9 @@ void Game::updateUI()
   m_menus.cache->setText(text);
 
   // Terrain options.
-  text = "Mode: ";
-  text += str(m_map.mode());
-  m_menus.biome->setText(text);
+  text = "Terrain: ";
+  text += str(m_map.terrain());
+  m_menus.terrain->setText(text);
 
   text = "Layers: ";
   text += std::to_string(m_map.layersCount());
@@ -376,13 +375,13 @@ auto Game::generateTerrainMenus(int width, int height) -> std::vector<MenuShPtr>
                               false,
                               menu::Layout::Horizontal);
 
-  m_menus.biome = generateMenu(olc::vi2d{0, 0},
-                               olc::vi2d{10, DEFAULT_MENU_HEIGHT},
-                               "Biome: N/A",
-                               "biome",
-                               true);
-  m_menus.biome->setSimpleAction([](Game &g) { g.toggleBiome(false); });
-  terrain->addMenu(m_menus.biome);
+  m_menus.terrain = generateMenu(olc::vi2d{0, 0},
+                                 olc::vi2d{10, DEFAULT_MENU_HEIGHT},
+                                 "Terrain: N/A",
+                                 "terrain",
+                                 true);
+  m_menus.terrain->setSimpleAction([](Game &g) { g.toggleTerrainMode(false); });
+  terrain->addMenu(m_menus.terrain);
   m_menus.layers = generateMenu(olc::vi2d{0, 0},
                                 olc::vi2d{10, DEFAULT_MENU_HEIGHT},
                                 "Layers: N/A",

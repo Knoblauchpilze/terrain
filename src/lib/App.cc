@@ -11,16 +11,32 @@ auto colorFromTerrain(const terrain::Type &terrain) noexcept -> olc::Pixel
 {
   switch (terrain)
   {
+    case terrain::Type::ABYSS:
+      return olc::VERY_DARK_BLUE;
     case terrain::Type::OCEAN:
       return olc::DARK_BLUE;
+    case terrain::Type::SEA:
+      return olc::COBALT_BLUE;
     case terrain::Type::COAST:
-      return olc::BLUE;
+      return olc::BIDOOF;
+    case terrain::Type::ICE_PACK:
+      return olc::CORNFLOWER_BLUE;
     case terrain::Type::PLAIN:
-      return olc::GREEN;
+      return olc::APPLE_GREEN;
+    case terrain::Type::TOUNDRA:
+      return olc::PALE_GREEN;
+    case terrain::Type::FOREST:
+      return olc::VERY_DARK_GREEN;
+    case terrain::Type::TAIGA:
+      return olc::PALE_DARK_GREEN;
+    case terrain::Type::DESERT:
+      return olc::PALE_YELLOW;
     case terrain::Type::MOUNTAIN:
       return olc::BROWN;
+    case terrain::Type::ROCKS:
+      return olc::GREY;
     case terrain::Type::ICE:
-      return olc::WHITE;
+      return olc::OFF_WHITE;
     default:
       return olc::RED;
   }
@@ -139,9 +155,9 @@ void App::onInputs(const controls::State &c, const CoordinateFrame &cf)
     {
       m_game->toggleTerrainGain(c.shift);
     }
-    if (c.keys[controls::keys::B])
+    if (c.keys[controls::keys::T])
     {
-      m_game->toggleBiome(c.shift);
+      m_game->toggleTerrainMode(c.shift);
     }
   }
 }

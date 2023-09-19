@@ -80,7 +80,9 @@ class Game : public utils::CoreObject
   void save(const std::string &fileName) const;
 
   auto displayMode() const noexcept -> DisplayMode;
+
   void toggleDisplayMode(bool prev);
+  void toggleTerrainMode(bool prev);
 
   void toggleLatticeMode(bool prev);
   void toggleInterpolationMode(bool prev);
@@ -93,8 +95,6 @@ class Game : public utils::CoreObject
   void toggleTerrainLayer(bool prev);
 
   void toggleNextSeed();
-
-  void toggleBiome(bool prev);
 
   auto latticeAt(const int x, const int y) const -> std::vector<float>;
 
@@ -176,7 +176,7 @@ class Game : public utils::CoreObject
     MenuShPtr cache;
 
     // Terrain menus.
-    MenuShPtr biome;
+    MenuShPtr terrain;
     MenuShPtr layers;
     MenuShPtr gain;
     MenuShPtr lacunarity;

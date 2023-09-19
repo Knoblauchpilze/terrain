@@ -7,19 +7,19 @@ namespace pge::terrain {
 
 enum class Type
 {
+  ABYSS,
   OCEAN,
+  SEA,
   COAST,
+  ICE_PACK,
   PLAIN,
+  TOUNDRA,
+  FOREST,
+  TAIGA,
+  DESERT,
   MOUNTAIN,
+  ROCKS,
   ICE
 };
-
-enum class TerrainMode
-{
-  NOISE,
-  BIOME
-};
-
-auto str(const TerrainMode &mode) noexcept -> std::string;
 
 } // namespace pge::terrain
