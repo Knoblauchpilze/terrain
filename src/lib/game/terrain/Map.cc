@@ -8,7 +8,7 @@ constexpr auto COAST_THRESHOLD    = 0.5f;
 constexpr auto PLAIN_THRESHOLD    = 0.6f;
 constexpr auto MOUNTAIN_THRESHOLD = 0.85f;
 
-auto heightToTerrainType(const float height, const float moisture, const float temperature) noexcept
+auto noiseToTerrainType(const float height, const float moisture, const float temperature) noexcept
   -> Type
 {
   /// https://gamedev.stackexchange.com/questions/178084/map-generation-biome-3d-zonation-altitude-temperature-moisture
@@ -116,7 +116,7 @@ auto Map::at(const float x, const float y) const -> Type
   const auto moist = m_terrains.at(TerrainMode::MOISTURE)->height(x, y);
   const auto temp  = m_terrains.at(TerrainMode::TEMPERATURE)->height(x, y);
 
-  return heightToTerrainType(h, moist, temp);
+  return noiseToTerrainType(h, moist, temp);
 }
 
 auto Map::height(const float x, const float y) const -> float
