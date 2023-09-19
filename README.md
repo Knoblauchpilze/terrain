@@ -35,21 +35,21 @@ We used various online resources to understand how to properly implement Perlin 
 
 ## How it works
 
-Generated a procedural terrain is a combination of several things:
+Generating a procedural terrain is a combination of several things:
 * we need a way to consistently generate the same random values based on input coordinates.
 * we need to generate coherent noise across a chunk of space.
 
-These two constraints have given birth to various algorithms to generate terrain. In this project we chose to give the Perlin noise a go. The Perlin noise in and of itself is a periodic coherent noise which aims at generating a lattice of random gradient vectors at integer coordinates and then use this to interpolate the values in between.
+These two constraints have given birth to various algorithms to generate terrains. In this project we chose to give the Perlin noise a go. The Perlin noise in and of itself is a periodic coherent noise which aims at generating a lattice of random gradient vectors at integer coordinates and then use this to interpolate the values in between.
 
 Using a periodic lattice allows to easily guarantee the consistency of the data (as we then project each point on a grid, so the consistency is guaranteed by the projection algorithm) and the lattice approach guarantees some coherence between values.
 
-The variety of the terrain is then of course proportional to the size of the lattice we generate. We can remove this limitation by using a procedural approach (similar to what is described by javidx9).
+The variety of the terrain is then of course proportional to the size of the lattice we generate. We can remove this limitation by using a procedural approach (similar to what is described by javidx9 in his [Programming The Universe](https://www.youtube.com/watch?v=ZZY9YE7rZJw) video).
 
-Generating the terrain is then a question of combining several frequencies of noise, and adding multiple noises to account for humidity, height, erosion, etc. and then extracting the terrain type from this.
+Generating the terrain is then a question of combining several frequencies of noise and adding multiple noises to account for humidity, height, erosion, etc. and then extracting the terrain type from this.
 
 ## Implementation
 
-We decided to separate the concerns of generating the values for the lattice from the generation of the lattice and from the generation of the final noise value at a point. Additionally creating the terrain from several layers of noise is also a dedicated operation.
+We decided to separate the concerns of generating the values for the lattice from the generation of the lattice and from the generation of the final noise value at a point. Additionally creating the terrain from several layers of noise is also a dedicated operation. And finally putting together multiple noises to determine a terrain type is also extracted into a dedicated class.
 
 In general:
 * [INoise](src/lib/game/terrain/noise/INoise.hh) represents the interface to generate some noise. It is used as a wrapper around some abstract way to produce 1D noise.
@@ -57,15 +57,15 @@ In general:
 * [IValueGenerator](src/lib/game/terrain/generator/IValueGenerator.hh) is used to generate the value at a specific lattice point based on a noise and use the `IHasher` interface to consistently produce the same values for the same coordinates.
 * [ILattice](src/lib/game/terrain/lattice/ILattice.hh) allows to generate the noise value at a specific point based on the values at the lattice point surrounding it. It reuses a certain value generator and combines these value using some interpolation mechanism and a normalization function to produce noise within a certain range.
 
-The [Terrain](src/lib/game/terrain/Terrain.hh) class is using a lattice to combine it into a consistent value. It uses layered noise and various frequencies to generate coherent values.
+The [Terrain](src/lib/game/terrain/Terrain.hh) class is using a lattice and combines it into a consistent and persistent pattern. It uses layered noise and various frequencies to generate coherent values.
 
-Finally the [Map](src/lib/game/terrain/Map.hh) class is combining multiple `Terrain` each one representing a certain parameter. For now we define height, moisture and temperature to create several biomes. The biomes are defined in the [Type](src/lib/game/terrain/Type.hh) file.
+Finally the [Map](src/lib/game/terrain/Map.hh) class is combining multiple `Terrain`, each one representing a certain parameter. For now we define height, moisture and temperature to create several biomes. The biomes are defined in the [Type](src/lib/game/terrain/Type.hh) file.
 
-We tried to keep the classes as generic as possible to maybe handle various kind ofvalues at the lattice points or multiple dimensions for the input point. This worked to some extent: we can probably pretty easily instantiate a 3d lattice. The only issue would be with the testing, which is mostly suited for the 2d case.
+We tried to keep the classes as generic as possible to maybe handle various kind of values at the lattice points or multiple dimensions for the input points. This worked to some extent: we can probably pretty easily instantiate a 3d lattice. The only issue would be with the testing, which is mostly suited for the 2d case.
 
 ## Testing
 
-We have a relatively good set of tests for the value generators and the lattice at least for the 2d case. The `Terrain` and `Map` classes are not tested at all.
+We have a relatively good set of tests for the value generators and the lattices at least for the 2d case. The `Terrain` and `Map` classes are not tested at all.
 
 ## Generation
 
@@ -96,6 +96,8 @@ This makes it harder to have a flat surface as when the point moves within the l
 ![point_to_lattice](resources/point_to_lattice.png)
 
 The images were taken from [here](https://adrianb.io/2014/08/09/perlinnoise.html).
+
+In the app we use a 3d gradient, despite the input points having only two coordinates.
 
 ### Perlin noise
 
@@ -214,3 +216,11 @@ In the end, our approach is as usual unique and quite suboptimal. The code can b
 An example below shows how a possible terrain looks:
 
 ![Terrain generated with the app](resources/final_result.png)
+
+## Controlling the simulation
+
+The user has plenty of controls to change the behavior of the generated terrain. All buttons are clickable and cycle through a certain number of values (for example the scale ranges from 2 to 64, doubling each time).
+
+Additionally, the keyboard can also be used to change the same parameters. The mapping for the keys is defined here in the [App](https://github.com/Knoblauchpilze/terrain/blob/master/src/lib/App.cc#L122) class.
+
+Note that holding `shift` allows to cycle backwards, which is not possible through the UI only. Also note that no save/load operation has been implemented in this app: it would be relatively easy by persisting the state of the `Map` and notably the current seeds for each noise. Persisting the additional values such as the lacunarity, cache size, etc. would be a nice bonus.
