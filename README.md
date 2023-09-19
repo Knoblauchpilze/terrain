@@ -57,7 +57,11 @@ In general:
 * [IValueGenerator](src/lib/game/terrain/generator/IValueGenerator.hh) is used to generate the value at a specific lattice point based on a noise and use the `IHasher` interface to consistently produce the same values for the same coordinates.
 * [ILattice](src/lib/game/terrain/lattice/ILattice.hh) allows to generate the noise value at a specific point based on the values at the lattice point surrounding it. It reuses a certain value generator and combines these value using some interpolation mechanism and a normalization function to produce noise within a certain range.
 
-The [Terrain](src/lib/game/terrain/Terrain.hh) class is using a lattice to combine it into a consistent value. It uses layered noise and various frequencies to generate coherent values (TODO).
+The [Terrain](src/lib/game/terrain/Terrain.hh) class is using a lattice to combine it into a consistent value. It uses layered noise and various frequencies to generate coherent values.
+
+Finally the [Map](src/lib/game/terrain/Map.hh) class is combining multiple `Terrain` each one representing a certain parameter. For now we define height, moisture and temperature to create several biomes. The biomes are defined in the [Type](src/lib/game/terrain/Type.hh) file.
+
+We tried to keep the classes as generic as possible to maybe handle various kind ofvalues at the lattice points or multiple dimensions for the input point. This worked to some extent: we can probably pretty easily instantiate a 3d lattice. The only issue would be with the testing, which is mostly suited for the 2d case.
 
 ## Generation
 
@@ -171,4 +175,38 @@ For `M`, `P` and `Gr`, each value is just the average for a single lattice point
 
 The periodic case is more or less equal in terms of what takes the most time per lattice point while the non periodic case is clearly very biased in generating the noise values.
 
-It's not clear how to propperly optimize the periodic case as it seems we're already relatively bottleneck-ing a bit everywhere.
+It's not clear how to properly optimize the periodic case as it seems we're already relatively bottleneck-ing a bit everywhere.
+
+## Further work
+
+After noticing that we are spending most of the time in generating the values for the lattice points, we decided to try out how it would look to cache lattice values for further reuse. The hope was that computing the local value from a lattice point was still faster than having to generate the whole thing.
+
+This worked remarkably well and allowed to bring the non periodic noises in par with the periodic ones. The work is grouped in the [AbstractCachedGenerator](src/lib/game/terrain/generator/AbstractCachedGenerator.hh). The user can control the size of the cache: the bigger the viewport, the larger the cache needed.
+
+# Results
+
+## Layered noise
+
+With the control over the lacunarity (which is the rate at which the frequency of the noise is changed between layers) and gain (which is how much of a change in amplitude each layer adds), we can reach pretty convincing results.
+
+This is a gradient noise with a single layer.
+
+![Gradient noise 1 layer](resources/gradient_noise_1_layer.png)
+
+This is the same noise but with 2 layers.
+
+![Gradient noise 2 layers](resources/gradient_noise_2_layers.png)
+
+And below with 4 layers.
+
+![Gradient noise 4 layers](resources/gradient_noise_4_layers.png)
+
+## Terrain generation
+
+We drew from multiple sources to come up with a good way to extrapolate a terrain type based on the noise values. These two videos ([1](https://www.youtube.com/watch?v=ob3VwY4JyzE) and [2](https://www.youtube.com/watch?v=YyVAaJqYAfE)) were a very good first introduction to how it works in minecraft. We also found a couple of articles presenting some more or less advanced way to do it.
+
+In the end, our approach is as usual unique and quite suboptimal. The code can be found in the [noiseToTerrainType](https://github.com/Knoblauchpilze/terrain/blob/master/src/lib/game/terrain/Map.cc#L11) method, which combines the various noises we use to find the terrain type.
+
+An example below shows how a possible terrain looks:
+
+![Terrain generated with the app](resources/final_result.png)
